@@ -3,9 +3,9 @@ export const rootPath = (menuGroup = ':menuGroup') => `/${menuGroup}/networks`;
 export const groupsPath = (menuGroup = ':menuGroup') => `/${menuGroup}/groups`;
 export const groupPath = (id = ':id', menuGroup = ':menuGroup') => `/${menuGroup}/groups/${id}`;
 
-export const networksPath = (menuGroup = ':menuGroup') => `/${menuGroup}/networks`;
-export const networkPath = (id = ':id', menuGroup = ':menuGroup') => `/${menuGroup}/networks/${id}`;
-export const routesPath = (menuGroup = ':menuGroup') => `/${menuGroup}/routes`;
+export const networksPath = () => `/vpc/networks`;
+export const networkPath = (id = ':id') => `/vpc/networks/${id}`;
+export const routesPath = () => `/vpc/routes`;
 
 export const webRoutesPath = (menuGroup = ':menuGroup') => `/${menuGroup}/web_routes`;
 export const detailsPath = (menuGroup = ':menuGroup', id = ':id') => `/${menuGroup}/web_routes/${id}`;

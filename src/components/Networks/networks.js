@@ -1,33 +1,41 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import ContentPage from '../../general/contentPage';
 import NetworksList from './networksList';
 import NetworkModal from './networkModal';
 import { fetchNetworks, fetchVMs, fetchProvider } from '../../AppActions';
-import messages from '../../Messages';
 import { withRouter } from 'react-router-dom';
+import { Loader } from 'semantic-ui-react';
 
-const Networks = ({ history }) => {
+const ContentPage = React.lazy(() => import('container/ContentPage'));
+
+const Networks = ({ t, history }) => {
     const networks = useSelector(state => state.VpcStore.networks);
+    const networksFetchStatus = useSelector(state => state.VpcStore.networksFetchStatus);
     const vms = useSelector(state => state.VpcStore.assignedVms);
     const vmsFetchStatus = useSelector(state => state.VpcStore.assignedVmsFetchStatus);
+    const providerIdFetchStatus = useSelector(state => state.VpcStore.providerIdFetchStatus);
     const user = useSelector(state => state.host.user);
 
-    window.goToRootRoute = () => history.push('/networks');
+    window.goToRootRoute = () => history.push('/vpc');
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (Object.keys(user).length === 0) return; // eslint-disable-line curly
-        dispatch(fetchNetworks());
-        dispatch(fetchVMs());
-        dispatch(fetchProvider());
-    }, [dispatch, user.location, user.role, user.account, user]);
+        if (user.location) {
+            dispatch(fetchNetworks());
+            dispatch(fetchVMs());
+            providerIdFetchStatus !== 'fulfilled' && dispatch(fetchProvider());
+        }
+    }, [dispatch, user]);
 
     return (
-        <ContentPage status={vmsFetchStatus} pageData={networks.length ? [vms, networks] : []} title={messages.vpcNetworks}
-            componentDataList={NetworksList} componentModal={NetworkModal} noContentMessage={messages.noNetworks}
+        <React.Suspense fallback={
+            <Loader active inline='centered' />
+        }>
+        <ContentPage t={t} statuses={[vmsFetchStatus, networksFetchStatus, providerIdFetchStatus]} pageData={networks.length ? [vms, networks] : []} title={'vpcNetworks'}
+            componentDataList={NetworksList} componentModal={NetworkModal} noContentMessage={'noNetworks'}
         />
+        </React.Suspense>
     );
 };
 

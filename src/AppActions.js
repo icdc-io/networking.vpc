@@ -65,127 +65,37 @@ const expandHeaders = (headers) => {
     };
 };
 
-const fetchData = async (url, headers, payload) => {
-    const response = await API.get(base(url), expandHeaders(headers), payload);
-    return response.data;
-};
+const fetchData = (url, headers, payload) => API.get(base(url), expandHeaders(headers), payload);
 
-const createData = async (url, headers, payload) => {
-    const response = await API.post(base(url), expandHeaders(headers), payload);
-    return response.data;
-};
+const createData = (url, headers, payload) => API.post(base(url), expandHeaders(headers), payload);
 
-const updateData = async (url, headers, payload) => {
-    const response = await API.put(base(url), payload, expandHeaders(headers));
-    return response.data;
-};
+const updateData = (url, headers, payload) => API.put(base(url), payload, expandHeaders(headers));
 
-const deleteData = async (url, headers) => {
-    const response = await API.delete(base(url), expandHeaders(headers));
-    return response;
-};
-
-const fetchDataGroups = async (url, headers, payload) => {
-    return await fetchData(url, headers, payload).then(response => response);
-};
-
-const fetchDataRoutes = async (url, headers, payload) => {
-    return await fetchData(url, headers, payload)
-        .then(response => ({
-            routes: response.resources[0].extra_attributes.routes,
-            routerId: response.resources[0].id
-        }));
-};
-
-const fetchProviderId = async (url, headers, payload) => {
-    return await fetchData(url, headers, payload).then(response => response.resources[0].id);
-};
-
-const fetchCurrentNetwork = async (url, headers, options) => {
-    const response = await fetchData(url, headers, options);
-    let networkData = {
-        name: response.cloud_network.name,
-        subnet: response.cidr,
-        type: response.network_protocol,
-        dns: response.dns_nameservers[0],
-        assignedVms: response.assigned_vms,
-        netId: response.cloud_network_id
-    };
-
-    return networkData;
-};
-
-const fetchVMsData = async (url, headers, options) => {
-    const response = await fetchData(url, headers, options);
-    let vmsArray = [];
-    response.resources.forEach((item) => {
-        vmsArray.push({
-            subnetId: item.id,
-            netId: item.cloud_network_id,
-            vmsCount: item.assigned_vms.length
-        });
-    });
-
-    return vmsArray;
-};
-
-const fetchCurrentSecurityGroup = async (url, headers, options) => {
-    const response = await fetchData(url, headers, options);
-    let securityGroup = {
-        id: response.id,
-        ems: response.ems_ref,
-        name: response.name,
-        firewallRules: response.firewall_rules,
-        assignedVms: response.assigned_vms
-    };
-
-    return securityGroup;
-};
-
-const fetchNetworksData = async (url, headers, options) => {
-    const response = await fetchData(url, headers, options);
-    let networksArray = [];
-    response.resources.forEach((item) => {
-        networksArray.push({
-            name: item.name,
-            netId: item.id,
-            emsRef: item.ems_ref
-        });
-        item.cloud_subnets.forEach((subnet) => {
-            networksArray.push(Object.assign(networksArray.pop(), {
-                id: subnet.id,
-                subnet: subnet.cidr,
-                type: subnet.network_protocol,
-                dns: subnet.dns_nameservers[0]
-            }));
-        });
-    });
-    return networksArray;
-};
+const deleteData = (url, headers) => API.delete(base(url), expandHeaders(headers));
 
 export const fetchNetworks = (options) => ({
     type: ActionTypes.NETWORKS_FETCH,
-    payload: fetchNetworksData(ActionTypes.NETWORKS_FETCH_URL, {}, options)
+    payload: fetchData(ActionTypes.NETWORKS_FETCH_URL, {}, options)
 });
 
 export const fetchVMs = (options) => ({
     type: ActionTypes.ASSIGNED_VMS_FETCH,
-    payload: fetchVMsData(ActionTypes.ASSIGNED_VMS, {}, options)
+    payload: fetchData(ActionTypes.ASSIGNED_VMS, {}, options)
 });
 
 export const fetchAllVMs = (options) => ({
     type: ActionTypes.ALL_VMS_FETCH,
-    payload: fetchDataGroups(ActionTypes.ALL_VMS_URL, {}, options)
+    payload: fetchData(ActionTypes.ALL_VMS_URL, {}, options)
 });
 
 export const fetchNetwork = (id) => ({
     type: ActionTypes.NETWORK_FETCH,
-    payload: fetchCurrentNetwork(ActionTypes.currentNetwork(id), {}, {})
+    payload: fetchData(ActionTypes.currentNetwork(id), {}, {})
 });
 
 export const fetchProvider = () => ({
     type: ActionTypes.PROVIDER_ID_FETCH,
-    payload: fetchProviderId(ActionTypes.PROVIDER_ID_URL, {}, {})
+    payload: fetchData(ActionTypes.PROVIDER_ID_URL, {}, {})
 });
 
 export const createNetwork = (payload, id) => ({
@@ -220,7 +130,7 @@ export const createNetworkActionAndFetch = (payload, id) => {
             dispatch(fetchVMs());
             successNotification('');
         }, error => {
-            dispatch(removeTemporaryNetwork(payload.name));
+            dispatch(removeNetwork(payload.name));
             errorNotification(error);
         });
     };
@@ -260,12 +170,12 @@ export const deleteNetworkActionAndFetch = (payload, providerId) => {
 
 export const fetchSecurityGroups = (options) => ({
     type: ActionTypes.SECURITY_GROUPS_FETCH,
-    payload: fetchDataGroups(ActionTypes.SECURITY_GROUPS_FETCH_URL, {}, options)
+    payload: fetchData(ActionTypes.SECURITY_GROUPS_FETCH_URL, {}, options)
 });
 
 export const fetchSecurityGroup = (id) => ({
     type: ActionTypes.SECURITY_GROUP_FETCH,
-    payload: fetchCurrentSecurityGroup(ActionTypes.getSecurityGroup(id), {}, {})
+    payload: fetchData(ActionTypes.getSecurityGroup(id), {}, {})
 });
 
 export const deleteSecurityGroup = () => ({
@@ -275,7 +185,7 @@ export const deleteSecurityGroup = () => ({
 
 export const fetchRoutes = (options) => ({
     type: ActionTypes.ROUTES_FETCH,
-    payload: fetchDataRoutes(ActionTypes.ROUTES_FETCH_URL, {}, options)
+    payload: fetchData(ActionTypes.ROUTES_FETCH_URL, {}, options)
 });
 
 export const createRoute = (payload, routerId) => ({
@@ -286,6 +196,7 @@ export const createRoute = (payload, routerId) => ({
 export const createRouteActionAndFetch = (payload, routerId) => {
     return (dispatch) => {
         const response = dispatch(createRoute(payload, routerId));
+
         response.then(() => {
             dispatch(fetchRoutes());
             successNotification('');

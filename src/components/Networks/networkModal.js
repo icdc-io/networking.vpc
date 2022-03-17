@@ -2,12 +2,10 @@ import React, { useState, useCallback } from 'react';
 import { Modal, Header, Button, Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import NetworkForm from './networkForm';
-import { injectIntl } from 'react-intl';
-import messages from '../../Messages';
 import { createNetworkActionAndFetch, editNetworkActionAndFetch, infoNotification, addTemporaryNetwork } from '../../AppActions';
 import { useSelector, useDispatch } from 'react-redux';
 
-const NetworkModal = ({ network, edit, intl, details }) => {
+const NetworkModal = ({ t, network, edit, details }) => {
     const [open, setOpen] = useState(false);
     const providerId = useSelector(state => state.VpcStore.providerId);
     const dispatch = useDispatch();
@@ -73,27 +71,28 @@ const NetworkModal = ({ network, edit, intl, details }) => {
 
     const onSubmit = useCallback(
         (values) => {
-            infoNotification(intl.formatMessage(messages.creatingNetwork));
+            infoNotification(t('creatingNetwork'));
             edit ?
                 dispatch(editNetworkActionAndFetch(mapPropsToApi(values), providerId)) :
                 createNetwork(values, providerId);
             handleClose();
         },
-        [dispatch, providerId, handleClose, mapPropsToApi, edit, intl, user]
+        [dispatch, providerId, handleClose, mapPropsToApi, edit, user]
     );
 
-    const headerContent = edit ? intl.formatMessage(messages.editVps) : intl.formatMessage(messages.createVps);
+    const headerContent = edit ? t('editVps') : t('createVps');
     const buttonModal = edit ?
         // details ?
-        //     <Button onClick={() => setOpen(true)} basic compact size='tiny' color='black' content={intl.formatMessage(messages.editVps)}/> :
-        !details && <Dropdown.Item text={intl.formatMessage(messages.editVps)} onClick={() => setOpen(true)} /> :
-        <Button onClick={() => setOpen(true)} primary>{intl.formatMessage(messages.createVps)}</Button>;
+        //     <Button onClick={() => setOpen(true)} basic compact size='tiny' color='black' content={t('editVps)}/> :
+        !details && <Dropdown.Item text={t('editVps')} onClick={() => setOpen(true)} /> :
+        <Button onClick={() => setOpen(true)} primary>{t('createVps')}</Button>;
     return window.insights.getRole() === 'admin' && <>
         {buttonModal}
         <Modal open={open} size="tiny" onSubmit={onSubmit} onClose={handleClose}>
             <Header content={headerContent} />
             <Modal.Content>
                 <NetworkForm
+                    t={t}
                     open={open}
                     handleClose={handleClose}
                     onSubmit={onSubmit}
@@ -106,10 +105,10 @@ const NetworkModal = ({ network, edit, intl, details }) => {
 };
 
 NetworkModal.propTypes = {
-    intl: PropTypes.any,
+    t: PropTypes.func,
     network: PropTypes.object,
     edit: PropTypes.bool,
     details: PropTypes.bool
 };
 
-export default injectIntl(NetworkModal);
+export default NetworkModal;

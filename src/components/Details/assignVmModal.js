@@ -3,12 +3,10 @@ import { Modal, Header, Button, Input } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import ReturnVmTable from './returnVmTable';
 import { onSearch } from '../../utilities/search';
-import { injectIntl } from 'react-intl';
-import messages from '../../Messages';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchAllVMs } from '../../AppActions';
 
-const AssignVmModal = ({ intl, submitAction }) => {
+const AssignVmModal = ({ t, submitAction }) => {
     const [open, setOpen] = useState(false);
     const [search, setSearch] = useState('');
     const [result, setResult] = useState([]);
@@ -72,7 +70,7 @@ const AssignVmModal = ({ intl, submitAction }) => {
     }, [checked]);
 
     return <React.Fragment>
-        <Button onClick={() => setOpen(true)} primary>{intl.formatMessage(messages.assignNic)}</Button>
+        <Button onClick={() => setOpen(true)} primary>{t('assignNic')}</Button>
 
         <Modal open={open} size="fullscreen">
             <Header content='Assigned VM Network Interfaces' />
@@ -81,12 +79,12 @@ const AssignVmModal = ({ intl, submitAction }) => {
                 <Input value={search} onChange={onChange} icon='search' placeholder='Search...' />
 
                 <div className='vm-block'>
-                    <ReturnVmTable modal vmInterfaces={result} checked={checked} toggle={toggle} disabledList={disabledList} />
+                    <ReturnVmTable t={t} modal vmInterfaces={result} checked={checked} toggle={toggle} disabledList={disabledList} />
                 </div>
                 <Modal.Actions align={'right'}>
-                    {intl.formatMessage(messages.selected, { count: checkedCount })}
-                    <Button onClick={handleClose}>{intl.formatMessage(messages.cancel)}</Button>
-                    <Button onClick={handleSubmit} primary type='submit' disabled={!checkedCount} >{intl.formatMessage(messages.save)}</Button>
+                    {t('selected', { count: checkedCount })}
+                    <Button onClick={handleClose}>{t('cancel')}</Button>
+                    <Button onClick={handleSubmit} primary type='submit' disabled={!checkedCount} >{t('save')}</Button>
                 </Modal.Actions>
             </Modal.Content>
         </Modal>
@@ -94,11 +92,11 @@ const AssignVmModal = ({ intl, submitAction }) => {
 };
 
 AssignVmModal.propTypes = {
-    intl: PropTypes.any,
+    t: PropTypes.func,
     // data: PropTypes.string,
     handleClose: PropTypes.func,
     handleSubmit: PropTypes.func,
     submitAction: PropTypes.func
 };
 
-export default injectIntl(AssignVmModal);
+export default AssignVmModal;

@@ -1,28 +1,32 @@
 import React, { useEffect } from 'react';
-import { Grid, Header, Loader } from 'semantic-ui-react';
-import { injectIntl } from 'react-intl';
+import { Grid, Loader } from 'semantic-ui-react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchNetwork, assignNicsToSecurityGroupAndFetch, fetchSecurityGroups, fetchSecurityGroup } from '../../AppActions';
-import ApiButton from '../../general/apiButton';
-import Network from '../../static/svgNetwork.svg';
-import NetworkModal from '../Networks/networkModal';
-import ReturnVmTable from './returnVmTable';
-import messages from '../../Messages';
+import {
+    fetchNetwork,
+    fetchSecurityGroups,
+    fetchSecurityGroup,
+    fetchProvider
+} from '../../AppActions';
+import NetworkDetailsContent from './networkDetailsContent';
 import PropTypes from 'prop-types';
-import ButtonBack from '../../general/buttonBack';
 import { networksPath } from '../../constants/routes';
-import { copyInfo } from '../../utilities/copyInfo';
-import DeleteModal from '../../general/deleteModal';
 import { withRouter } from 'react-router-dom';
+import ButtonBack from '../../general/buttonBack';
 
-const NetworkDetails = ({ intl, history }) => {
-    const { id, menuGroup } = useParams();
-    const currNetwork = useSelector(state => state.VpcStore.network);
-    const group = useSelector(state => state.VpcStore.group);
+const ContentPage = React.lazy(() => import('container/ContentPage'));
+
+const NetworkDetails = ({ t, history }) => {
+    const { id } = useParams();
+    const network = useSelector(state => state.VpcStore.network);
     const networkFetchStatus = useSelector(state => state.VpcStore.networkFetchStatus);
+    const group = useSelector(state => state.VpcStore.group);
+    const groupFetchStatus = useSelector(state => state.VpcStore.groupFetchStatus);
+    const providerId = useSelector(state => state.VpcStore.providerId);
+    const providerIdFetchStatus = useSelector(state => state.VpcStore.providerIdFetchStatus);
+    const user = useSelector(state => state.host.user);
 
-    window.goToRootRoute = () => history.push('/networks');
+    window.goToRootRoute = () => history.push('/vpc');
 
     const dispatch = useDispatch();
 
@@ -30,68 +34,30 @@ const NetworkDetails = ({ intl, history }) => {
         dispatch(fetchNetwork(id));
         dispatch(fetchSecurityGroups());
         dispatch(fetchSecurityGroup(id));
-    }, [dispatch, id]);
+        providerIdFetchStatus !== 'fulfilled' && dispatch(fetchProvider());
+    }, [dispatch, id, user]);
 
-    const assignNicsAndFetch = (nics) => {
-        const payload = {
-            action: 'add_to_port',
-            // eslint-disable-next-line camelcase
-            nic_ids: nics
-        };
-        dispatch(assignNicsToSecurityGroupAndFetch(payload, group.id));
-    };
-
-    let infoVM = networkFetchStatus === 'fulfilled' ?
-        <ReturnVmTable showModalButton
-            onModalSubmit={assignNicsAndFetch}
-            headerMesage={intl.formatMessage(messages.assignedVm)}
-            vmInterfaces={currNetwork.assignedVms} />
-        :
-        <Loader active inline='centered' className="firewall-loader" />;
-
-    return <>
-        <ButtonBack path={networksPath(menuGroup)} />
-        <Grid>
-            <Grid.Row verticalAlign='middle'>
-                <Grid.Column className='inline-cell-wrapper'>
-                    <div className='name-with-image-wrapper'>
-                        <img src={Network} />
-                        <div>
-                            {currNetwork.name}
-                        </div>
-                    </div>
-                </Grid.Column>
-                <Grid.Column ><ApiButton direction='right' element='network' item ={currNetwork} /></Grid.Column>
-                <Grid.Column width={2}><NetworkModal edit details network={currNetwork}/></Grid.Column>
-            </Grid.Row>
-            <Header className='network-details' as='h4'>{intl.formatMessage(messages.netDetails)}</Header>
-            <Grid.Row className='network-table' verticalAlign='middle'>
-                <Grid.Column className='network-table-title'>{intl.formatMessage(messages.subnet)}</Grid.Column>
-                <Grid.Column className='network-table-content'>
-                    {currNetwork.subnet || String.fromCharCode(8212)}{copyInfo(currNetwork.subnet)}
-                </Grid.Column>
-            </Grid.Row>
-            <Grid.Row verticalAlign='middle' className='network-table'>
-                <Grid.Column className='network-table-title'>{intl.formatMessage(messages.type)}</Grid.Column>
-                <Grid.Column className='network-table-content'>{currNetwork.type || String.fromCharCode(8212)}</Grid.Column>
-            </Grid.Row>
-            <Grid.Row verticalAlign='middle' className='network-table'>
-                <Grid.Column className='network-table-title'>DNS</Grid.Column>
-                <Grid.Column className='network-table-content'>{currNetwork.dns || String.fromCharCode(8212)}{copyInfo(currNetwork.dns)}</Grid.Column>
-            </Grid.Row>
-            {infoVM}
-            <Grid.Row verticalAlign='middle' className='network-delete'>
-                <Grid.Column width={2}><b>{intl.formatMessage(messages.delete).toUpperCase()}</b></Grid.Column>
-                <Grid.Column width={5}>{intl.formatMessage(messages.deleteVpsDetailsDesc)}</Grid.Column>
-                <Grid.Column width={2}><DeleteModal type='networks' button instance={currNetwork} /></Grid.Column>
-            </Grid.Row>
-        </Grid>
-    </>;
+    return (
+        <React.Suspense fallback={
+            <Loader active inline='centered' />
+        }>
+        <ContentPage
+            t={t}
+            statuses={[providerIdFetchStatus, networkFetchStatus]}
+            pageData={[network, group, providerId, user]}
+            componentDataList={NetworkDetailsContent}
+            noContentMessage={'noSecurityGroups'}
+        >
+        <Grid.Row className="content-page__header">
+            <ButtonBack back={t('back')} style={{ marginLeft: 15 }} path={networksPath()} />
+        </Grid.Row>
+    </ContentPage>
+    </React.Suspense>
+    )
 };
 
 NetworkDetails.propTypes = {
-    intl: PropTypes.any,
     history: PropTypes.any
 };
 
-export default injectIntl(withRouter(NetworkDetails));
+export default withRouter(NetworkDetails);

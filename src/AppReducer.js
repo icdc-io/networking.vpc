@@ -18,9 +18,30 @@ const initialState = Immutable({
     routeFetchStatus: '',
     routerId: '',
     providerId: '',
+    providerIdFetchStatus: '',
     allVms: [],
     allVmsFetchStatus: ''
 });
+
+const mapNetworksData = (payload) => {
+    const result = [];
+    payload.resources.forEach((item) => {
+        const networkData = {
+            name: item.name,
+            netId: item.id,
+            emsRef: item.ems_ref
+        };
+        item.cloud_subnets.forEach((subnet) => result.push({
+                id: subnet.id,
+                subnet: subnet.cidr,
+                type: subnet.network_protocol,
+                dns: subnet.dns_nameservers[0],
+                ...networkData
+        }));
+    });
+
+    return result;
+};
 
 export const VpcStore = (state = initialState, action) => {
     switch (action.type) {
@@ -31,7 +52,11 @@ export const VpcStore = (state = initialState, action) => {
         return state.set('assignedVmsFetchStatus', 'rejected');
     case `${ActionTypes.ASSIGNED_VMS_FETCH}_FULFILLED`:
         return Immutable.merge(state, {
-            assignedVms: action.payload,
+            assignedVms: action.payload.resources.map((item) => ({
+                subnetId: item.id,
+                netId: item.cloud_network_id,
+                vmsCount: item.assigned_vms.length
+            })),
             assignedVmsFetchStatus: 'fulfilled'
         });
 
@@ -41,7 +66,7 @@ export const VpcStore = (state = initialState, action) => {
         return state.set('networksFetchStatus', 'rejected');
     case `${ActionTypes.NETWORKS_FETCH}_FULFILLED`:
         return Immutable.merge(state, {
-            networks: action.payload,
+            networks: mapNetworksData(action.payload),
             networksFetchStatus: 'fulfilled'
         });
 
@@ -51,7 +76,14 @@ export const VpcStore = (state = initialState, action) => {
         return state.set('networkFetchStatus', 'rejected');
     case `${ActionTypes.NETWORK_FETCH}_FULFILLED`:
         return Immutable.merge(state, {
-            network: action.payload,
+            network: {
+                name: action.payload.cloud_network.name,
+                subnet: action.payload.cidr,
+                type: action.payload.network_protocol,
+                dns: action.payload.dns_nameservers[0],
+                assignedVms: action.payload.assigned_vms,
+                netId: action.payload.cloud_network_id
+            },
             networkFetchStatus: 'fulfilled'
         });
 
@@ -69,10 +101,16 @@ export const VpcStore = (state = initialState, action) => {
     case `${ActionTypes.SECURITY_GROUP_FETCH}_PENDING`:
         return state.set('groupFetchStatus', 'pending');
     case `${ActionTypes.SECURITY_GROUP_FETCH}_REJECTED`:
-        return state.set('groupsetchStatus', 'rejected');
+        return state.set('groupFetchStatus', 'rejected');
     case `${ActionTypes.SECURITY_GROUP_FETCH}_FULFILLED`:
         return Immutable.merge(state, {
-            group: action.payload,
+            group: {
+                id: action.payload.id,
+                ems: action.payload.ems_ref,
+                name: action.payload.name,
+                firewallRules: action.payload.firewall_rules,
+                assignedVms: action.payload.assigned_vms
+            },
             groupFetchStatus: 'fulfilled'
         });
 
@@ -82,14 +120,22 @@ export const VpcStore = (state = initialState, action) => {
         return state.set('routesFetchStatus', 'rejected');
     case `${ActionTypes.ROUTES_FETCH}_FULFILLED`:
         return Immutable.merge(state, {
-            routes: action.payload.routes,
-            routerId: action.payload.routerId,
+            routes: action.payload.resources[0].extra_attributes.routes,
+            routerId: action.payload.resources[0].id,
             routesFetchStatus: 'fulfilled'
         });
 
+    case `${ActionTypes.PROVIDER_ID_FETCH}_PENDING`:
+        return state.set('providerIdFetchStatus', 'pending');
+    case `${ActionTypes.PROVIDER_ID_FETCH}_REJECTED`:
+        return state.set('providerIdFetchStatus', 'rejected');
     case `${ActionTypes.PROVIDER_ID_FETCH}_FULFILLED`:
+        console.log('providerId')
+        console.log(action.payload)
+        console.log('providerId')
         return Immutable.merge(state, {
-            providerId: action.payload
+            providerId: action.payload.resources[0].id,
+            providerIdFetchStatus: 'fulfilled'
         });
 
     case `${ActionTypes.ALL_VMS_FETCH}_PENDING`:

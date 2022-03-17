@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Icon, Checkbox, Grid, Header, Input, Pagination } from 'semantic-ui-react';
+import { Table, Icon, Checkbox, Grid, Header, Input, Pagination, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import ApiButton from '../../general/apiButton';
 import TableHeader from '../../general/tableHeader';
 import AssignVmModal from './assignVmModal';
 import { onSearch } from '../../utilities/search';
-import messages from '../../Messages';
-import { injectIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
 
-const ReturnVmTable = ({ modal, vmInterfaces, intl, checked, toggle, showModalButton, onModalSubmit, onDelete, disabledList, group }) => {
+const ApiButton = React.lazy(() => import('container/ApiButton'));
+
+const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButton, onModalSubmit, onDelete, disabledList, group }) => {
     const [search, setSearch] = useState('');
     const [result, setResult] = useState([]);
     const [activePage, setActivePage] = useState(1);
     const [oldActivePage, setoldActivePage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [paginationMass, setPaginationMass] = useState([]);
+    const providerId = useSelector(state => state.VpcStore.providerId);
+    const user = useSelector(state => state.host.user);
 
     const getPaginationMass = () => {
         let paginationMassVar = [];
@@ -79,7 +81,18 @@ const ReturnVmTable = ({ modal, vmInterfaces, intl, checked, toggle, showModalBu
         // eslint-disable-next-line
         modal ? vmInterfacesCell.unshift(<Table.Cell key={vmInterface.nicId}><Checkbox onChange={toggle(vmInterface.nicId)} checked={checked[vmInterface.nicId]} disabled={disabledList[vmInterface.nicId]} /></Table.Cell>) :
             vmInterfacesCell.push(
-                <Table.Cell key={vmInterfacesCell.length + 1}><ApiButton firewallGroup={group} element='vmTable' item={vmInterface} /></Table.Cell>,
+                <Table.Cell key={vmInterfacesCell.length + 1}>
+                    <React.Suspense fallback={
+                        <Loader active inline='centered' />
+                    }>
+                    <ApiButton
+                        firewallGroup={group}
+                        element='vmTable'
+                        item={vmInterface}
+                        user={user}
+                        providerId={providerId} />
+                    </React.Suspense>
+                </Table.Cell>,
                 window.insights.getRole() === 'admin' && <Table.Cell key={vmInterfacesCell.length + 2}>
                     {onDelete && <Icon onClick={onDelete(vmInterface.nicId)} name='trash alternate' />}
                 </Table.Cell>
@@ -94,17 +107,19 @@ const ReturnVmTable = ({ modal, vmInterfaces, intl, checked, toggle, showModalBu
     ));
 
     return <>
-        <Header as='h4'>{intl.formatMessage(messages.assignedVm)} ({vmInterfaces.length})</Header>
+        <Header as='h4'>{t('assignedVm')} ({vmInterfaces.length})</Header>
         {!modal && <Grid.Row>
             <Grid.Column verticalAlign='middle' width={8}>
                 <Input value={search} onChange={onChange} icon='search'
-                    placeholder={intl.formatMessage(messages.search)}
+                    placeholder={t('search')}
                     disabled={vmInterfaces.length === 0} />
             </Grid.Column>
-            {showModalButton && <Grid.Column textAlign='right' width={8}><AssignVmModal submitAction={onModalSubmit} /></Grid.Column>}
+            {showModalButton && <Grid.Column textAlign='right' width={8}>
+                <AssignVmModal t={t} submitAction={onModalSubmit} />
+            </Grid.Column>}
         </Grid.Row>}
         <Table unstackable className="item-list">
-            <TableHeader headers={headers} />
+            <TableHeader t={t} headers={headers} />
             <Table.Body>{vmInterfacesRow}</Table.Body>
         </Table>
         {vmInterfaces.length > 9 &&
@@ -114,16 +129,16 @@ const ReturnVmTable = ({ modal, vmInterfaces, intl, checked, toggle, showModalBu
         }
         {vmInterfaces.length === 0 &&
             <Grid.Row className='pagination__novm'>
-                <Grid.Column className='novm-text'>{intl.formatMessage(messages.noAssignedVM)}</Grid.Column>
+                <Grid.Column className='novm-text'>{t('noAssignedVM')}</Grid.Column>
             </Grid.Row>
         }
     </>;
 };
 
 ReturnVmTable.propTypes = {
+    t: PropTypes.func,
     vmInterfaces: PropTypes.array,
     modal: PropTypes.bool,
-    intl: PropTypes.any,
     checked: PropTypes.any,
     toggle: PropTypes.func,
     showModalButton: PropTypes.bool,
@@ -133,4 +148,4 @@ ReturnVmTable.propTypes = {
     group: PropTypes.object
 };
 
-export default injectIntl(ReturnVmTable);
+export default ReturnVmTable;

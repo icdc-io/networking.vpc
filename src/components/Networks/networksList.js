@@ -1,18 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'semantic-ui-react';
-import { injectIntl } from 'react-intl';
-import messages from '../../Messages';
-import ApiButton from '../../general/apiButton';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Network from '../../static/svgNetwork.svg';
 import Loading from '../../static/spinner.gif';
 import { networkPath } from '../../constants/routes';
 import { copyInfo } from '../../utilities/copyInfo';
 import OptionsMenu from '../../general/optionsMenu';
+import { useSelector } from 'react-redux';
 
-const NetworksList = ({ items, intl }) => {
-    const { menuGroup } = useParams();
+const ApiButton = React.lazy(() => import('container/ApiButton'));
+
+const NetworksList = ({ t, items }) => {
+    const providerId = useSelector(state => state.VpcStore.providerId);
+    const user = useSelector(state => state.host.user);
+
     const emptyValue = String.fromCharCode(8212);
     const returnAsignedVM = (item) => {
         let vm = items[0].find(vm => vm.netId === item.netId);
@@ -30,29 +32,34 @@ const NetworksList = ({ items, intl }) => {
                         <img src={network.isLoading ? Loading : Network} />
                         <div>
                             {network.id ?
-                                <Link to={networkPath(network.id, menuGroup)}>{network.name}</Link>
+                                <Link to={networkPath(network.id)}>{network.name}</Link>
                                 : network.name
                             }
                         </div>
                     </div>
                 </Table.Cell>
-                <Table.Cell>{intl.formatMessage(messages.subnet)}: {network.subnet || emptyValue}
+                <Table.Cell>{t('subnet')}: {network.subnet || emptyValue}
                     {network.subnet && copyInfo(network.subnet)}
                 </Table.Cell>
-                <Table.Cell>{intl.formatMessage(messages.type)}: {network.type || emptyValue}</Table.Cell>
+                <Table.Cell>{t('type')}: {network.type || emptyValue}</Table.Cell>
                 <Table.Cell>DNS: {network.dns || emptyValue}{network.dns && copyInfo(network.dns)}</Table.Cell>
                 <Table.Cell textAlign='center'>
-                    {intl.formatMessage(messages.assignedNics)}: {
+                    {t('assignedNics')}: {
                         !returnAsignedVM(network) ? returnAsignedVM(network) :
-                            <Link to={networkPath(network.id, menuGroup)}>
+                            <Link to={networkPath(network.id)}>
                                 {returnAsignedVM(network)}
                             </Link>
                     }
                 </Table.Cell>
-                <Table.Cell textAlign='center'><ApiButton element='network' item={network} /></Table.Cell>
+                <Table.Cell textAlign='center'>
+                    <ApiButton element='network'
+                        item={network}
+                        user={user}
+                        providerId={providerId} />
+                </Table.Cell>
                 <Table.Cell collapsing textAlign='right'>
                     {(window.insights.getRole() === 'admin' || returnAsignedVM(network)) &&
-                        <OptionsMenu type='networks' instance={network} options={options} /> || ''}
+                        <OptionsMenu t={t} type='networks' instance={network} options={options} /> || ''}
                 </Table.Cell>
             </Table.Row>
         );
@@ -64,8 +71,8 @@ const NetworksList = ({ items, intl }) => {
 };
 
 NetworksList.propTypes = {
-    intl: PropTypes.any,
+    t: PropTypes.func,
     items: PropTypes.array
 };
 
-export default injectIntl(NetworksList);
+export default NetworksList;

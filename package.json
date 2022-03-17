@@ -51,7 +51,7 @@
     "workbox-webpack-plugin": "^6.4.2"
   },
   "dependencies": {
-    "@redhat-cloud-services/frontend-components-translations": "^3.2.3",
+    "axios": "^0.26.1",
     "cogo-toast": "https://github.com/Voloshch/cogo",
     "express": "^4.17.2",
     "ip-regex": "^5.0.0",

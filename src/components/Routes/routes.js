@@ -1,29 +1,36 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import ContentPage from '../../general/contentPage';
 import RouteModal from './routeModal';
 import RoutesList from './routesList';
-import { fetchRoutes } from '../../AppActions';
-import messages from '../../Messages';
+import { fetchRoutes, fetchProvider } from '../../AppActions';
 import { withRouter } from 'react-router-dom';
+import { Loader } from 'semantic-ui-react';
 
-const Routes = ({ history }) => {
+const ContentPage = React.lazy(() => import('container/ContentPage'));
+
+const Routes = ({ t, history }) => {
     const routes = useSelector(state => state.VpcStore.routes);
     const routesFetchStatus = useSelector(state => state.VpcStore.routesFetchStatus);
+    const providerIdFetchStatus = useSelector(state => state.VpcStore.providerIdFetchStatus);
     const user = useSelector(state => state.host.user);
 
-    window.goToRootRoute = () => history.push('/routes');
+    window.goToRootRoute = () => history.push('/vpc');
 
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(fetchRoutes());
+        providerIdFetchStatus !== 'fulfilled' && dispatch(fetchProvider());
     }, [dispatch, user]);
 
     return (
-        <ContentPage status={routesFetchStatus} pageData={routes} title={messages.routes}
-            componentDataList={RoutesList} componentModal={RouteModal} noContentMessage={messages.noRoutes}
+        <React.Suspense fallback={
+            <Loader active inline='centered' />
+        }>
+        <ContentPage t={t} statuses={[routesFetchStatus, providerIdFetchStatus]} pageData={routes} title={'routes'}
+            componentDataList={RoutesList} componentModal={RouteModal} noContentMessage={'noRoutes'}
         />
+        </React.Suspense>
     );
 };
 

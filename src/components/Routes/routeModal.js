@@ -3,11 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Modal, Header, Button, Dropdown } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import RouteForm from './routeForm';
-import { injectIntl } from 'react-intl';
-import messages from '../../Messages';
 import { createRouteActionAndFetch } from '../../AppActions';
 
-const RouteModal = ({ edit, route, intl }) => {
+const RouteModal = ({ t, edit, route }) => {
     const [open, setOpen] = useState(false);
     const routerId = useSelector(state => state.VpcStore.routerId);
     const oldSubnet = edit && route.destination;
@@ -56,13 +54,13 @@ const RouteModal = ({ edit, route, intl }) => {
         [handleClose, dispatch, routerId]
     );
 
-    const headerContent = edit ? intl.formatMessage(messages.editRoute) : intl.formatMessage(messages.createRoute);
+    const headerContent = edit ? t('editRoute') : t('createRoute');
 
     const buttonModal = edit ?
-        <Dropdown.Item text= {intl.formatMessage(messages.editRoute)} onClick={() => setOpen(true)} /> :
-        <Button onClick={() => setOpen(true)} primary>{intl.formatMessage(messages.createRoute)}</Button>;
+        <Dropdown.Item text= {t('editRoute')} onClick={() => setOpen(true)} /> :
+        <Button onClick={() => setOpen(true)} primary>{t('createRoute')}</Button>;
 
-    const routeForm = <RouteForm handleClose={handleClose} onSubmit={onSubmit} initialValues={edit && mapRouteToProps(route)} edit={edit} />;
+    const routeForm = <RouteForm t={t} handleClose={handleClose} onSubmit={onSubmit} initialValues={edit && mapRouteToProps(route)} edit={edit} />;
 
     return window.insights.getRole() === 'admin' && <>
         {buttonModal}
@@ -74,9 +72,9 @@ const RouteModal = ({ edit, route, intl }) => {
 };
 
 RouteModal.propTypes = {
+    t: PropTypes.func,
     edit: PropTypes.bool,
-    route: PropTypes.any,
-    intl: PropTypes.any
+    route: PropTypes.any
 };
 
-export default injectIntl(RouteModal);
+export default RouteModal;

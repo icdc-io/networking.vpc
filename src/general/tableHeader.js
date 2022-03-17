@@ -1,15 +1,14 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { Table } from 'semantic-ui-react';
-import messages from '../Messages';
-const TableHeader = ({ headers, colSizes, intl }) => {
+
+const TableHeader = ({ t, headers, colSizes }) => {
     const tableCells = headers.map((header, index) => {
         return (
             <Table.HeaderCell
                 key={index}
                 width={colSizes && colSizes[header]}>
-                {header && intl.formatMessage(messages[header])}
+                {header && t([header])}
             </Table.HeaderCell>
         );
     });
@@ -21,9 +20,9 @@ const TableHeader = ({ headers, colSizes, intl }) => {
 };
 
 TableHeader.propTypes = {
-    intl: PropTypes.any,
+    t: PropTypes.func,
     headers: PropTypes.array,
     colSizes: PropTypes.object
 };
 
-export default injectIntl(TableHeader);
+export default TableHeader;

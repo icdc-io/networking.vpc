@@ -1,21 +1,20 @@
 import React from 'react';
 import { Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
-import messages from '../Messages';
 
-const ButtonBack = ({ intl, path }) => {
+const ButtonBack = ({ back, path, style = {} }) => {
     return (
-        <Link to={path}>
-            <Button className="back back__top" labelPosition='left' icon='left chevron' content={intl.formatMessage(messages.back)} />
+        <Link style={style} to={path}>
+            <Button className="back back__top" labelPosition='left' icon='left chevron' content={back} />
         </Link>
     );
 };
 
 ButtonBack.propTypes = {
-    intl: PropTypes.any,
-    path: PropTypes.any
+    back: PropTypes.string,
+    path: PropTypes.string,
+    style: PropTypes.object
 };
 
-export default injectIntl(ButtonBack);
+export default ButtonBack;

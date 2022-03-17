@@ -364,10 +364,12 @@ module.exports = () => {
       new MiniCssExtractPlugin(),
       new ModuleFederationPlugin({
         name: 'vpc',
-        library: { type: 'var', name: 'vpc' },
         filename: 'remoteEntry.js',
         exposes: {
           './vpcMicrofrontend': './src/vpc.js',
+        },
+        remotes: {
+          container: (mode === 'development' ? 'mainComponent@http://localhost:8080/general.js' : 'mainComponent@http://localhost:8080/general.js')
         },
         shared: {
           react: {
