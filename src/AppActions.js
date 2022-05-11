@@ -2,13 +2,13 @@ import * as ActionTypes from './AppConstants';
 import API from './utilities/Api';
 import cogoToast from 'cogo-toast';
 
-const waitingForBaseUrl = () => {
-    const { locations } = window.insights.getUserInfo().external;
+const waitingForBaseUrl = async() => {
+    const data = await window.insights.getUserInfo();
     const location = window.insights.getLocation();
-    return locations[location];
+    return data.external.locations[location];
 };
 
-const base = (url) => waitingForBaseUrl() + `/api/compute/v1` + url;
+const base = async(url) => await waitingForBaseUrl() + `/api/compute/v1` + url;
 
 const notificationOptions = { position: 'top-right', hideAfter: 7 };
 
@@ -65,13 +65,25 @@ const expandHeaders = (headers) => {
     };
 };
 
-const fetchData = (url, headers, payload) => API.get(base(url), expandHeaders(headers), payload);
+const fetchData = async (url, headers, payload) => {
+    const response = API.get(await base(url), expandHeaders(headers), payload);
+    return response.data;
+};
 
-const createData = (url, headers, payload) => API.post(base(url), expandHeaders(headers), payload);
+const createData = async (url, headers, payload) => {
+    const response = API.post(await base(url), expandHeaders(headers), payload);
+    return response.data;
+};
 
-const updateData = (url, headers, payload) => API.put(base(url), payload, expandHeaders(headers));
+const updateData = (url, headers, payload) => {
+    const response = API.put(await base(url), payload, expandHeaders(headers));
+    return response.data;
+};
 
-const deleteData = (url, headers) => API.delete(base(url), expandHeaders(headers));
+const deleteData = (url, headers) => {
+    const response = API.delete(await base(url), expandHeaders(headers));
+    return response.data;
+};
 
 export const fetchNetworks = (options) => ({
     type: ActionTypes.NETWORKS_FETCH,
