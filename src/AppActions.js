@@ -75,12 +75,12 @@ const createData = async (url, headers, payload) => {
     return response.data;
 };
 
-const updateData = (url, headers, payload) => {
+const updateData = async(url, headers, payload) => {
     const response = API.put(await base(url), payload, expandHeaders(headers));
     return response.data;
 };
 
-const deleteData = (url, headers) => {
+const deleteData = async(url, headers) => {
     const response = API.delete(await base(url), expandHeaders(headers));
     return response.data;
 };
