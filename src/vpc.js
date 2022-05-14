@@ -12,7 +12,7 @@ const Vpc = ({ store, t }) => {
 
   return (
     <Provider store={store}>
-      <Router>
+      <Router basename={process.env.NODE_ENV === 'production' ? '/networking' : ''}>
         <NetworksOverview t={t} />
       </Router>
     </Provider>
