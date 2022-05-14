@@ -17,6 +17,7 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
     const [paginationMass, setPaginationMass] = useState([]);
     const providerId = useSelector(state => state.VpcStore.providerId);
     const user = useSelector(state => state.host.user);
+    const baseUrls = useSelector(state => state.host.baseUrls);
 
     const getPaginationMass = () => {
         let paginationMassVar = [];
@@ -90,7 +91,8 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
                         element='vmTable'
                         item={vmInterface}
                         user={user}
-                        providerId={providerId} />
+                        providerId={providerId}
+                        locationUrl={baseUrls[user.location]} />
                     </React.Suspense>
                 </Table.Cell>,
                 window.insights.getRole() === 'admin' && <Table.Cell key={vmInterfacesCell.length + 2}>

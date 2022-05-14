@@ -13,6 +13,7 @@ const RoutesList = ({ t, items }) => {
     const headers = ['subnet', 'gateway', 'type', '', ''];
     const providerId = useSelector(state => state.VpcStore.providerId);
     const user = useSelector(state => state.host.user);
+    const baseUrls = useSelector(state => state.host.baseUrls);
 
     const routeList = items.map((route, i) => {
         return (
@@ -29,7 +30,8 @@ const RoutesList = ({ t, items }) => {
                     <ApiButton element='route'
                         item ={route}
                         user={user}
-                        providerId={providerId} />
+                        providerId={providerId}
+                        locationUrl={baseUrls[user.location]} />
                 </Table.Cell>
                 <Table.Cell collapsing textAlign='right'>
                     {window.insights.getRole() === 'admin' && <OptionsMenu t={t} type='routes' instance={route} options={['delete']}/>}

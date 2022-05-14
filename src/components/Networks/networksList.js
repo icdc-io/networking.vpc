@@ -14,6 +14,7 @@ const ApiButton = React.lazy(() => import('container/ApiButton'));
 const NetworksList = ({ t, items }) => {
     const providerId = useSelector(state => state.VpcStore.providerId);
     const user = useSelector(state => state.host.user);
+    const baseUrls = useSelector(state => state.host.baseUrls);
 
     const emptyValue = String.fromCharCode(8212);
     const returnAsignedVM = (item) => {
@@ -55,7 +56,8 @@ const NetworksList = ({ t, items }) => {
                     <ApiButton element='network'
                         item={network}
                         user={user}
-                        providerId={providerId} />
+                        providerId={providerId}
+                        locationUrl={baseUrls[user.location]} />
                 </Table.Cell>
                 <Table.Cell collapsing textAlign='right'>
                     {(window.insights.getRole() === 'admin' || returnAsignedVM(network)) &&

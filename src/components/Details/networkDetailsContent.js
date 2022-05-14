@@ -3,7 +3,7 @@ import { Grid, Header } from 'semantic-ui-react';
 import {
     assignNicsToSecurityGroupAndFetch,
 } from '../../AppActions';
-// import ApiButton from '../../general/apiButton';
+import { useSelector } from 'react-redux';
 import Network from '../../static/svgNetwork.svg';
 import NetworkModal from '../Networks/networkModal';
 import ReturnVmTable from './returnVmTable';
@@ -14,6 +14,8 @@ import DeleteModal from '../../general/deleteModal';
 const ApiButton = React.lazy(() => import('container/ApiButton'));
 
 const NetworkDetailsContent = ({ t, items: [network, group, providerId, user] }) => {
+    const baseUrls = useSelector(state => state.host.baseUrls);
+
   const assignNicsAndFetch = (nics) => {
     const payload = {
         action: 'add_to_port',
@@ -39,7 +41,8 @@ const NetworkDetailsContent = ({ t, items: [network, group, providerId, user] })
                   element='network'
                   item={network}
                   user={user}
-                  providerId={providerId} />
+                  providerId={providerId}
+                  locationUrl={baseUrls[user.location]} />
           </Grid.Column>
           <Grid.Column width={2}><NetworkModal t={t} edit details network={network}/></Grid.Column>
       </Grid.Row>

@@ -66,22 +66,23 @@ const expandHeaders = (headers) => {
 };
 
 const fetchData = async (url, headers, payload) => {
-    const response = API.get(await base(url), expandHeaders(headers), payload);
+    const response = await API.get(await base(url), expandHeaders(headers), payload);
+    console.log(response)
     return response.data;
 };
 
 const createData = async (url, headers, payload) => {
-    const response = API.post(await base(url), expandHeaders(headers), payload);
+    const response = await API.post(await base(url), expandHeaders(headers), payload);
     return response.data;
 };
 
 const updateData = async(url, headers, payload) => {
-    const response = API.put(await base(url), payload, expandHeaders(headers));
+    const response = await API.put(await base(url), payload, expandHeaders(headers));
     return response.data;
 };
 
 const deleteData = async(url, headers) => {
-    const response = API.delete(await base(url), expandHeaders(headers));
+    const response = await API.delete(await base(url), expandHeaders(headers));
     return response.data;
 };
 
