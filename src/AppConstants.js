@@ -7,6 +7,7 @@ export const NETWORK_EDIT = 'NETWORK_EDIT';
 export const ASSIGNED_VMS_FETCH = 'ASSIGNED_VMS_FETCH';
 export const NETWORK_TEMP_ADD = 'NETWORK_TEMP_ADD';
 export const NETWORK_TEMP_REMOVE = 'NETWORK_TEMP_REMOVE';
+export const ASSIGN_NICS_TO_SECURITY_GROUP = 'ASSIGN_NICS_TO_SECURITY_GROUP';
 
 export const ASSIGNED_VMS = `/cloud_subnets?expand=resources&attributes=assigned_vms`;
 export const ALL_VMS_FETCH = 'ALL_VMS_FETCH';
@@ -25,7 +26,9 @@ export const SECURITY_GROUP_FETCH = 'SECURITY_GROUP_FETCH';
 export const SECURITY_GROUP_DELETE = 'SECURITY_GROUP_DELETE';
 export const SECURITY_GROUP_LOADER = 'SECURITY_GROUP_LOADER';
 export const UNASSIGN_NICS_FROM_SECURITY_GROUP = 'UNASSIGN_NICS_FROM_SECURITY_GROUP';
+export const CLOUD_SUBNETS_FETCH = 'SECURITY_GROUPS_FETCH';
 
+export const cloudSubnetsUrl = (id) => `/cloud_subnets/${id}`;
 export const getSecurityGroup = (id) => `/security_groups/${id}?expand=resources&attributes=firewall_rules,assigned_vms`;
 export const routerUrl = (id) => `/network_routers/${id}`;
 export const securityGroupsUrl = (id) => `/providers/${id}/security_groups`;

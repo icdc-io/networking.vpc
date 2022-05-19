@@ -29,7 +29,8 @@ const mapNetworksData = (payload) => {
         const networkData = {
             name: item.name,
             netId: item.id,
-            emsRef: item.ems_ref
+            emsRef: item.ems_ref,
+            type: item.type.split(':').reverse()[0]
         };
         item.cloud_subnets.forEach((subnet) => result.push({
                 id: subnet.id,

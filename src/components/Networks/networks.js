@@ -33,7 +33,7 @@ const Networks = ({ t, history }) => {
             <Loader active inline='centered' />
         }>
         <ContentPage t={t} statuses={[vmsFetchStatus, networksFetchStatus, providerIdFetchStatus]} pageData={networks.length ? [vms, networks] : []} title={'vpcNetworks'}
-            componentDataList={NetworksList} componentModal={NetworkModal} noContentMessage={'noNetworks'}
+            componentDataList={NetworksList} noContentMessage={'noNetworks'}
         />
         </React.Suspense>
     );

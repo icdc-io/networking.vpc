@@ -86,13 +86,12 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
                     <React.Suspense fallback={
                         <Loader active inline='centered' />
                     }>
-                    <ApiButton
-                        firewallGroup={group}
-                        element='vmTable'
-                        item={vmInterface}
-                        user={user}
-                        providerId={providerId}
-                        locationUrl={baseUrls[user.location]} />
+                        <ApiButton
+                            firewallGroup={group}
+                            element='vmTable'
+                            item={vmInterface}
+                            user={user}
+                            providerId={providerId} />
                     </React.Suspense>
                 </Table.Cell>,
                 window.insights.getRole() === 'admin' && <Table.Cell key={vmInterfacesCell.length + 2}>
@@ -126,7 +125,14 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
         </Table>
         {vmInterfaces.length > 9 &&
             <Grid.Row className='pagination__vm'>
-                <Pagination activePage={activePage} totalPages={totalPages} onPageChange={pageChange} />
+                <Pagination
+                    pointing
+                    secondary
+                    lastItem={null}
+                    firstItem={null}
+                    activePage={activePage}
+                    totalPages={totalPages}
+                    onPageChange={pageChange} />
             </Grid.Row>
         }
         {vmInterfaces.length === 0 &&

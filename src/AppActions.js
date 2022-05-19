@@ -188,7 +188,7 @@ export const fetchSecurityGroups = (options) => ({
 
 export const fetchSecurityGroup = (id) => ({
     type: ActionTypes.SECURITY_GROUP_FETCH,
-    payload: fetchData(ActionTypes.getSecurityGroup(id), {}, {})
+    payload: fetchData(ActionTypes.currentNetwork(id), {}, {})
 });
 
 export const deleteSecurityGroup = () => ({
@@ -237,6 +237,12 @@ export const unassignNicsToSecurityGroup = (payload, id) => ({
     type: ActionTypes.UNASSIGN_NICS_FROM_SECURITY_GROUP,
     payload: createData(ActionTypes.securityGroupUrl(id), {}, payload)
 });
+
+export const assignNicsToSecurityGroup = (payload, id) => {
+    return({
+    type: ActionTypes.ASSIGN_NICS_TO_SECURITY_GROUP,
+    payload: createData(ActionTypes.cloudSubnetsUrl(id), {}, payload)
+})};
 
 export const assignNicsToSecurityGroupAndFetch = (payload, id) => {
     return (dispatch) => {
