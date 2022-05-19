@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import RouteModal from './routeModal';
 import RoutesList from './routesList';
 import { fetchRoutes, fetchProvider } from '../../AppActions';
 import { withRouter } from 'react-router-dom';
@@ -28,7 +27,7 @@ const Routes = ({ t, history }) => {
             <Loader active inline='centered' />
         }>
         <ContentPage t={t} statuses={[routesFetchStatus, providerIdFetchStatus]} pageData={routes} title={'routes'}
-            componentDataList={RoutesList} componentModal={RouteModal} noContentMessage={'noRoutes'}
+            componentDataList={RoutesList} noContentMessage={'noRoutes'}
         />
         </React.Suspense>
     );

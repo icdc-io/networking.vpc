@@ -8,6 +8,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { networksPath } from '../constants/routes';
+import DangerousHTML from 'react-dangerous-html';
 
 const DeleteModal = ({ t, type, instance, icon, button, history }) => {
     const routerId = useSelector(state => state.VpcStore.routerId);
@@ -39,7 +40,7 @@ const DeleteModal = ({ t, type, instance, icon, button, history }) => {
             item: 'deleteVps',
             header: 'deleteVpsHeader',
             content: ['deleteVpsDesc'],
-            contentNamed: ['deleteVpsMessage', { name: <b>{instance.name}</b> }],
+            contentNamed: <DangerousHTML html={t('deleteVpsMessage', { name: `<b>${instance.name}</b>` })} />,
             deleteAction: useCallback(
                 (network) => {
                     const netId = network.netId;

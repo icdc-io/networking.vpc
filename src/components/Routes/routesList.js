@@ -1,21 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'semantic-ui-react';
+import { Table, Input } from 'semantic-ui-react';
 import { copyInfo } from '../../utilities/copyInfo';
 import TableHeader from '../../general/tableHeader';
 import OptionsMenu from '../../general/optionsMenu';
 import Route from '../../static/route.svg';
 import { useSelector } from 'react-redux';
+import { onSearch } from '../../utilities/search';
+import RouteModal from './routeModal';
 
 const ApiButton = React.lazy(() => import('container/ApiButton'));
 
 const RoutesList = ({ t, items }) => {
+    const [search, setSearch] = useState('');
+    const [filteredData, setFilteredData] = useState([]);
     const headers = ['subnet', 'gateway', 'type', '', ''];
     const providerId = useSelector(state => state.VpcStore.providerId);
     const user = useSelector(state => state.host.user);
-    const baseUrls = useSelector(state => state.host.baseUrls);
+    const value = {
+        destination: '10.220.0.0/16',
+        nexthop: '10.220.0.2'
+    };
 
-    const routeList = items.map((route, i) => {
+    useEffect(() => {
+        setFilteredData(onSearch(items, search));
+    }, [search, items]);
+
+    const routeList = filteredData.map((route, i) => {
         return (
             <Table.Row key={i}>
                 <Table.Cell className='name-with-image-wrapper'>
@@ -27,24 +38,45 @@ const RoutesList = ({ t, items }) => {
                 <Table.Cell>{route.nexthop} {copyInfo(route.nexthop)}</Table.Cell>
                 <Table.Cell>{'IPv4'}</Table.Cell>
                 <Table.Cell textAlign='center'>
-                    <ApiButton element='route'
-                        item ={route}
-                        user={user}
-                        providerId={providerId}
-                        locationUrl={baseUrls[user.location]} />
                 </Table.Cell>
                 <Table.Cell collapsing textAlign='right'>
-                    {window.insights.getRole() === 'admin' && <OptionsMenu t={t} type='routes' instance={route} options={['delete']}/>}
+                    {window.insights.getRole() === 'admin' && <OptionsMenu t={t} type='routes' instance={route} options={['delete']} />}
                 </Table.Cell>
             </Table.Row>
         );
     });
 
     return (
-        <Table unstackable>
-            <TableHeader t={t} headers={headers}/>
-            <Table.Body>{routeList}</Table.Body>
-        </Table>
+        <>
+            <div className='vpcDescription'>
+                <div>
+                    <p>{t('search')}</p>
+                    <Input
+                        icon='search'
+                        iconPosition='left'
+                        placeholder={t('searchField')}
+                        style={{ width: '600px', margin: '10px 0px 0px 0px' }}
+                        value={search}
+                        onChange={e => setSearch(e.currentTarget.value)}
+                    />
+                </div>
+                <div className='buttons-vpc'>
+                    <ApiButton element='route'
+                        item={value}
+                        user={user}
+                        providerId={providerId}
+                    />
+                    <RouteModal t={t} />
+                </div>
+            </div>
+            <Table unstackable basic='very'>
+                <TableHeader t={t} headers={headers} />
+                <Table.Body>{routeList}</Table.Body>
+            </Table>
+            {search && filteredData.length === 0 &&
+                <div className='empty-table'>{t('noSearchResults')}</div>
+            }
+        </>
     );
 };
 
