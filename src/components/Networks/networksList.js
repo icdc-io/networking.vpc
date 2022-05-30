@@ -54,7 +54,7 @@ const NetworksList = ({ t, items }) => {
                             <img src={network.isLoading ? Loading : Network} />
                             <div>
                                 {network.id ?
-                                    <Link to={networkPath(network.id)}>{network.type}</Link>
+                                    <Link to={networkPath(network.id)}>{network.fullName}</Link>
                                     : network.name
                                 }
                                 <p>{network.name}</p>
