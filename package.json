@@ -11,8 +11,7 @@
   "scripts": {
     "start": "NODE_ENV=development webpack serve",
     "build": "NODE_ENV=production webpack",
-    "dev": "webpack-dev-server --hot",
-    "server": "node src/server.js"
+    "dev": "webpack-dev-server --hot"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
@@ -53,7 +52,6 @@
   "dependencies": {
     "axios": "^0.26.1",
     "cogo-toast": "https://github.com/Voloshch/cogo",
-    "express": "^4.17.2",
     "ip-regex": "^5.0.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
