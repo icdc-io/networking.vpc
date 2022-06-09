@@ -119,10 +119,12 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
                 <AssignVmModal t={t} submitAction={onModalSubmit} />
             </Grid.Column>}
         </Grid.Row>}
-        <Table unstackable className="item-list">
-            <TableHeader t={t} headers={headers} />
-            <Table.Body>{vmInterfacesRow}</Table.Body>
-        </Table>
+        <div className='table-container'>
+            <Table unstackable className="item-list">
+                <TableHeader t={t} headers={headers} />
+                <Table.Body>{vmInterfacesRow}</Table.Body>
+            </Table>
+        </div>
         {vmInterfaces.length > 9 &&
             <Grid.Row className='pagination__vm'>
                 <Pagination

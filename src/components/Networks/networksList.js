@@ -40,8 +40,8 @@ const NetworksList = ({ t, items }) => {
 
     const tableHeader = ['name', 'subnet', 'type', 'dns', 'assignedVmNics', ''];
 
-    const tableHeaderCells = tableHeader.map((header) => (
-        <Table.Cell style={{ borderBottom: '1px solid #D1D1D1' }}><b>{t(header)}</b></Table.Cell>))
+    const tableHeaderCells = tableHeader.map((header, key) => (
+        <Table.Cell key={key} style={{ borderBottom: '1px solid #D1D1D1' }}><b>{t(header)}</b></Table.Cell>))
 
     const networkList = filteredData.map((network, index) => {
         // const options = !returnAsignedVM(network) ? ['edit', 'delete'] : ['edit', 'view'];
@@ -86,13 +86,12 @@ const NetworksList = ({ t, items }) => {
     return <>
         <div style={{ maxWidth: '600px' }}><p className='color--grey'>{t('vpcDescription')}</p></div>
         <div className='vpcDescription'>
-            <div>
+            <div className='search-block'>
                 <p>{t('search')}</p>
                 <Input
                     icon='search'
                     iconPosition='left'
                     placeholder={t('searchField')}
-                    style={{ width: '600px', margin: '10px 0px 0px 0px' }}
                     value={search}
                     onChange={e => setSearch(e.currentTarget.value)}
                 />
@@ -106,10 +105,16 @@ const NetworksList = ({ t, items }) => {
                 <NetworkModal t={t} />
             </div>
         </div>
-        <Table unstackable basic='very'>
-            <Table.Header>{tableHeaderCells}</Table.Header>
-            <Table.Body>{networkList}</Table.Body>
-        </Table>
+        <div className='table-container'>
+            <Table unstackable basic='very'>
+                <Table.Header>
+                    <Table.Row>
+                        {tableHeaderCells}
+                    </Table.Row>
+                </Table.Header>
+                <Table.Body>{networkList}</Table.Body>
+            </Table>
+        </div>
         {search && filteredData.length === 0 &&
             <div className='empty-table'>{t('noSearchResults')}</div>
         }

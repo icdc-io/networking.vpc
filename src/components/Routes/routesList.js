@@ -55,7 +55,6 @@ const RoutesList = ({ t, items }) => {
                         icon='search'
                         iconPosition='left'
                         placeholder={t('searchField')}
-                        style={{ width: '600px', margin: '10px 0px 0px 0px' }}
                         value={search}
                         onChange={e => setSearch(e.currentTarget.value)}
                     />
@@ -69,10 +68,12 @@ const RoutesList = ({ t, items }) => {
                     <RouteModal t={t} />
                 </div>
             </div>
-            <Table unstackable basic='very'>
-                <TableHeader t={t} headers={headers} />
-                <Table.Body>{routeList}</Table.Body>
-            </Table>
+            <div className='table-container'>
+                <Table unstackable basic='very'>
+                    <TableHeader t={t} headers={headers} />
+                    <Table.Body>{routeList}</Table.Body>
+                </Table>
+            </div>
             {search && filteredData.length === 0 &&
                 <div className='empty-table'>{t('noSearchResults')}</div>
             }
