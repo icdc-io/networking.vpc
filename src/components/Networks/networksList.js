@@ -18,6 +18,7 @@ const NetworksList = ({ t, items }) => {
     const [filteredData, setFilteredData] = useState([]);
     const providerId = useSelector(state => state.VpcStore.providerId);
     const user = useSelector(state => state.host.user);
+    const baseUrls = useSelector(state => state.host.baseUrls);
     const value = {
         dns: '213.222.50.226',
         emsRef: 'b9637c1d-71ee-4372-b6c9-52e1ab4e8089',
@@ -101,6 +102,7 @@ const NetworksList = ({ t, items }) => {
                     item={value}
                     user={user}
                     providerId={providerId}
+                    locationUrl={baseUrls[user.location]}
                 />
                 <NetworkModal t={t} />
             </div>

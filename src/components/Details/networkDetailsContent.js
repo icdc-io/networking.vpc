@@ -15,6 +15,7 @@ import { useParams } from 'react-router-dom';
 const ApiButton = React.lazy(() => import('container/ApiButton'));
 
 const NetworkDetailsContent = ({ t, items: [network, group, providerId, user] }) => {
+    const baseUrls = useSelector(state => state.host.baseUrls);
     const dispatch = useDispatch();
     const { id } = useParams();
 
@@ -29,7 +30,7 @@ const NetworkDetailsContent = ({ t, items: [network, group, providerId, user] })
 
     return (
         <Grid>
-            <Grid.Row verticalAlign='middle'>
+            <Grid.Row>
                 <Grid.Column className='inline-cell-wrapper'>
                     <div className='name-with-image-wrapper'>
                         <img src={Network} />
@@ -43,22 +44,23 @@ const NetworkDetailsContent = ({ t, items: [network, group, providerId, user] })
                         element='network'
                         item={network}
                         user={user}
-                        providerId={providerId} />
+                        providerId={providerId}
+                        locationUrl={baseUrls[user.location]} />
                 </Grid.Column>
                 <Grid.Column width={2}><NetworkModal t={t} edit details network={network} /></Grid.Column>
             </Grid.Row>
             <Header className='network-details' as='h4'>{t('netDetails')}</Header>
-            <Grid.Row className='network-table' verticalAlign='middle'>
+            <Grid.Row className='network-table'>
                 <Grid.Column className='network-table-title'>{t('subnet')}</Grid.Column>
                 <Grid.Column className='network-table-content'>
                     {network.subnet || String.fromCharCode(8212)}{copyInfo(network.subnet)}
                 </Grid.Column>
             </Grid.Row>
-            <Grid.Row verticalAlign='middle' className='network-table'>
+            <Grid.Row className='network-table'>
                 <Grid.Column className='network-table-title'>{t('type')}</Grid.Column>
                 <Grid.Column className='network-table-content'>{network.type || String.fromCharCode(8212)}</Grid.Column>
             </Grid.Row>
-            <Grid.Row verticalAlign='middle' className='network-table'>
+            <Grid.Row className='network-table'>
                 <Grid.Column className='network-table-title'>DNS</Grid.Column>
                 <Grid.Column className='network-table-content'>{network.dns || String.fromCharCode(8212)}{copyInfo(network.dns)}</Grid.Column>
             </Grid.Row>
@@ -68,11 +70,13 @@ const NetworkDetailsContent = ({ t, items: [network, group, providerId, user] })
                 headerMesage={t('assignedVm')}
                 vmInterfaces={network.assignedVms}
                 group={group} />
-            <Grid.Row verticalAlign='middle' className='network-delete'>
-                <Grid.Column width={2}><b>{t('delete').toUpperCase()}</b></Grid.Column>
-                <Grid.Column width={5}>{t('deleteVpsDetailsDesc')}</Grid.Column>
-                <Grid.Column width={2}><DeleteModal t={t} type='networks' button instance={network} /></Grid.Column>
-            </Grid.Row>
+            <div className='network-delete'>
+                <div className='network-delete_desc'>
+                    <div><b>{t('delete').toUpperCase()}</b></div>
+                    <div>{t('deleteVpsDetailsDesc')}</div>
+                </div>
+                <div><DeleteModal t={t} type='networks' button instance={network} /></div>
+            </div>
         </Grid>
     )
 };
