@@ -17,6 +17,7 @@ const RoutesList = ({ t, items }) => {
     const headers = ['subnet', 'gateway', 'type', '', ''];
     const providerId = useSelector(state => state.VpcStore.providerId);
     const user = useSelector(state => state.host.user);
+    const baseUrls = useSelector(state => state.host.baseUrls);
     const value = {
         destination: '10.220.0.0/16',
         nexthop: '10.220.0.2'
@@ -64,6 +65,7 @@ const RoutesList = ({ t, items }) => {
                         item={value}
                         user={user}
                         providerId={providerId}
+                        locationUrl={baseUrls[user.location]}
                     />
                     <RouteModal t={t} />
                 </div>
