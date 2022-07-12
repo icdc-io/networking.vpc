@@ -95,7 +95,7 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
                             locationUrl={baseUrls[user.location]}/>
                     </React.Suspense>
                 </Table.Cell>,
-                window.insights.getRole() === 'admin' && <Table.Cell key={vmInterfacesCell.length + 2}>
+                user.role === 'admin' && <Table.Cell key={vmInterfacesCell.length + 2}>
                     {onDelete && <Icon onClick={onDelete(vmInterface.nicId)} name='trash alternate' />}
                 </Table.Cell>
             );

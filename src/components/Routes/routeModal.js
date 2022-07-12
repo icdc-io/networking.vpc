@@ -9,6 +9,7 @@ const RouteModal = ({ t, edit, route }) => {
     const [open, setOpen] = useState(false);
     const routerId = useSelector(state => state.VpcStore.routerId);
     const oldSubnet = edit && route.destination;
+    const user = useSelector(state => state.host.user);
 
     const dispatch = useDispatch();
 
@@ -62,7 +63,7 @@ const RouteModal = ({ t, edit, route }) => {
 
     const routeForm = <RouteForm t={t} handleClose={handleClose} onSubmit={onSubmit} initialValues={edit && mapRouteToProps(route)} edit={edit} />;
 
-    return window.insights.getRole() === 'admin' && <>
+    return user.role === 'admin' && <>
         {buttonModal}
         <Modal open={open} size={'tiny'} onSubmit={onSubmit} onClose={handleClose} closeIcon>
             <Header content={headerContent} onClick={handleClose}  />
