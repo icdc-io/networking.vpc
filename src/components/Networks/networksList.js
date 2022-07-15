@@ -76,7 +76,7 @@ const NetworksList = ({ t, items }) => {
                         }
                     </Table.Cell>
                     <Table.Cell collapsing textAlign='right'>
-                        {(window.insights.getRole() === 'admin' || returnAsignedVM(network)) &&
+                        {(user.role === 'admin' || returnAsignedVM(network)) &&
                             <OptionsMenu t={t} type='networks' instance={network} options={options} /> || ''}
                     </Table.Cell>
                 </Table.Row>

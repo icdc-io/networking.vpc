@@ -86,7 +86,7 @@ const NetworkModal = ({ t, network, edit, details }) => {
         //     <Button onClick={() => setOpen(true)} basic compact size='tiny' color='black' content={t('editVps)}/> :
         !details && <Dropdown.Item text={t('editVps')} onClick={() => setOpen(true)} /> :
         <Button onClick={() => setOpen(true)} primary>{t('createVps')}</Button>;
-    return window.insights.getRole() === 'admin' && <>
+    return user.role === 'admin' && <>
         {buttonModal}
         <Modal open={open} size="tiny" onSubmit={onSubmit} onClose={handleClose}>
             <Header content={headerContent} />

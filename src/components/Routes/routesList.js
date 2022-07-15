@@ -41,7 +41,7 @@ const RoutesList = ({ t, items }) => {
                 <Table.Cell textAlign='center'>
                 </Table.Cell>
                 <Table.Cell collapsing textAlign='right'>
-                    {window.insights.getRole() === 'admin' && <OptionsMenu t={t} type='routes' instance={route} options={['delete']} />}
+                    {user.role === 'admin' && <OptionsMenu t={t} type='routes' instance={route} options={['delete']} />}
                 </Table.Cell>
             </Table.Row>
         );

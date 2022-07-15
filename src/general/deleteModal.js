@@ -13,6 +13,7 @@ import DangerousHTML from 'react-dangerous-html';
 const DeleteModal = ({ t, type, instance, icon, button, history }) => {
     const routerId = useSelector(state => state.VpcStore.routerId);
     const providerId = useSelector(state => state.VpcStore.providerId);
+    const user = useSelector(state => state.host.user);
     const [isVisible, setIsVisible] = useState(false);
     const dispatch = useDispatch();
 
@@ -86,7 +87,7 @@ const DeleteModal = ({ t, type, instance, icon, button, history }) => {
             <Dropdown.Item onClick={showModal} className='delete'>{t(types[type].item)}</Dropdown.Item>;
 
     return (
-        window.insights.getRole() === 'admin' && <>
+        user.role === 'admin' && <>
             {buttonModal}
             <Modal open={isVisible} size='mini' onClick={closeModal} closeIcon>
                 <Header as='h3' content={t(types[type].header)} />

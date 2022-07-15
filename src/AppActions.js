@@ -1,14 +1,6 @@
 import * as ActionTypes from './AppConstants';
-import API from './utilities/Api';
+import { fetchData, createData } from 'container/Api';
 import cogoToast from 'cogo-toast';
-
-const waitingForBaseUrl = async() => {
-    const data = await window.insights.getUserInfo();
-    const location = window.insights.getLocation();
-    return data.external.locations[location];
-};
-
-const base = async(url) => await waitingForBaseUrl() + `/api/compute/v1` + url;
 
 const notificationOptions = { position: 'top-right', hideAfter: 7 };
 
@@ -52,68 +44,36 @@ const successNotification = (msg) =>
 export const infoNotification = (msg) =>
     cogoToast.info(msg, notificationOptions);
 
-const expandHeaders = (headers) => {
-    const account = window.insights.getAccount();
-    const role = window.insights.getRole();
-
-    return {
-        ...headers,
-        Authorization: `Bearer ${window.insights.getToken()}`,
-        X_MIQ_GROUP: `${account.toLowerCase()}.${role.toLowerCase()}`,
-        'x-icdc-role': role,
-        'x-icdc-account': account
-    };
-};
-
-const fetchData = async (url, headers, payload) => {
-    const response = await API.get(await base(url), expandHeaders(headers), payload);
-    console.log(response)
-    return response.data;
-};
-
-const createData = async (url, headers, payload) => {
-    const response = await API.post(await base(url), expandHeaders(headers), payload);
-    return response.data;
-};
-
-const updateData = async(url, headers, payload) => {
-    const response = await API.put(await base(url), payload, expandHeaders(headers));
-    return response.data;
-};
-
-const deleteData = async(url, headers) => {
-    const response = await API.delete(await base(url), expandHeaders(headers));
-    return response.data;
-};
+const getFullPath = (url) => '/api/compute/v1' + url;
 
 export const fetchNetworks = (options) => ({
     type: ActionTypes.NETWORKS_FETCH,
-    payload: fetchData(ActionTypes.NETWORKS_FETCH_URL, {}, options)
+    payload: fetchData(getFullPath(ActionTypes.NETWORKS_FETCH_URL), options)
 });
 
 export const fetchVMs = (options) => ({
     type: ActionTypes.ASSIGNED_VMS_FETCH,
-    payload: fetchData(ActionTypes.ASSIGNED_VMS, {}, options)
+    payload: fetchData(getFullPath(ActionTypes.ASSIGNED_VMS), options)
 });
 
-export const fetchAllVMs = (options) => ({
+export const fetchAllVMs = () => ({
     type: ActionTypes.ALL_VMS_FETCH,
-    payload: fetchData(ActionTypes.ALL_VMS_URL, {}, options)
+    payload: fetchData(getFullPath(ActionTypes.ALL_VMS_URL))
 });
 
 export const fetchNetwork = (id) => ({
     type: ActionTypes.NETWORK_FETCH,
-    payload: fetchData(ActionTypes.currentNetwork(id), {}, {})
+    payload: fetchData(getFullPath(ActionTypes.currentNetwork(id)))
 });
 
 export const fetchProvider = () => ({
     type: ActionTypes.PROVIDER_ID_FETCH,
-    payload: fetchData(ActionTypes.PROVIDER_ID_URL, {}, {})
+    payload: fetchData(getFullPath(ActionTypes.PROVIDER_ID_URL))
 });
 
 export const createNetwork = (payload, id) => ({
     type: ActionTypes.NETWORK_CREATE,
-    payload: createData(ActionTypes.networksUrl(id), {}, payload)
+    payload: createData(getFullPath(ActionTypes.networksUrl(id)), payload)
 });
 
 const addNetwork = (payload) => ({
@@ -151,7 +111,7 @@ export const createNetworkActionAndFetch = (payload, id) => {
 
 export const editNetwork = (payload, providerId) => ({
     type: ActionTypes.NETWORK_EDIT,
-    payload: createData(ActionTypes.networkUrl(providerId), {}, payload)
+    payload: createData(getFullPath(ActionTypes.networkUrl(providerId)), payload)
 });
 
 export const editNetworkActionAndFetch = (payload, providerId) => {
@@ -167,7 +127,7 @@ export const editNetworkActionAndFetch = (payload, providerId) => {
 
 export const deleteNetwork = (payload, providerId) => ({
     type: ActionTypes.NETWORK_DELETE,
-    payload: createData(ActionTypes.networkUrl(providerId), {}, payload)
+    payload: createData(getFullPath(ActionTypes.networkUrl(providerId)), payload)
 });
 
 export const deleteNetworkActionAndFetch = (payload, providerId) => {
@@ -181,14 +141,14 @@ export const deleteNetworkActionAndFetch = (payload, providerId) => {
     };
 };
 
-export const fetchSecurityGroups = (options) => ({
+export const fetchSecurityGroups = () => ({
     type: ActionTypes.SECURITY_GROUPS_FETCH,
-    payload: fetchData(ActionTypes.SECURITY_GROUPS_FETCH_URL, {}, options)
+    payload: fetchData(getFullPath(ActionTypes.SECURITY_GROUPS_FETCH_URL))
 });
 
 export const fetchSecurityGroup = (id) => ({
     type: ActionTypes.SECURITY_GROUP_FETCH,
-    payload: fetchData(ActionTypes.currentNetwork(id), {}, {})
+    payload: fetchData(getFullPath(ActionTypes.currentNetwork(id)))
 });
 
 export const deleteSecurityGroup = () => ({
@@ -196,14 +156,14 @@ export const deleteSecurityGroup = () => ({
     payload: successNotification('')
 });
 
-export const fetchRoutes = (options) => ({
+export const fetchRoutes = () => ({
     type: ActionTypes.ROUTES_FETCH,
-    payload: fetchData(ActionTypes.ROUTES_FETCH_URL, {}, options)
+    payload: fetchData(getFullPath(ActionTypes.ROUTES_FETCH_URL))
 });
 
 export const createRoute = (payload, routerId) => ({
     type: ActionTypes.ROUTE_CREATE,
-    payload: createData(ActionTypes.routerUrl(routerId), {}, payload)
+    payload: createData(getFullPath(ActionTypes.routerUrl(routerId)), payload)
 });
 
 export const createRouteActionAndFetch = (payload, routerId) => {
@@ -219,7 +179,7 @@ export const createRouteActionAndFetch = (payload, routerId) => {
 
 export const deleteRoute = (payload, routerId) => ({
     type: ActionTypes.ROUTE_DELETE,
-    payload: createData(ActionTypes.routerUrl(routerId), {}, payload)
+    payload: createData(getFullPath(ActionTypes.routerUrl(routerId)), payload)
 });
 
 export const deleteRouteActionAndFetch = (payload, routerId) => {
@@ -235,13 +195,13 @@ export const deleteRouteActionAndFetch = (payload, routerId) => {
 
 export const unassignNicsToSecurityGroup = (payload, id) => ({
     type: ActionTypes.UNASSIGN_NICS_FROM_SECURITY_GROUP,
-    payload: createData(ActionTypes.securityGroupUrl(id), {}, payload)
+    payload: createData(getFullPath(ActionTypes.securityGroupUrl(id)), payload)
 });
 
 export const assignNicsToSecurityGroup = (payload, id) => {
     return({
     type: ActionTypes.ASSIGN_NICS_TO_SECURITY_GROUP,
-    payload: createData(ActionTypes.cloudSubnetsUrl(id), {}, payload)
+    payload: createData(getFullPath(ActionTypes.cloudSubnetsUrl(id)), payload)
 })};
 
 export const assignNicsToSecurityGroupAndFetch = (payload, id) => {
