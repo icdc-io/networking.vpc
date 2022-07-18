@@ -23,7 +23,7 @@ const NetworkDetailsContent = ({ t, items: [network, group, providerId, user] })
         const payload = {
             action: 'additional_nics',
             // eslint-disable-next-line camelcase
-            nic_ids: nics
+            vms_ids: nics
         };
         dispatch(assignNicsToSecurityGroupAndFetch(payload, id));
     };
