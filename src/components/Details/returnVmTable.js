@@ -80,7 +80,7 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
         });
 
         // eslint-disable-next-line
-        modal ? vmInterfacesCell.unshift(<Table.Cell key={vmInterface.nicId}><Checkbox onChange={toggle(vmInterface.nicId)} checked={checked[vmInterface.nicId]} disabled={disabledList[vmInterface.nicId]} /></Table.Cell>) :
+        modal ? vmInterfacesCell.unshift(<Table.Cell key={vmInterface.nicId}><Checkbox onChange={toggle(vmInterface.vmId)} checked={checked[vmInterface.nicId]} disabled={disabledList[vmInterface.nicId]} /></Table.Cell>) :
             vmInterfacesCell.push(
                 <Table.Cell key={vmInterfacesCell.length + 1}>
                     <React.Suspense fallback={
