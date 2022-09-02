@@ -48,6 +48,10 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
     }, [vmInterfaces]);
 
     useEffect(() => {
+        paginationMass.length < 1 && setActivePage(1)
+    }, [paginationMass]);
+
+    useEffect(() => {
         setResult(onSearch(vmInterfaces, search));
     }, [search, activePage, totalPages]);
 
