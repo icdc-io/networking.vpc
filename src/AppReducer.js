@@ -8,6 +8,7 @@ const initialState = Immutable({
     networksFetchStatus: '',
     assignedVms: [],
     assignedVmsFetchStatus: '',
+    unassignedVmsFetchStatus: '',
     network: {},
     networkFetchStatus: '',
     group: {},
@@ -60,6 +61,13 @@ export const VpcStore = (state = initialState, action) => {
             })),
             assignedVmsFetchStatus: 'fulfilled'
         });
+
+    case `${ActionTypes.UNASSIGN_NICS_FROM_SECURITY_GROUP}_PENDING`:
+        return state.set('unassignedVmsFetchStatus', 'pending');
+    case `${ActionTypes.UNASSIGN_NICS_FROM_SECURITY_GROUP}_REJECTED`:
+        return state.set('unassignedVmsFetchStatus', 'rejected');
+    case `${ActionTypes.UNASSIGN_NICS_FROM_SECURITY_GROUP}_FULFILLED`:
+        return state.set('unassignedVmsFetchStatus', 'fulfilled');
 
     case `${ActionTypes.NETWORKS_FETCH}_PENDING`:
         return state.set('networksFetchStatus', 'pending');

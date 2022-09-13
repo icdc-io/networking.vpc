@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Header } from 'semantic-ui-react';
 import {
-    assignNicsToSecurityGroupAndFetch,
+    assignNicsToSecurityGroupAndFetch, unassignNicsFromSecurityGroupAndFetch, 
 } from '../../AppActions';
 import Network from '../../static/svgNetwork.svg';
 import NetworkModal from '../Networks/networkModal';
@@ -26,6 +26,15 @@ const NetworkDetailsContent = ({ t, items: [network, group, providerId, user] })
             vms_ids: nics
         };
         dispatch(assignNicsToSecurityGroupAndFetch(payload, id));
+    };
+
+    const deleteNicAndFetch = nicId => () => {
+        const payload = {
+            action: 'remove_nics',
+            // eslint-disable-next-line camelcase
+            nics: {VM_UUID:[nicId]}
+        };
+        dispatch(unassignNicsFromSecurityGroupAndFetch(payload, id))
     };
 
     return (
@@ -69,7 +78,8 @@ const NetworkDetailsContent = ({ t, items: [network, group, providerId, user] })
                 onModalSubmit={assignNicsAndFetch}
                 headerMesage={t('assignedVm')}
                 vmInterfaces={network.assignedVms}
-                group={group} />
+                group={group}
+                onDelete={deleteNicAndFetch} />
             <div className='network-delete'>
                 <div className='network-delete_desc'>
                     <div><b>{t('delete').toUpperCase()}</b></div>
