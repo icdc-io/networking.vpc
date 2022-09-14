@@ -18,6 +18,7 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
     const providerId = useSelector(state => state.VpcStore.providerId);
     const user = useSelector(state => state.host.user);
     const baseUrls = useSelector(state => state.host.baseUrls);
+    const unassignedVmsFetchStatus = useSelector(state => state.VpcStore.unassignedVmsFetchStatus);
 
     const getPaginationMass = () => {
         let paginationMassVar = [];
@@ -92,15 +93,15 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
                     }>
                         <ApiButton
                             firewallGroup={group}
-                            element='vmTable'
+                            element='vmNetworkTable'
                             item={vmInterface}
                             user={user}
                             providerId={providerId} 
                             locationUrl={baseUrls[user.location]}/>
                     </React.Suspense>
                 </Table.Cell>,
-                user.role === 'admin' && <Table.Cell key={vmInterfacesCell.length + 2}>
-                    {onDelete && <Icon onClick={onDelete(vmInterface.nicId)} name='trash alternate' />}
+                user.role === 'admin' && <Table.Cell key={vmInterfacesCell.length + 2} style={{ textAlign: 'center' }}>
+                    {onDelete && <Icon onClick={onDelete(vmInterface.nicId)} name='trash alternate' disabled={unassignedVmsFetchStatus === 'pending'}/>}
                 </Table.Cell>
             );
 

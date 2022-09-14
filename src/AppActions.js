@@ -195,8 +195,22 @@ export const deleteRouteActionAndFetch = (payload, routerId) => {
 
 export const unassignNicsToSecurityGroup = (payload, id) => ({
     type: ActionTypes.UNASSIGN_NICS_FROM_SECURITY_GROUP,
-    payload: createData(getFullPath(ActionTypes.securityGroupUrl(id)), payload)
+    payload: createData(getFullPath(ActionTypes.cloudSubnetsUrl(id)), payload)
 });
+
+export const unassignNicsFromSecurityGroupAndFetch = (payload, id) => {
+    return (dispatch) => {
+        infoNotification('Unassigning NICs...');
+        const response = dispatch(unassignNicsToSecurityGroup(payload, id));
+
+        response.then(() => {
+            dispatch(fetchSecurityGroup(id));
+            successNotification('');
+        }, error => {
+            errorNotification(error);
+        });
+    };
+};
 
 export const assignNicsToSecurityGroup = (payload, id) => {
     return({
