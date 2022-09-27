@@ -28,11 +28,11 @@ const NetworkDetailsContent = ({ t, items: [network, group, providerId, user] })
         dispatch(assignNicsToSecurityGroupAndFetch(payload, id));
     };
 
-    const deleteNicAndFetch = nicId => () => {
+    const deleteNicAndFetch = vmInterface => () => {
         const payload = {
             action: 'remove_nics',
             // eslint-disable-next-line camelcase
-            nics: {VM_UUID:[nicId]}
+            nics: {[vmInterface.vmId]:[vmInterface.nicId]}
         };
         dispatch(unassignNicsFromSecurityGroupAndFetch(payload, id))
     };

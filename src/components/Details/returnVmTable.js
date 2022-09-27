@@ -101,7 +101,7 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
                     </React.Suspense>
                 </Table.Cell>,
                 user.role === 'admin' && <Table.Cell key={vmInterfacesCell.length + 2} style={{ textAlign: 'center' }}>
-                    {onDelete && <Icon onClick={onDelete(vmInterface.nicId)} name='trash alternate' disabled={unassignedVmsFetchStatus === 'pending'}/>}
+                    {onDelete && <Icon onClick={onDelete(vmInterface)} name='trash alternate' disabled={unassignedVmsFetchStatus === 'pending'}/>}
                 </Table.Cell>
             );
 
