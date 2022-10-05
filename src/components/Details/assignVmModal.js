@@ -33,21 +33,17 @@ const AssignVmModal = ({ t, submitAction }) => {
     useEffect(() => {
         const nics = [];
         for (let vm of allVms) {
-            for (let nic of vm.nics) {
                 nics.push({
-                    nic: nic.device_name,
-                    nicId: nic.uid_ems,
                     service: vm.service?.name,
                     vmName: vm.name,
                     vmId: vm.id,
-                    mac: nic.address
+                    nics: vm.nics?.length
                 });
 
                 // disable vms which were created but never started
                 if (!vm.boot_time) {
-                    setDisabledList({ ...disabledList, [nic.uid_ems]: true });
+                    setDisabledList({ ...disabledList, [vm.uid_ems]: true });
                 }
-            }
         }
 
         setNicsBasedVmList(nics);
@@ -73,8 +69,8 @@ const AssignVmModal = ({ t, submitAction }) => {
         <Button onClick={() => setOpen(true)} primary>{t('assignNic')}</Button>
 
         <Modal open={open} size="fullscreen">
-            <Header content='Assigned VM Network Interfaces' />
-
+            <Header content={t('selectAssignetVMS')} />
+           
             <Modal.Content>
                 <Input value={search} onChange={onChange} icon='search' placeholder='Search...' />
 
