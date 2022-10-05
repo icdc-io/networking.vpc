@@ -71,8 +71,7 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
         }
     }, [result, activePage, totalPages]);
 
-    const nameCells = ['nic', 'service', 'vmName', 'vmId', 'mac', 'ipv4', 'ipv6'];
-    modal && nameCells.splice(5);
+    const nameCells = modal ? ['vmName', 'service', 'vmId', 'nics'] : ['nic', 'service', 'vmName', 'vmId', 'ipv4', 'ipv6', 'mac'];
 
     const headers = nameCells.slice(0);
     modal ? headers.unshift('') : headers.push('', '');
@@ -80,7 +79,7 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
     const vmInterfacesCell = (vmInterface) => {
         const vmInterfacesCell = nameCells.map((nameCell, index) => {
             return (
-                <Table.Cell key={index}>{vmInterface[nameCell] || String.fromCharCode(8212)}</Table.Cell>
+                <Table.Cell key={index} style={{ textAlign: 'left' }}>{vmInterface[nameCell] || String.fromCharCode(8212)}</Table.Cell>
             );
         });
 
