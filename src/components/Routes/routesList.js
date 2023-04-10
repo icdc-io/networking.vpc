@@ -15,7 +15,7 @@ const RoutesList = ({ t, items }) => {
     const [search, setSearch] = useState('');
     const [filteredData, setFilteredData] = useState([]);
     const headers = ['subnet', 'gateway', 'type', '', ''];
-    const providerId = useSelector(state => state.VpcStore.providerId);
+    const routerId = useSelector(state => state.VpcStore.routerId);
     const user = useSelector(state => state.host.user);
     const baseUrls = useSelector(state => state.host.baseUrls);
     const value = {
@@ -64,7 +64,7 @@ const RoutesList = ({ t, items }) => {
                     <ApiButton element='route'
                         item={value}
                         user={user}
-                        providerId={providerId}
+                        providerId={routerId}
                         locationUrl={baseUrls[user.location]}
                     />
                     <RouteModal t={t} />
