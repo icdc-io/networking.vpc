@@ -4,6 +4,7 @@ import RoutesList from './routesList';
 import { fetchRoutes, fetchProvider } from '../../AppActions';
 import { withRouter } from 'react-router-dom';
 import { Loader } from 'semantic-ui-react';
+import RouteModal from './routeModal';
 
 const ContentPage = React.lazy(() => import('container/ContentPage'));
 
@@ -26,8 +27,8 @@ const Routes = ({ t, history }) => {
         <React.Suspense fallback={
             <Loader active inline='centered' />
         }>
-        <ContentPage t={t} statuses={[routesFetchStatus, providerIdFetchStatus]} pageData={routes} title={'routes'}
-            componentDataList={RoutesList} noContentMessage={'noRoutes'}
+        <ContentPage t={t} statuses={[routesFetchStatus, providerIdFetchStatus]} pageData={[]} title={'routes'}
+            componentDataList={RoutesList} noContentMessage={'noRoutes'} noContentComponentModal={RouteModal}
         />
         </React.Suspense>
     );
