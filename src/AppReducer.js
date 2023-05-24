@@ -129,8 +129,8 @@ export const VpcStore = (state = initialState, action) => {
         return state.set('routesFetchStatus', 'rejected');
     case `${ActionTypes.ROUTES_FETCH}_FULFILLED`:
         return Immutable.merge(state, {
-            routes: action.payload.resources[0].extra_attributes.routes,
-            routerId: action.payload.resources[0].id,
+            routes: action.payload.resources[0]?.extra_attributes.routes,
+            routerId: action.payload.resources[0]?.id,
             routesFetchStatus: 'fulfilled'
         });
 
