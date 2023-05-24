@@ -27,7 +27,7 @@ const Routes = ({ t, history }) => {
         <React.Suspense fallback={
             <Loader active inline='centered' />
         }>
-        <ContentPage t={t} statuses={[routesFetchStatus, providerIdFetchStatus]} pageData={[]} title={'routes'}
+        <ContentPage t={t} statuses={[routesFetchStatus, providerIdFetchStatus]} pageData={routes} title={'routes'}
             componentDataList={RoutesList} noContentMessage={'noRoutes'} noContentComponentModal={RouteModal}
         />
         </React.Suspense>
