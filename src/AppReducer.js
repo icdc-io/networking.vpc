@@ -139,9 +139,6 @@ export const VpcStore = (state = initialState, action) => {
     case `${ActionTypes.PROVIDER_ID_FETCH}_REJECTED`:
         return state.set('providerIdFetchStatus', 'rejected');
     case `${ActionTypes.PROVIDER_ID_FETCH}_FULFILLED`:
-        console.log('providerId')
-        console.log(action.payload)
-        console.log('providerId')
         return Immutable.merge(state, {
             providerId: action.payload.resources[0].id,
             providerIdFetchStatus: 'fulfilled'
