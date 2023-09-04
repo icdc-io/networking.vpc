@@ -87,7 +87,7 @@ const NetworksList = ({ t, items }) => {
     return <>
         <div style={{ maxWidth: '600px' }}><p className='color--grey'>{t('vpcDescription')}</p></div>
         <div className='vpcDescription'>
-            <div className='search-block'>
+            <div>
                 <p>{t('search')}</p>
                 <Input
                     icon='search'
