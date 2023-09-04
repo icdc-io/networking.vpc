@@ -51,7 +51,7 @@ const RoutesList = ({ t, items }) => {
         <>
             <div className='vpcDescription'>
                 <div>
-                    <p>{t('search')}</p>
+                    <p style={{ fontWeight: '700' }}>{t('search')}</p>
                     <Input
                         icon='search'
                         iconPosition='left'
