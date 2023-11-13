@@ -33,13 +33,17 @@ const mapNetworksData = (payload) => {
             emsRef: item.ems_ref,
             fullName: item.name.split('_').slice(2).join('_')
         };
-        item.cloud_subnets.forEach((subnet) => result.push({
+        if (item.cloud_subnets.length) {
+            item.cloud_subnets.forEach((subnet) => result.push({
                 id: subnet.id,
                 subnet: subnet.cidr,
                 type: subnet.network_protocol,
                 dns: subnet.dns_nameservers[0],
                 ...networkData
-        }));
+            }));
+        } else {
+            result.push({ ...networkData });
+        }
     });
 
     return result;
