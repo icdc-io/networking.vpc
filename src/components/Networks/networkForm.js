@@ -4,7 +4,6 @@ import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { required, name, dns, ip } from '../../utilities/Validations';
 import CustomCheckbox from '../../general/customCheckbox';
-
 const GeneralInput = React.lazy(() => import('container/GeneralInput'));
 
 const NetworkForm = ({ t, handleClose, handleSubmit, create, initialValues, invalid, pristine }) => {
