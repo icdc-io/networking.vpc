@@ -11,7 +11,7 @@ export const ASSIGN_NICS_TO_SECURITY_GROUP = 'ASSIGN_NICS_TO_SECURITY_GROUP';
 
 export const ASSIGNED_VMS = `/cloud_subnets?expand=resources&attributes=assigned_vms`;
 export const ALL_VMS_FETCH = 'ALL_VMS_FETCH';
-export const ALL_VMS_URL = `/vms?expand=resources&attributes=nics,service.name&filter[]=retirement_state=nil`;
+export const ALL_VMS_URL = `/services?expand=resources&filter[]=retirement_state=nil&attributes=networks,user.email`;
 export const PROVIDER_ID_FETCH = 'PROVIDER_ID_FETCH';
 export const PROVIDER_ID_URL = `/providers?expand=resources&filter[]=type=ManageIQ::Providers::Redhat::NetworkManager`;
 

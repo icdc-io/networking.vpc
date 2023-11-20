@@ -6,14 +6,14 @@ import { onSearch } from '../../utilities/search';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchAllVMs } from '../../AppActions';
 
-const AssignVmModal = ({ t, submitAction }) => {
+const AssignVmModal = ({ t, submitAction, vmAssignedData = [] }) => {
     const [open, setOpen] = useState(false);
     const [search, setSearch] = useState('');
     const [result, setResult] = useState([]);
     const [checked, setChecked] = useState({});
     const [disabledList, setDisabledList] = useState({});
     const [checkedCount, setCheckedCount] = useState(0);
-    const allVms = useSelector(state => state.VpcStore.allVms);
+    const allServices = useSelector(state => state.VpcStore.allVms)
     const [nicsBasedVmList, setNicsBasedVmList] = useState([]);
     const dispatch = useDispatch();
 
@@ -32,22 +32,25 @@ const AssignVmModal = ({ t, submitAction }) => {
 
     useEffect(() => {
         const nics = [];
-        for (let vm of allVms) {
-                nics.push({
-                    service: vm.service?.name,
-                    vmName: vm.name,
-                    vmId: vm.id,
-                    nics: vm.nics?.length
-                });
-
-                // disable vms which were created but never started
-                if (!vm.boot_time) {
-                    setDisabledList({ ...disabledList, [vm.uid_ems]: true });
+        for (let serv of allServices) {
+            for (let network of serv.networks) {
+                for (let nic of network.allocations) {
+                    if(nic?.type === 'nic' && nic.nic_id
+                    ){
+                        nics.push({
+                            service: serv?.name,
+                            vmName: nic?.vm_name,
+                            vmId: nic.vm_id,
+                            ip: nic.ip,
+                            nics: serv.networks?.length
+                        });
+                    }
                 }
+            }
         }
 
-        setNicsBasedVmList(nics);
-    }, [allVms]);
+        setNicsBasedVmList(nics.filter(x=>!vmAssignedData.some(y => y.nicId === x.nicId)));
+    }, [allServices]);
 
     const handleSubmit = () => {
         const nicIds = Object.entries(checked).filter(([_nicId, isChecked]) => isChecked).map(([nicId, _isChecked]) => nicId);

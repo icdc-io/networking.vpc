@@ -71,7 +71,7 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
         }
     }, [result, activePage, totalPages]);
 
-    const nameCells = modal ? ['vmName', 'service', 'vmId', 'nics'] : ['nic', 'service', 'vmName', 'vmId', 'ipv4', 'ipv6', 'mac'];
+    const nameCells = modal ? ['vmName', 'service', 'vmId', 'ip', 'nics'] : ['nic', 'service', 'vmName', 'vmId', 'ipv4', 'ipv6', 'mac'];
 
     const headers = nameCells.slice(0);
     modal ? headers.unshift('') : headers.push('', '');
