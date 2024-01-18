@@ -66,11 +66,11 @@ export const VpcStore = (state = initialState, action) => {
             assignedVmsFetchStatus: 'fulfilled'
         });
 
-    case `${ActionTypes.UNASSIGN_NICS_FROM_SECURITY_GROUP}_PENDING`:
+    case `${ActionTypes.VPC_UNASSIGN_NICS_FROM_SECURITY_GROUP}_PENDING`:
         return state.set('unassignedVmsFetchStatus', 'pending');
-    case `${ActionTypes.UNASSIGN_NICS_FROM_SECURITY_GROUP}_REJECTED`:
+    case `${ActionTypes.VPC_UNASSIGN_NICS_FROM_SECURITY_GROUP}_REJECTED`:
         return state.set('unassignedVmsFetchStatus', 'rejected');
-    case `${ActionTypes.UNASSIGN_NICS_FROM_SECURITY_GROUP}_FULFILLED`:
+    case `${ActionTypes.VPC_UNASSIGN_NICS_FROM_SECURITY_GROUP}_FULFILLED`:
         return state.set('unassignedVmsFetchStatus', 'fulfilled');
 
     case `${ActionTypes.NETWORKS_FETCH}_PENDING`:
@@ -111,11 +111,11 @@ export const VpcStore = (state = initialState, action) => {
 
         return state;
 
-    case `${ActionTypes.SECURITY_GROUP_FETCH}_PENDING`:
+    case `${ActionTypes.VPC_SECURITY_GROUP_FETCH}_PENDING`:
         return state.set('groupFetchStatus', 'pending');
-    case `${ActionTypes.SECURITY_GROUP_FETCH}_REJECTED`:
+    case `${ActionTypes.VPC_SECURITY_GROUP_FETCH}_REJECTED`:
         return state.set('groupFetchStatus', 'rejected');
-    case `${ActionTypes.SECURITY_GROUP_FETCH}_FULFILLED`:
+    case `${ActionTypes.VPC_SECURITY_GROUP_FETCH}_FULFILLED`:
         return Immutable.merge(state, {
             group: {
                 id: action.payload.id,
@@ -127,32 +127,32 @@ export const VpcStore = (state = initialState, action) => {
             groupFetchStatus: 'fulfilled'
         });
 
-    case `${ActionTypes.ROUTES_FETCH}_PENDING`:
+    case `${ActionTypes.VPC_ROUTES_FETCH}_PENDING`:
         return state.set('routesFetchStatus', 'pending');
-    case `${ActionTypes.ROUTES_FETCH}_REJECTED`:
+    case `${ActionTypes.VPC_ROUTES_FETCH}_REJECTED`:
         return state.set('routesFetchStatus', 'rejected');
-    case `${ActionTypes.ROUTES_FETCH}_FULFILLED`:
+    case `${ActionTypes.VPC_ROUTES_FETCH}_FULFILLED`:
         return Immutable.merge(state, {
             routes: action.payload.resources[0]?.extra_attributes.routes,
             routerId: action.payload.resources[0]?.id,
             routesFetchStatus: 'fulfilled'
         });
 
-    case `${ActionTypes.PROVIDER_ID_FETCH}_PENDING`:
+    case `${ActionTypes.VPC_PROVIDER_ID_FETCH}_PENDING`:
         return state.set('providerIdFetchStatus', 'pending');
-    case `${ActionTypes.PROVIDER_ID_FETCH}_REJECTED`:
+    case `${ActionTypes.VPC_PROVIDER_ID_FETCH}_REJECTED`:
         return state.set('providerIdFetchStatus', 'rejected');
-    case `${ActionTypes.PROVIDER_ID_FETCH}_FULFILLED`:
+    case `${ActionTypes.VPC_PROVIDER_ID_FETCH}_FULFILLED`:
         return Immutable.merge(state, {
             providerId: action.payload.resources[0].id,
             providerIdFetchStatus: 'fulfilled'
         });
 
-    case `${ActionTypes.ALL_VMS_FETCH}_PENDING`:
+    case `${ActionTypes.VPC_ALL_VMS_FETCH}_PENDING`:
         return state.set('allVmsFetchStatus', 'pending');
-    case `${ActionTypes.ALL_VMS_FETCH}_REJECTED`:
+    case `${ActionTypes.VPC_ALL_VMS_FETCH}_REJECTED`:
         return state.set('allVmsFetchStatus', 'rejected');
-    case `${ActionTypes.ALL_VMS_FETCH}_FULFILLED`:
+    case `${ActionTypes.VPC_ALL_VMS_FETCH}_FULFILLED`:
         return Immutable.merge(state, {
             allVms: action.payload.resources,
             allVmsFetchStatus: 'fulfilled'

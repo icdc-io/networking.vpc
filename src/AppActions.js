@@ -57,7 +57,7 @@ export const fetchVMs = (options) => ({
 });
 
 export const fetchAllVMs = () => ({
-    type: ActionTypes.ALL_VMS_FETCH,
+    type: ActionTypes.VPC_ALL_VMS_FETCH,
     payload: fetchData(getFullPath(ActionTypes.ALL_VMS_URL))
 });
 
@@ -67,7 +67,7 @@ export const fetchNetwork = (id) => ({
 });
 
 export const fetchProvider = () => ({
-    type: ActionTypes.PROVIDER_ID_FETCH,
+    type: ActionTypes.VPC_PROVIDER_ID_FETCH,
     payload: fetchData(getFullPath(ActionTypes.PROVIDER_ID_URL))
 });
 
@@ -142,27 +142,27 @@ export const deleteNetworkActionAndFetch = (payload, providerId) => {
 };
 
 export const fetchSecurityGroups = () => ({
-    type: ActionTypes.SECURITY_GROUPS_FETCH,
+    type: ActionTypes.VPC_SECURITY_GROUPS_FETCH,
     payload: fetchData(getFullPath(ActionTypes.SECURITY_GROUPS_FETCH_URL))
 });
 
 export const fetchSecurityGroup = (id) => ({
-    type: ActionTypes.SECURITY_GROUP_FETCH,
+    type: ActionTypes.VPC_SECURITY_GROUP_FETCH,
     payload: fetchData(getFullPath(ActionTypes.currentNetwork(id)))
 });
 
 export const deleteSecurityGroup = () => ({
-    type: ActionTypes.SECURITY_GROUP_DELETE,
+    type: ActionTypes.VPC_SECURITY_GROUP_DELETE,
     payload: successNotification('')
 });
 
 export const fetchRoutes = () => ({
-    type: ActionTypes.ROUTES_FETCH,
+    type: ActionTypes.VPC_ROUTES_FETCH,
     payload: fetchData(getFullPath(ActionTypes.ROUTES_FETCH_URL))
 });
 
 export const createRoute = (payload, routerId) => ({
-    type: ActionTypes.ROUTE_CREATE,
+    type: ActionTypes.VPC_ROUTE_CREATE,
     payload: createData(getFullPath(ActionTypes.routerUrl(routerId)), payload)
 });
 
@@ -178,7 +178,7 @@ export const createRouteActionAndFetch = (payload, routerId) => {
 };
 
 export const deleteRoute = (payload, routerId) => ({
-    type: ActionTypes.ROUTE_DELETE,
+    type: ActionTypes.VPC_ROUTE_DELETE,
     payload: createData(getFullPath(ActionTypes.routerUrl(routerId)), payload)
 });
 
@@ -194,7 +194,7 @@ export const deleteRouteActionAndFetch = (payload, routerId) => {
 };
 
 export const unassignNicsToSecurityGroup = (payload, id) => ({
-    type: ActionTypes.UNASSIGN_NICS_FROM_SECURITY_GROUP,
+    type: ActionTypes.VPC_UNASSIGN_NICS_FROM_SECURITY_GROUP,
     payload: createData(getFullPath(ActionTypes.cloudSubnetsUrl(id)), payload)
 });
 
@@ -214,7 +214,7 @@ export const unassignNicsFromSecurityGroupAndFetch = (payload, id) => {
 
 export const assignNicsToSecurityGroup = (payload, id) => {
     return({
-    type: ActionTypes.ASSIGN_NICS_TO_SECURITY_GROUP,
+    type: ActionTypes.VPC_ASSIGN_NICS_TO_SECURITY_GROUP,
     payload: createData(getFullPath(ActionTypes.cloudSubnetsUrl(id)), payload)
 })};
 
