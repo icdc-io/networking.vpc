@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { required, name, dns, ip } from '../../utilities/Validations';
+import { required, name, ip, ipWithSubnetPrefix } from '../../utilities/Validations';
 import CustomCheckbox from '../../general/customCheckbox';
 const GeneralInput = React.lazy(() => import('container/GeneralInput'));
 
@@ -41,7 +41,7 @@ const NetworkForm = ({ t, handleClose, handleSubmit, create, initialValues, inva
             label={t('subnet')}
             component={GeneralInput}
             type="text"
-            validate={addSubnet ? [required, dns] : []}
+            validate={addSubnet ? [required, ipWithSubnetPrefix] : []}
             readOnly={!addSubnet}
         />
         <Field
