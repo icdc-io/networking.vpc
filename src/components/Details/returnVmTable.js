@@ -5,6 +5,7 @@ import TableHeader from '../../general/tableHeader';
 import AssignVmModal from './assignVmModal';
 import { onSearch } from '../../utilities/search';
 import { useSelector } from 'react-redux';
+import { copyInfo } from '../../utilities/copyInfo';
 
 const ApiButton = React.lazy(() => import('container/ApiButton'));
 
@@ -30,6 +31,8 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
             setPaginationMass(paginationMassVar);
         }
     };
+
+    const copyContent = (nameCell, content) => (nameCell === 'ipv4' || nameCell === 'mac') && copyInfo(content)
 
     const onChange = (e) => {
         setSearch(e.currentTarget.value);
@@ -79,7 +82,7 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
     const vmInterfacesCell = (vmInterface) => {
         const vmInterfacesCell = nameCells.map((nameCell, index) => {
             return (
-                <Table.Cell key={index} style={{ textAlign: 'left' }}>{vmInterface[nameCell] || String.fromCharCode(8212)}</Table.Cell>
+                <Table.Cell key={index} style={{ textAlign: 'left' }}>{vmInterface[nameCell] || String.fromCharCode(8212)}{vmInterface[nameCell] && copyContent(nameCell, vmInterface[nameCell])}</Table.Cell>
             );
         });
 
