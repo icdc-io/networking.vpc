@@ -60,7 +60,6 @@ const AssignVmModal = ({ t, submitAction, vmAssignedData = [] }) => {
     }, [allServices]);
 
     const handleSubmit = () => {
-        // debugger;
         const uids = Object.entries(checked).filter(([_nicId, isChecked]) => isChecked).map(([nicId, _isChecked]) => nicId);
         var nicIds = nicsBasedVmList.filter(x => uids.includes(x.uid)).map(x=>x.nicId);
         submitAction(nicIds);
