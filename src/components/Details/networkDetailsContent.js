@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Header } from 'semantic-ui-react';
 import {
-    assignNicsToSecurityGroupAndFetch, unassignNicsFromSecurityGroupAndFetch, 
+    assignNicsToNetworkAndFetch, unassignNicsFromNetworkAndFetch, 
 } from '../../AppActions';
 import Network from '../../static/svgNetwork.svg';
 import NetworkModal from '../Networks/networkModal';
@@ -25,16 +25,16 @@ const NetworkDetailsContent = ({ t, items: [network, group, providerId, user] })
             // eslint-disable-next-line camelcase
             vms_ids: nics
         };
-        dispatch(assignNicsToSecurityGroupAndFetch(payload, id));
+        dispatch(assignNicsToNetworkAndFetch(payload, id));
     };
 
-    const deleteNicAndFetch = vmInterface => () => {
+    const deleteNicAndFetch = (nicId, vmId) => {
         const payload = {
             action: 'remove_nics',
             // eslint-disable-next-line camelcase
-            nics: {[vmInterface.vmId]:[vmInterface.nicId]}
+            nics: {[vmId]: [nicId]}
         };
-        dispatch(unassignNicsFromSecurityGroupAndFetch(payload, id))
+        dispatch(unassignNicsFromNetworkAndFetch(payload, group.id))
     };
 
     return (
@@ -77,7 +77,7 @@ const NetworkDetailsContent = ({ t, items: [network, group, providerId, user] })
                 showModalButton
                 onModalSubmit={assignNicsAndFetch}
                 headerMesage={t('assignedVm')}
-                vmInterfaces={network.assignedVms}
+                vmInterfaces={network?.assignedVms.map(x=>({...x, ip: x.ipv4, uuid: x.vmId}))}
                 group={group}
                 onDelete={deleteNicAndFetch} />
             <div className='network-delete'>

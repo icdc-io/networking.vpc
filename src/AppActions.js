@@ -212,6 +212,20 @@ export const unassignNicsFromSecurityGroupAndFetch = (payload, id) => {
     };
 };
 
+export const unassignNicsFromNetworkAndFetch = (payload, id) => {
+    return (dispatch) => {
+        infoNotification('Unassigning NICs...');
+        const response = dispatch(unassignNicsToSecurityGroup(payload, id));
+
+        response.then(() => {
+            dispatch(fetchNetwork(id));
+            successNotification('');
+        }, error => {
+            errorNotification(error);
+        });
+    };
+};
+
 export const assignNicsToSecurityGroup = (payload, id) => {
     return({
     type: ActionTypes.VPC_ASSIGN_NICS_TO_SECURITY_GROUP,
@@ -225,6 +239,20 @@ export const assignNicsToSecurityGroupAndFetch = (payload, id) => {
 
         response.then(() => {
             dispatch(fetchSecurityGroup(id));
+            successNotification('');
+        }, error => {
+            errorNotification(error);
+        });
+    };
+};
+
+export const assignNicsToNetworkAndFetch = (payload, id) => {
+    return (dispatch) => {
+        infoNotification('Assigning NICs...');
+        const response = dispatch(assignNicsToSecurityGroup(payload, id));
+
+        response.then(() => {
+            dispatch(fetchNetwork(id));
             successNotification('');
         }, error => {
             errorNotification(error);
