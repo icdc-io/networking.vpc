@@ -33,27 +33,35 @@ const AssignVmModal = ({ t, submitAction, vmAssignedData = [] }) => {
     useEffect(() => {
         const nics = [];
         for (let serv of allServices) {
-            for (let network of serv.networks) {
+
+            for (let network of serv.networks) { 
+            
                 for (let nic of network.allocations) {
-                    if(nic?.type === 'nic' && nic.nic_id
-                    ){
+                    if (nic?.type === 'nic' && nic.nic_id) {
                         nics.push({
-                            service: serv?.name,
-                            vmName: nic?.vm_name,
-                            vmId: nic.vm_id,
+                            nic: nic?.nic_name,
+                            nicId: nic.nic_id,
+                            serviceName: serv?.name,
+                            vmName: nic.vm_name,
+                            uuid: nic.uid_ems,
+                            mac: nic.mac,
                             ip: nic.ip,
-                            nics: serv.networks?.length
+                            email: serv?.user?.email,
+                            uid: nic.uid_ems
                         });
                     }
                 }
             }
         }
 
-        setNicsBasedVmList(nics.filter(x=>!vmAssignedData.some(y => y.nicId === x.nicId)));
+        setNicsBasedVmList(nics.filter(x => !vmAssignedData.some(y => {
+            return y.mac == x.mac
+        })));
     }, [allServices]);
 
     const handleSubmit = () => {
-        const nicIds = Object.entries(checked).filter(([_nicId, isChecked]) => isChecked).map(([nicId, _isChecked]) => nicId);
+        const uids = Object.entries(checked).filter(([_nicId, isChecked]) => isChecked).map(([nicId, _isChecked]) => nicId);
+        const nicIds = nicsBasedVmList.filter(x => uids.includes(x.uid)).map(x=>x.nicId);
         submitAction(nicIds);
         handleClose();
     };

@@ -71,10 +71,11 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
         }
     }, [result, activePage, totalPages]);
 
-    const nameCells = modal ? ['vmName', 'service', 'vmId', 'ip', 'nics'] : ['nic', 'service', 'vmName', 'vmId', 'ipv4', 'ipv6', 'mac'];
+    const nameCells = ['nic', 'serviceName', 'email', 'vmName', 'uuid', 'mac', 'ip'];
 
+    modal && nameCells.splice(7);
     const headers = nameCells.slice(0);
-    modal ? headers.unshift('') : headers.push('', '');
+    modal ? headers.unshift('') && headers.push('') : headers.push('', '');
 
     const vmInterfacesCell = (vmInterface) => {
         const vmInterfacesCell = nameCells.map((nameCell, index) => {
@@ -83,8 +84,10 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
             );
         });
 
+        vmInterfacesCell.push(<Table.Cell/>);
+
         // eslint-disable-next-line
-        modal ? vmInterfacesCell.unshift(<Table.Cell key={vmInterface.nicId}><Checkbox onChange={toggle(vmInterface.vmId)} checked={checked[vmInterface.nicId]} disabled={disabledList[vmInterface.nicId]} /></Table.Cell>) :
+        modal ? vmInterfacesCell.unshift(<Table.Cell key={vmInterface.uuid}><Checkbox onChange={toggle(vmInterface.uuid)} checked={checked[vmInterface.uuid]} disabled={disabledList[vmInterface.uuid]} /></Table.Cell>) :
             vmInterfacesCell.push(
                 <Table.Cell key={vmInterfacesCell.length + 1}>
                     <React.Suspense fallback={
@@ -100,7 +103,7 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
                     </React.Suspense>
                 </Table.Cell>,
                 user.role === 'admin' && <Table.Cell key={vmInterfacesCell.length + 2} style={{ textAlign: 'center' }}>
-                    {onDelete && <Icon onClick={onDelete(vmInterface)} name='trash alternate' disabled={unassignedVmsFetchStatus === 'pending'}/>}
+                    {onDelete && <Icon onClick={() => {onDelete(vmInterface.nicId, vmInterface.vmId)}} name='trash alternate' disabled={unassignedVmsFetchStatus === 'pending'}/>}
                 </Table.Cell>
             );
 
@@ -109,7 +112,7 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
 
     const vmInterfacesRow = paginationMass && paginationMass.map((vmInterface, index) => (
         // eslint-disable-next-line max-len
-        <Table.Row className={disabledList && disabledList[vmInterface.nicId] && 'disabled-nic' || ''} key={index}>{vmInterfacesCell(vmInterface)}</Table.Row>
+        <Table.Row className={disabledList && disabledList[vmInterface.uuid] && 'disabled-nic' || ''} key={index}>{vmInterfacesCell(vmInterface)}</Table.Row>
     ));
 
     return <>
@@ -121,7 +124,7 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
                     disabled={vmInterfaces.length === 0} />
             </Grid.Column>
             {showModalButton && <Grid.Column textAlign='right' width={8}>
-                <AssignVmModal t={t} submitAction={onModalSubmit} />
+                <AssignVmModal t={t} submitAction={onModalSubmit} vmAssignedData={paginationMass} />
             </Grid.Column>}
         </Grid.Row>}
         <div className='table-container'>
