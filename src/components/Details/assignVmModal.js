@@ -38,17 +38,25 @@ const AssignVmModal = ({ t, submitAction, vmAssignedData = [] }) => {
             
                 for (let nic of network.allocations) {
                     if (nic?.type === 'nic' && nic.nic_id) {
-                        nics.push({
-                            nic: nic?.nic_name,
-                            nicId: nic.nic_id,
-                            serviceName: serv?.name,
-                            vmName: nic.vm_name,
-                            uuid: nic.uid_ems,
-                            mac: nic.mac,
-                            ip: nic.ip,
-                            email: serv?.user?.email,
-                            uid: nic.uid_ems
-                        });
+                        const existingNic = nics.find(x=>x.vmId === nic?.vm_id);
+                        if(existingNic && nic.ip)
+                        {
+                            existingNic.ipAddresses.push(nic.ip);
+                        } else
+                        {
+                            nics.push({
+                                nic: nic?.nic_name,
+                                nicId: nic.nic_id,
+                                serviceName: serv?.name,
+                                vmId: nic?.vm_id,
+                                vmName: nic.vm_name,
+                                mac: nic.mac,
+                                ip: nic.ip,
+                                ipAddresses: [nic.ip],
+                                owner: serv?.user?.email,
+                                uid: nic.uid_ems
+                            });
+                        }
                     }
                 }
             }
@@ -60,8 +68,7 @@ const AssignVmModal = ({ t, submitAction, vmAssignedData = [] }) => {
     }, [allServices]);
 
     const handleSubmit = () => {
-        const uids = Object.entries(checked).filter(([_nicId, isChecked]) => isChecked).map(([nicId, _isChecked]) => nicId);
-        const nicIds = nicsBasedVmList.filter(x => uids.includes(x.uid)).map(x=>x.nicId);
+        const nicIds = Object.entries(checked).filter(([_nicId, isChecked]) => isChecked).map(([nicId, _isChecked]) => nicId);
         submitAction(nicIds);
         handleClose();
     };
@@ -77,10 +84,10 @@ const AssignVmModal = ({ t, submitAction, vmAssignedData = [] }) => {
     }, [checked]);
 
     return <React.Fragment>
-        <Button onClick={() => setOpen(true)} primary>{t('assignNic')}</Button>
+        <Button onClick={() => setOpen(true)} primary>{t('createNic')}</Button>
 
         <Modal open={open} size="fullscreen">
-            <Header content={t('selectAssignetVMS')} />
+            <Header content={t('connectAssignetVMS')} />
            
             <Modal.Content>
                 <Input value={search} onChange={onChange} icon='search' placeholder='Search...' />

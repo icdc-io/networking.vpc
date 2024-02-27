@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Icon, Checkbox, Grid, Header, Input, Pagination, Loader } from 'semantic-ui-react';
+import { Table, Icon, Checkbox, Grid, Header, Input, Pagination, Loader, Popup, Button, GridColumn } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import TableHeader from '../../general/tableHeader';
 import AssignVmModal from './assignVmModal';
 import { onSearch } from '../../utilities/search';
 import { useSelector } from 'react-redux';
+import { copyInfo } from '../../utilities/copyInfo';
 
 const ApiButton = React.lazy(() => import('container/ApiButton'));
 
@@ -71,7 +72,9 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
         }
     }, [result, activePage, totalPages]);
 
-    const nameCells = ['nic', 'serviceName', 'email', 'vmName', 'uuid', 'mac', 'ip'];
+    const nameCells = modal 
+        ? ['serviceName', 'owner', 'vmName', 'vmId', 'ipAddresses'] 
+        : ['nic', 'serviceName', 'owner', 'vmName', 'uuid', 'mac', 'ip'];
 
     modal && nameCells.splice(7);
     const headers = nameCells.slice(0);
@@ -79,15 +82,38 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
 
     const vmInterfacesCell = (vmInterface) => {
         const vmInterfacesCell = nameCells.map((nameCell, index) => {
-            return (
-                <Table.Cell key={index} style={{ textAlign: 'left' }}>{vmInterface[nameCell] || String.fromCharCode(8212)}</Table.Cell>
-            );
+            switch (nameCell) {
+                case "ipAddresses":
+                    return (
+                        <Table.Cell key={index} style={{ textAlign: 'left' }}>
+                            {vmInterface[nameCell][0] || String.fromCharCode(8212)}{copyInfo(vmInterface[nameCell])}
+                            {vmInterface[nameCell].length > 1 &&
+                                <Popup position='bottom left'
+                                    trigger={<Icon size='large' name='triangle down' style={{ cursor: 'pointer' }} />} flowing hoverable>
+                                    <GridColumn>
+                                        {vmInterface[nameCell].slice(1).map((element, index) => <p key={index}>{element} {copyInfo(element)}</p>)}
+                                    </GridColumn>
+                                </Popup>}
+                        </Table.Cell>
+                    );
+                case "mac":
+                case "ip":
+                        return (
+                            <Table.Cell key={index} style={{ textAlign: 'left' }}>{vmInterface[nameCell] || String.fromCharCode(8212)}{copyInfo(vmInterface[nameCell])}</Table.Cell>
+                        );
+                default:
+                    return (
+                        <Table.Cell key={index} style={{ textAlign: 'left' }}>{vmInterface[nameCell] || String.fromCharCode(8212)}</Table.Cell>
+                    );
+            }
         });
 
         vmInterfacesCell.push(<Table.Cell/>);
 
         // eslint-disable-next-line
-        modal ? vmInterfacesCell.unshift(<Table.Cell key={vmInterface.uuid}><Checkbox onChange={toggle(vmInterface.uuid)} checked={checked[vmInterface.uuid]} disabled={disabledList[vmInterface.uuid]} /></Table.Cell>) :
+        modal ? vmInterfacesCell.unshift(<Table.Cell key={vmInterface.vmId}>
+            <Checkbox onChange={toggle(vmInterface.vmId)} checked={checked[vmInterface.vmId]} disabled={disabledList[vmInterface.vmId]} /></Table.Cell>)
+            :
             vmInterfacesCell.push(
                 <Table.Cell key={vmInterfacesCell.length + 1}>
                     <React.Suspense fallback={
@@ -98,12 +124,12 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
                             element='vmNetworkTable'
                             item={vmInterface}
                             user={user}
-                            providerId={providerId} 
-                            locationUrl={baseUrls[user.location]}/>
+                            providerId={providerId}
+                            locationUrl={baseUrls[user.location]} />
                     </React.Suspense>
                 </Table.Cell>,
                 user.role === 'admin' && <Table.Cell key={vmInterfacesCell.length + 2} style={{ textAlign: 'center' }}>
-                    {onDelete && <Icon onClick={() => {onDelete(vmInterface.nicId, vmInterface.vmId)}} name='trash alternate' disabled={unassignedVmsFetchStatus === 'pending'}/>}
+                    {onDelete && <Icon onClick={() => { onDelete(vmInterface.nicId, vmInterface.vmId) }} name='trash alternate' disabled={unassignedVmsFetchStatus === 'pending'} />}
                 </Table.Cell>
             );
 
@@ -116,7 +142,7 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
     ));
 
     return <>
-        <Header as='h4'>{t('assignedVm')} ({vmInterfaces.length})</Header>
+        {modal ? <Header as='h4'>[{vmInterfaces.length}] {t('availableVMs')}</Header> : <Header as='h4'>{t('assignedVm')} ({vmInterfaces.length})</Header>}
         {!modal && <Grid.Row>
             <Grid.Column verticalAlign='middle' width={8}>
                 <Input value={search} onChange={onChange} icon='search'
