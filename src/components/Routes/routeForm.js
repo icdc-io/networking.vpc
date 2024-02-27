@@ -2,7 +2,7 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Modal, Form, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { required, dns, ip } from '../../utilities/Validations';
+import { required, ip, ipWithSubnetPrefix } from '../../utilities/Validations';
 
 const GeneralInput = React.lazy(() => import('container/GeneralInput'));
 
@@ -20,7 +20,7 @@ const RouteForm = ({ t, handleClose, handleSubmit, edit, invalid, pristine }) =>
                 label={t('subnet')}
                 component={GeneralInput}
                 type='text'
-                validate={[required, dns]}
+                validate={[required, ipWithSubnetPrefix]}
             />
             <Field
                 name='gateway'

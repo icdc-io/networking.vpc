@@ -33,23 +33,38 @@ const AssignVmModal = ({ t, submitAction, vmAssignedData = [] }) => {
     useEffect(() => {
         const nics = [];
         for (let serv of allServices) {
-            for (let network of serv.networks) {
+
+            for (let network of serv.networks) { 
+            
                 for (let nic of network.allocations) {
-                    if(nic?.type === 'nic' && nic.nic_id
-                    ){
-                        nics.push({
-                            service: serv?.name,
-                            vmName: nic?.vm_name,
-                            vmId: nic.vm_id,
-                            ip: nic.ip,
-                            nics: serv.networks?.length
-                        });
+                    if (nic?.type === 'nic' && nic.nic_id) {
+                        const existingNic = nics.find(x=>x.vmId === nic?.vm_id);
+                        if(existingNic && nic.ip)
+                        {
+                            existingNic.ipAddresses.push(nic.ip);
+                        } else
+                        {
+                            nics.push({
+                                nic: nic?.nic_name,
+                                nicId: nic.nic_id,
+                                serviceName: serv?.name,
+                                vmId: nic?.vm_id,
+                                vmName: nic.vm_name,
+                                mac: nic.mac,
+                                ip: nic.ip,
+                                ipAddresses: [nic.ip],
+                                owner: serv?.user?.email,
+                                uid: nic.uid_ems
+                            });
+                        }
                     }
                 }
             }
         }
 
-        setNicsBasedVmList(nics.filter(x=>!vmAssignedData.some(y => y.nicId === x.nicId)));
+        setNicsBasedVmList(nics.filter(x => !vmAssignedData.some(y => {
+            return y.mac == x.mac
+        })));
     }, [allServices]);
 
     const handleSubmit = () => {
@@ -69,10 +84,10 @@ const AssignVmModal = ({ t, submitAction, vmAssignedData = [] }) => {
     }, [checked]);
 
     return <React.Fragment>
-        <Button onClick={() => setOpen(true)} primary>{t('assignNic')}</Button>
+        <Button onClick={() => setOpen(true)} primary>{t('createNic')}</Button>
 
         <Modal open={open} size="fullscreen">
-            <Header content={t('selectAssignetVMS')} />
+            <Header content={t('connectAssignetVMS')} />
            
             <Modal.Content>
                 <Input value={search} onChange={onChange} icon='search' placeholder='Search...' />
