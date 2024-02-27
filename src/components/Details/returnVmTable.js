@@ -97,9 +97,6 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
                         </Table.Cell>
                     );
                 case "mac":
-                        return (
-                            <Table.Cell key={index} style={{ textAlign: 'left' }}>{vmInterface[nameCell] || String.fromCharCode(8212)}{copyInfo(vmInterface[nameCell])}</Table.Cell>
-                        );
                 case "ip":
                         return (
                             <Table.Cell key={index} style={{ textAlign: 'left' }}>{vmInterface[nameCell] || String.fromCharCode(8212)}{copyInfo(vmInterface[nameCell])}</Table.Cell>
