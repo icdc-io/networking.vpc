@@ -86,7 +86,7 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
                 case "ipAddresses":
                     return (
                         <Table.Cell key={index} style={{ textAlign: 'left' }}>
-                            {vmInterface[nameCell][0] || String.fromCharCode(8212)}{copyInfo(vmInterface[nameCell])}
+                            {vmInterface[nameCell][0] || String.fromCharCode(8212)}{copyInfo(vmInterface[nameCell].length > 1 ? vmInterface[nameCell][0] : vmInterface[nameCell])}
                             {vmInterface[nameCell].length > 1 &&
                                 <Popup position='bottom left'
                                     trigger={<Icon size='large' name='triangle down' style={{ cursor: 'pointer' }} />} flowing hoverable>
