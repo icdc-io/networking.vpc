@@ -77,7 +77,7 @@ const NetworkDetailsContent = ({ t, items: [network, group, providerId, user] })
                 showModalButton
                 onModalSubmit={assignNicsAndFetch}
                 headerMesage={t('assignedVm')}
-                vmInterfaces={network?.assignedVms.map(x=>({...x, ip: x.ipv4, uuid: x.vmId}))}
+                vmInterfaces={network?.assignedVms.map(x=>({...x, ip: x.ipv4, uuid: x.vmId, owner: x.email}))}
                 group={group}
                 onDelete={deleteNicAndFetch} />
             <div className='network-delete'>
