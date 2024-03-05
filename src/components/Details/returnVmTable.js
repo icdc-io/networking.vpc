@@ -82,16 +82,17 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
 
     const vmInterfacesCell = (vmInterface) => {
         const vmInterfacesCell = nameCells.map((nameCell, index) => {
+            const currentVmInterface = vmInterface[nameCell]
             switch (nameCell) {
                 case "ipAddresses":
                     return (
                         <Table.Cell key={index} style={{ textAlign: 'left' }}>
-                            {vmInterface[nameCell][0] || String.fromCharCode(8212)}{copyInfo(vmInterface[nameCell])}
-                            {vmInterface[nameCell].length > 1 &&
+                            {currentVmInterface[0] || String.fromCharCode(8212)}{copyInfo(currentVmInterface.length > 1 ? currentVmInterface[0] : currentVmInterface)}
+                            {currentVmInterface.length > 1 &&
                                 <Popup position='bottom left'
                                     trigger={<Icon size='large' name='triangle down' style={{ cursor: 'pointer' }} />} flowing hoverable>
                                     <GridColumn>
-                                        {vmInterface[nameCell].slice(1).map((element, index) => <p key={index}>{element} {copyInfo(element)}</p>)}
+                                        {currentVmInterface.slice(1).map((element, index) => <p key={index}>{element} {copyInfo(element)}</p>)}
                                     </GridColumn>
                                 </Popup>}
                         </Table.Cell>
@@ -99,11 +100,11 @@ const ReturnVmTable = ({ t, modal, vmInterfaces, checked, toggle, showModalButto
                 case "mac":
                 case "ip":
                         return (
-                            <Table.Cell key={index} style={{ textAlign: 'left' }}>{vmInterface[nameCell] || String.fromCharCode(8212)}{copyInfo(vmInterface[nameCell])}</Table.Cell>
+                            <Table.Cell key={index} style={{ textAlign: 'left' }}>{currentVmInterface || String.fromCharCode(8212)}{copyInfo(currentVmInterface)}</Table.Cell>
                         );
                 default:
                     return (
-                        <Table.Cell key={index} style={{ textAlign: 'left' }}>{vmInterface[nameCell] || String.fromCharCode(8212)}</Table.Cell>
+                        <Table.Cell key={index} style={{ textAlign: 'left' }}>{currentVmInterface || String.fromCharCode(8212)}</Table.Cell>
                     );
             }
         });
