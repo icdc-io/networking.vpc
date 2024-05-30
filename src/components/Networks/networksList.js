@@ -10,6 +10,7 @@ import OptionsMenu from '../../general/optionsMenu';
 import { useSelector } from 'react-redux';
 import { onSearch } from '../../utilities/search';
 import NetworkModal from './networkModal';
+import { networkValue } from '../../constants/common';
 
 const ApiButton = React.lazy(() => import('container/ApiButton'));
 
@@ -19,15 +20,6 @@ const NetworksList = ({ t, items }) => {
     const providerId = useSelector(state => state.VpcStore.providerId);
     const user = useSelector(state => state.host.user);
     const baseUrls = useSelector(state => state.host.baseUrls);
-    const value = {
-        dns: '213.222.50.226',
-        emsRef: 'b9637c1d-71ee-4372-b6c9-52e1ab4e8089',
-        id: '25000000000011',
-        name: 'loc_icdc_name',
-        netId: '25000000000011',
-        subnet: '10.208.25.0/24',
-        type: 'ipv4'
-    };
 
     useEffect(() => {
         setFilteredData(onSearch(items[1], search));
@@ -99,7 +91,7 @@ const NetworksList = ({ t, items }) => {
             </div>
             <div className='buttons-vpc'>
                 <ApiButton element='network'
-                    item={value}
+                    item={networkValue}
                     user={user}
                     providerId={providerId}
                     locationUrl={baseUrls[user.location]}

@@ -8,6 +8,7 @@ import Route from '../../static/route.svg';
 import { useSelector } from 'react-redux';
 import { onSearch } from '../../utilities/search';
 import RouteModal from './routeModal';
+import { routesValue } from '../../constants/common';
 
 const ApiButton = React.lazy(() => import('container/ApiButton'));
 
@@ -18,10 +19,6 @@ const RoutesList = ({ t, items }) => {
     const routerId = useSelector(state => state.VpcStore.routerId);
     const user = useSelector(state => state.host.user);
     const baseUrls = useSelector(state => state.host.baseUrls);
-    const value = {
-        destination: '10.220.0.0/16',
-        nexthop: '10.220.0.2'
-    };
 
     useEffect(() => {
         setFilteredData(onSearch(items, search));
@@ -62,7 +59,7 @@ const RoutesList = ({ t, items }) => {
                 </div>
                 <div className='buttons-vpc'>
                     <ApiButton element='route'
-                        item={value}
+                        item={routesValue}
                         user={user}
                         providerId={routerId}
                         locationUrl={baseUrls[user.location]}

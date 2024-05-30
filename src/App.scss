@@ -31,3 +31,23 @@
   padding: 1rem;
   color: #515151;
 }
+
+.buttons-vpc {
+  display: flex;
+}
+
+.grid.no-vpc-networks-header, .grid.no-vpc-routes-header {
+  padding: 16px;
+
+  .row {
+
+    &:first-child {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+
+    }
+    padding: 0;
+  }
+}
