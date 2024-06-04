@@ -27,7 +27,7 @@ const Routes = ({ t, history }) => {
         providerIdFetchStatus !== 'fulfilled' && dispatch(fetchProvider());
     }, [dispatch, user]);
 
-    const isNoData = routes.length < 1;
+    const isNoData = !routes || routes.length < 1;
 
     return (
         <React.Suspense fallback={

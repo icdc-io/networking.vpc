@@ -32,7 +32,7 @@ const Networks = ({ t, history }) => {
         }
     }, [dispatch, user]);
 
-    const isNoData = networks.length < 1;
+    const isNoData = !networks || networks.length < 1;
 
     return (
         <React.Suspense fallback={
