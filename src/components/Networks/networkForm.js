@@ -1,75 +1,105 @@
-import React, { useState } from 'react';
-import { Field, reduxForm } from 'redux-form';
-import { Modal, Form, Button } from 'semantic-ui-react';
-import PropTypes from 'prop-types';
-import { required, name, ip, ipWithSubnetPrefix } from '../../utilities/Validations';
-import CustomCheckbox from '../../general/customCheckbox';
-const GeneralInput = React.lazy(() => import('container/GeneralInput'));
+import React, { useState } from "react";
+import { Form, Field } from "react-final-form";
+import { Modal, Button } from "semantic-ui-react";
+import PropTypes from "prop-types";
+import {
+  required,
+  name,
+  ip,
+  ipWithSubnetPrefix,
+} from "../../utilities/Validations";
+import CustomCheckbox from "../../general/customCheckbox";
+import { useTranslation } from "react-i18next";
+import composeValidators from "container/composeValidators";
 
-const NetworkForm = ({ t, handleClose, handleSubmit, create, initialValues, invalid, pristine }) => {
-    const [addSubnet, setAddSubnet] = useState(create ? true : initialValues.addSubnet);
+const GeneralInput = React.lazy(
+  () => import("container/networking/GeneralInput"),
+);
 
-    const onAddSubnet = () => setAddSubnet(!addSubnet);
+const NetworkForm = ({
+  handleClose,
+  onSubmit,
+  create,
+  initialValues,
+  invalid,
+  pristine,
+}) => {
+  const { t } = useTranslation();
+  const [addSubnet, setAddSubnet] = useState(
+    create ? true : initialValues.addSubnet,
+  );
 
-    const buttonContent = create ? t('create') : t('editNetwork');
+  const onAddSubnet = () => setAddSubnet(!addSubnet);
 
-    return <Form>
-        <Field
+  const buttonContent = create ? t("create") : t("editNetwork");
+
+  return (
+    <Form onSubmit={onSubmit}>
+      {({ handleSubmit }) => (
+        <form onSubmit={handleSubmit} className="ui form">
+          <Field
             name="name"
-            label={t('name')}
+            label={t("name")}
             component={GeneralInput}
             type="text"
-            validate={[required, name]}
-        />
-        <Field
+            validate={composeValidators(required, name)}
+          />
+          <Field
             name="addSubnet"
-            label={t('addSubnet')}
+            label={t("addSubnet")}
             component={CustomCheckbox}
             props={{ value: addSubnet, onClick: onAddSubnet }}
             type="checkbox"
-        />
-        <Field
+          />
+          <Field
             name="type"
-            label={t('type')}
+            label={t("type")}
             component={GeneralInput}
             type="text"
-            validate={[required]}
+            validate={required}
             readOnly={true}
-        />
-        <Field
+          />
+          <Field
             name="subnet"
-            label={t('subnet')}
+            label={t("subnet")}
             component={GeneralInput}
             type="text"
-            validate={addSubnet ? [required, ipWithSubnetPrefix] : []}
+            validate={
+              addSubnet ? composeValidators(required, ipWithSubnetPrefix) : []
+            }
             readOnly={!addSubnet}
-        />
-        <Field
+          />
+          <Field
             name="dns"
-            label={t('dnsIp')}
+            label={t("dnsIp")}
             component={GeneralInput}
             type="text"
-            validate={addSubnet ? [required, ip] : []}
+            validate={addSubnet ? composeValidators(required, ip) : []}
             readOnly={!addSubnet}
-        />
-        <Modal.Actions align={'right'} style={{ marginTop: '20px' }}>
-            <Button onClick={handleClose}>{t('cancel')}</Button>
-            <Button onClick={handleSubmit} primary type='submit' disabled={pristine || invalid} content={buttonContent} />
-        </Modal.Actions>
-    </Form>;
+          />
+          <Modal.Actions align={"right"} style={{ marginTop: "20px" }}>
+            <Button onClick={handleClose}>{t("cancel")}</Button>
+            <Button
+              primary
+              type="submit"
+              disabled={pristine || invalid}
+              content={buttonContent}
+            />
+          </Modal.Actions>
+        </form>
+      )}
+    </Form>
+  );
 };
 
 NetworkForm.propTypes = {
-    t: PropTypes.func,
-    open: PropTypes.bool,
-    handleClose: PropTypes.func,
-    handleSubmit: PropTypes.func,
-    create: PropTypes.bool,
-    invalid: PropTypes.any,
-    pristine: PropTypes.any,
-    initialValues: PropTypes.any
+  open: PropTypes.bool,
+  handleClose: PropTypes.func,
+  onSubmit: PropTypes.func,
+  create: PropTypes.bool,
+  invalid: PropTypes.any,
+  pristine: PropTypes.any,
+  initialValues: PropTypes.any,
 };
 
-export default reduxForm({
-    form: 'createNetwork'
-})(NetworkForm);
+export default NetworkForm;

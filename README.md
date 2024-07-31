@@ -1,19 +1,19 @@
-# networking-vpc
+# ISCSI - Storage Remote App
 
-npm i
+npm i --legacy-peer-deps - to avoid errors with old dependencies in libraries
 
-_________________________
+---
 
 env='DEVELOPMENT":
 
 npm run start
 
-_________________________
+open localhost:8002
+
+---
 
 env='PRODUCTION'
 
 npm run build
 
 dist folder contain all static files
-
-npm run server => to run node js server on port 8085 that return static from dist folder

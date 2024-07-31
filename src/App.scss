@@ -1,13 +1,10 @@
 .ui.header.network-details {
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 
-.network-table {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+.ui.grid>.row.network-table {
+  margin-bottom: 16px;
   margin-top: -2.5%;
-  margin-bottom: 12px;
 
   .network-table-title {
     width: 90px !important;
@@ -36,18 +33,66 @@
   display: flex;
 }
 
-.grid.no-vpc-networks-header, .grid.no-vpc-routes-header {
+.grid.no-vpc-networks-header,
+.grid.no-vpc-routes-header {
   padding: 16px;
 
   .row {
+    padding: 0;
 
     &:first-child {
       display: flex;
       align-items: center;
       justify-content: space-between;
-
-
     }
-    padding: 0;
   }
+}
+
+.vpcDescription {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 20px;
+
+  .ui.input {
+    margin: 10px 20px 20px 0;
+  }
+
+  .buttons-vpc {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 13px;
+
+    button {
+      margin: 0.5rem 0;
+    }
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .ui.primary.button {
+    height: 38px;
+    white-space: nowrap;
+    padding: 0 19px;
+  }
+}
+
+.vm-block {
+  margin: 2rem 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 368px;
+}
+
+.ui.grid > .row > .column.inline-cell-wrapper {
+  display: inline-block;
+  width: auto;
+}
+
+.items-center {
+  align-items: center;
+  margin-top: 2rem;
 }

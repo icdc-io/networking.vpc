@@ -1,165 +1,170 @@
 /* eslint camelcase: 0 */
-import * as ActionTypes from './AppConstants';
-import Immutable from 'seamless-immutable';
+import * as ActionTypes from "./AppConstants";
+import Immutable from "seamless-immutable";
 
 // eslint-disable-next-line new-cap
 const initialState = Immutable({
-    networks: [],
-    networksFetchStatus: '',
-    assignedVms: [],
-    assignedVmsFetchStatus: '',
-    unassignedVmsFetchStatus: '',
-    network: {},
-    networkFetchStatus: '',
-    group: {},
-    groupFetchStatus: '',
-    routes: [],
-    routesFetchStatus: '',
-    route: {},
-    routeFetchStatus: '',
-    routerId: '',
-    providerId: '',
-    providerIdFetchStatus: '',
-    allVms: [],
-    allVmsFetchStatus: ''
+  networks: [],
+  networksFetchStatus: "",
+  assignedVms: [],
+  assignedVmsFetchStatus: "",
+  unassignedVmsFetchStatus: "",
+  network: {},
+  networkFetchStatus: "",
+  group: {},
+  groupFetchStatus: "",
+  routes: [],
+  routesFetchStatus: "",
+  route: {},
+  routeFetchStatus: "",
+  routerId: "",
+  providerId: "",
+  providerIdFetchStatus: "",
+  allVms: [],
+  allVmsFetchStatus: "",
 });
 
 const mapNetworksData = (payload) => {
-    const result = [];
-    payload.resources.forEach((item) => {
-        const networkData = {
-            name: item.name,
-            netId: item.id,
-            emsRef: item.ems_ref,
-            fullName: item.name.split('_').slice(2).join('_')
-        };
-        if (item.cloud_subnets.length) {
-            item.cloud_subnets.forEach((subnet) => result.push({
-                id: subnet.id,
-                subnet: subnet.cidr,
-                type: subnet.network_protocol,
-                dns: subnet.dns_nameservers[0],
-                ...networkData
-            }));
-        } else {
-            result.push({ ...networkData });
-        }
-    });
+  const result = [];
+  payload.resources.forEach((item) => {
+    const networkData = {
+      name: item.name,
+      netId: item.id,
+      emsRef: item.ems_ref,
+      fullName: item.name.split("_").slice(2).join("_"),
+    };
+    if (item.cloud_subnets.length) {
+      item.cloud_subnets.forEach((subnet) =>
+        result.push({
+          id: subnet.id,
+          subnet: subnet.cidr,
+          type: subnet.network_protocol,
+          dns: subnet.dns_nameservers[0],
+          ...networkData,
+        }),
+      );
+    } else {
+      result.push({ ...networkData });
+    }
+  });
 
-    return result;
+  return result;
 };
 
 export const VpcStore = (state = initialState, action) => {
-    switch (action.type) {
-
+  switch (action.type) {
     case `${ActionTypes.ASSIGNED_VMS_FETCH}_PENDING`:
-        return state.set('assignedVmsFetchStatus', 'pending');
+      return state.set("assignedVmsFetchStatus", "pending");
     case `${ActionTypes.ASSIGNED_VMS_FETCH}_REJECTED`:
-        return state.set('assignedVmsFetchStatus', 'rejected');
+      return state.set("assignedVmsFetchStatus", "rejected");
     case `${ActionTypes.ASSIGNED_VMS_FETCH}_FULFILLED`:
-        return Immutable.merge(state, {
-            assignedVms: action.payload.resources.map((item) => ({
-                subnetId: item.id,
-                netId: item.cloud_network_id,
-                vmsCount: item.assigned_vms.length
-            })),
-            assignedVmsFetchStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        assignedVms: action.payload.resources.map((item) => ({
+          subnetId: item.id,
+          netId: item.cloud_network_id,
+          vmsCount: item.assigned_vms.length,
+        })),
+        assignedVmsFetchStatus: "fulfilled",
+      });
 
     case `${ActionTypes.VPC_UNASSIGN_NICS_FROM_SECURITY_GROUP}_PENDING`:
-        return state.set('unassignedVmsFetchStatus', 'pending');
+      return state.set("unassignedVmsFetchStatus", "pending");
     case `${ActionTypes.VPC_UNASSIGN_NICS_FROM_SECURITY_GROUP}_REJECTED`:
-        return state.set('unassignedVmsFetchStatus', 'rejected');
+      return state.set("unassignedVmsFetchStatus", "rejected");
     case `${ActionTypes.VPC_UNASSIGN_NICS_FROM_SECURITY_GROUP}_FULFILLED`:
-        return state.set('unassignedVmsFetchStatus', 'fulfilled');
+      return state.set("unassignedVmsFetchStatus", "fulfilled");
 
     case `${ActionTypes.NETWORKS_FETCH}_PENDING`:
-        return state.set('networksFetchStatus', 'pending');
+      return state.set("networksFetchStatus", "pending");
     case `${ActionTypes.NETWORKS_FETCH}_REJECTED`:
-        return state.set('networksFetchStatus', 'rejected');
+      return state.set("networksFetchStatus", "rejected");
     case `${ActionTypes.NETWORKS_FETCH}_FULFILLED`:
-        return Immutable.merge(state, {
-            networks: mapNetworksData(action.payload),
-            networksFetchStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        networks: mapNetworksData(action.payload),
+        networksFetchStatus: "fulfilled",
+      });
 
     case `${ActionTypes.NETWORK_FETCH}_PENDING`:
-        return state.set('networkFetchStatus', 'pending');
+      return state.set("networkFetchStatus", "pending");
     case `${ActionTypes.NETWORK_FETCH}_REJECTED`:
-        return state.set('networkFetchStatus', 'rejected');
+      return state.set("networkFetchStatus", "rejected");
     case `${ActionTypes.NETWORK_FETCH}_FULFILLED`:
-        return Immutable.merge(state, {
-            network: {
-                name: action.payload.cloud_network.name,
-                subnet: action.payload.cidr,
-                type: action.payload.network_protocol,
-                dns: action.payload.dns_nameservers[0],
-                assignedVms: action.payload.assigned_vms,
-                netId: action.payload.cloud_network_id
-            },
-            networkFetchStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        network: {
+          name: action.payload.cloud_network.name,
+          subnet: action.payload.cidr,
+          type: action.payload.network_protocol,
+          dns: action.payload.dns_nameservers[0],
+          assignedVms: action.payload.assigned_vms,
+          netId: action.payload.cloud_network_id,
+        },
+        networkFetchStatus: "fulfilled",
+      });
 
     case ActionTypes.NETWORK_TEMP_ADD:
-        return state.set('networks', [action.payload, ...state.networks]);
+      return state.set("networks", [action.payload, ...state.networks]);
     case ActionTypes.NETWORK_TEMP_REMOVE:
-        // eslint-disable-next-line
-        const index = state.networks.filter(network => network.isLoading).findIndex(network => network.name.endsWith('_' + action.payload))
-        if (index > -1) {
-            return state.set('networks', [...state.networks.slice(0, index), ...state.networks.slice(index + 1)]);
-        }
+      // eslint-disable-next-line
+      const index = state.networks
+        .filter((network) => network.isLoading)
+        .findIndex((network) => network.name.endsWith("_" + action.payload));
+      if (index > -1) {
+        return state.set("networks", [
+          ...state.networks.slice(0, index),
+          ...state.networks.slice(index + 1),
+        ]);
+      }
 
-        return state;
+      return state;
 
     case `${ActionTypes.VPC_SECURITY_GROUP_FETCH}_PENDING`:
-        return state.set('groupFetchStatus', 'pending');
+      return state.set("groupFetchStatus", "pending");
     case `${ActionTypes.VPC_SECURITY_GROUP_FETCH}_REJECTED`:
-        return state.set('groupFetchStatus', 'rejected');
+      return state.set("groupFetchStatus", "rejected");
     case `${ActionTypes.VPC_SECURITY_GROUP_FETCH}_FULFILLED`:
-        return Immutable.merge(state, {
-            group: {
-                id: action.payload.id,
-                ems: action.payload.ems_ref,
-                name: action.payload.name,
-                firewallRules: action.payload.firewall_rules,
-                assignedVms: action.payload.assigned_vms
-            },
-            groupFetchStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        group: {
+          id: action.payload.id,
+          ems: action.payload.ems_ref,
+          name: action.payload.name,
+          firewallRules: action.payload.firewall_rules,
+          assignedVms: action.payload.assigned_vms,
+        },
+        groupFetchStatus: "fulfilled",
+      });
 
     case `${ActionTypes.VPC_ROUTES_FETCH}_PENDING`:
-        return state.set('routesFetchStatus', 'pending');
+      return state.set("routesFetchStatus", "pending");
     case `${ActionTypes.VPC_ROUTES_FETCH}_REJECTED`:
-        return state.set('routesFetchStatus', 'rejected');
+      return state.set("routesFetchStatus", "rejected");
     case `${ActionTypes.VPC_ROUTES_FETCH}_FULFILLED`:
-        return Immutable.merge(state, {
-            routes: action.payload.resources[0]?.extra_attributes.routes,
-            routerId: action.payload.resources[0]?.id,
-            routesFetchStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        routes: action.payload.resources[0]?.extra_attributes.routes,
+        routerId: action.payload.resources[0]?.id,
+        routesFetchStatus: "fulfilled",
+      });
 
     case `${ActionTypes.VPC_PROVIDER_ID_FETCH}_PENDING`:
-        return state.set('providerIdFetchStatus', 'pending');
+      return state.set("providerIdFetchStatus", "pending");
     case `${ActionTypes.VPC_PROVIDER_ID_FETCH}_REJECTED`:
-        return state.set('providerIdFetchStatus', 'rejected');
+      return state.set("providerIdFetchStatus", "rejected");
     case `${ActionTypes.VPC_PROVIDER_ID_FETCH}_FULFILLED`:
-        return Immutable.merge(state, {
-            providerId: action.payload.resources[0].id,
-            providerIdFetchStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        providerId: action.payload.resources[0].id,
+        providerIdFetchStatus: "fulfilled",
+      });
 
     case `${ActionTypes.VPC_ALL_VMS_FETCH}_PENDING`:
-        return state.set('allVmsFetchStatus', 'pending');
+      return state.set("allVmsFetchStatus", "pending");
     case `${ActionTypes.VPC_ALL_VMS_FETCH}_REJECTED`:
-        return state.set('allVmsFetchStatus', 'rejected');
+      return state.set("allVmsFetchStatus", "rejected");
     case `${ActionTypes.VPC_ALL_VMS_FETCH}_FULFILLED`:
-        return Immutable.merge(state, {
-            allVms: action.payload.resources,
-            allVmsFetchStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        allVms: action.payload.resources,
+        allVmsFetchStatus: "fulfilled",
+      });
 
     default:
-        return state;
-    }
-
+      return state;
+  }
 };

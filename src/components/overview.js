@@ -1,43 +1,47 @@
-import React from 'react';
-import { Redirect, withRouter, Switch, Route } from 'react-router-dom';
-import { Segment } from 'semantic-ui-react';
-import TabsLayout from '../general/tabsLayout';
-import { networksPath, networkPath, routesPath } from '../constants/routes';
-import { PropTypes } from 'prop-types';
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { Loader, Segment } from "semantic-ui-react";
+import TabsLayout from "../general/tabsLayout";
+import { networksPath, networkPath, routesPath } from "../constants/routes";
+import { useTranslation } from "react-i18next";
 
-const NetworkDetails = React.lazy(() => import('./Details/networkDetails'));
-const Networks = React.lazy(() => import('./Networks/networks'));
-const Routes = React.lazy(() => import('./Routes/routes'));
+const NetworkDetails = React.lazy(() => import("./Details/networkDetails"));
+const Networks = React.lazy(() => import("./Networks/networks"));
+const RoutesPage = React.lazy(() => import("./Routes/routes"));
 
-const NetworksOverview = ({ t }) => {
-    const menuItems = [
-        {
-            name: t('networks'),
-            path: 'networks',
-            component: Networks
-        },
-        {
-            name: t('routes'),
-            path: 'routes',
-            component: Routes
-        }
-    ];
+const NetworksOverview = () => {
+  const { t } = useTranslation();
+  const menuItems = [
+    {
+      name: t("networks"),
+      path: networksPath(),
+      component: Networks,
+    },
+    {
+      name: t("routes"),
+      path: routesPath(),
+      component: RoutesPage,
+    },
+  ];
 
-    return <>
-        <TabsLayout menuItems={menuItems} />
-        <Segment attached='bottom'>
-            <Switch>
-                <Route exact path={networksPath()} render={() => <Networks t={t} />} />
-                <Route exact path={networkPath()} render={() => <NetworkDetails t={t} />} />
-                <Route exact path={routesPath()} render={() => <Routes t={t} />} />
-                <Redirect to={`/vpc/${menuItems[0].path}`} />
-            </Switch>
-        </Segment>
-    </>;
+  return (
+    <>
+      <TabsLayout menuItems={menuItems} />
+      <Segment attached="bottom">
+        <React.Suspense fallback={<Loader active inline="centered" />}>
+          <Routes>
+            <Route exact path={networksPath()} Component={Networks} />
+            <Route exact path={networkPath()} Component={NetworkDetails} />
+            <Route exact path={routesPath()} Component={RoutesPage} />
+            <Route
+              path="*"
+              element={<Navigate to={menuItems[0].path} replace />}
+            />
+          </Routes>
+        </React.Suspense>
+      </Segment>
+    </>
+  );
 };
 
-NetworksOverview.propTypes = {
-    t: PropTypes.func
-};
-
-export default withRouter(NetworksOverview);
+export default NetworksOverview;
