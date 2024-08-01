@@ -73,11 +73,9 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "i18next": "^23.9.0",
     "ip-regex": "^5.0.0",
     "react": "^18.2.0",
     "react-dangerous-html": "^1.0.0",
-    "react-dom": "^18.0.2",
     "react-i18next": "^14.1.2",
     "react-escape-outside": "^0.1.2",
     "react-final-form": "^6.5.9",
