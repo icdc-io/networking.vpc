@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import NetworksOverview from "./components/overview";
-import { Provider } from "react-redux";
 import { VpcStore } from "./AppReducer";
 import { Loader } from "semantic-ui-react";
 import PropTypes from "prop-types";
@@ -14,11 +13,7 @@ const Vpc = ({ store }) => {
     setIsLoaded(true);
   }, []);
 
-  return (
-    <Provider store={store}>
-      {isLoaded ? <NetworksOverview /> : <Loader active inline="centered" />}
-    </Provider>
-  );
+  return isLoaded ? <NetworksOverview /> : <Loader active inline="centered" />;
 };
 
 Vpc.propTypes = {
