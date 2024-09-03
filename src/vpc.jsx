@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import NetworksOverview from "./components/overview";
-import { VpcStore } from "./AppReducer";
-import { Loader } from "semantic-ui-react";
 import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import { Loader } from "semantic-ui-react";
+import { VpcStore } from "./AppReducer";
+import NetworksOverview from "./components/overview";
 import "./App.scss";
 
 const Vpc = ({ store }) => {

@@ -1,10 +1,10 @@
-import React from "react";
-import { Form, Field } from "react-final-form";
-import { Modal, Button } from "semantic-ui-react";
-import PropTypes from "prop-types";
-import { required, ip, ipWithSubnetPrefix } from "../../utilities/Validations";
-import { useTranslation } from "react-i18next";
 import composeValidators from "container/composeValidators";
+import PropTypes from "prop-types";
+import React from "react";
+import { Field, Form } from "react-final-form";
+import { useTranslation } from "react-i18next";
+import { Button, Modal } from "semantic-ui-react";
+import { ip, ipWithSubnetPrefix, required } from "../../utilities/Validations";
 
 const GeneralInput = React.lazy(
   () => import("container/networking/GeneralInput"),

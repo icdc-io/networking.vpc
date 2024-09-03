@@ -1,18 +1,18 @@
+import PropTypes from "prop-types";
 import React from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import { Grid, Header } from "semantic-ui-react";
 import {
   assignNicsToNetworkAndFetch,
   unassignNicsFromNetworkAndFetch,
 } from "../../AppActions";
+import DeleteModal from "../../general/deleteModal";
 import Network from "../../static/svgNetwork.svg";
+import { copyInfo } from "../../utilities/copyInfo";
 import NetworkModal from "../Networks/networkModal";
 import ReturnVmTable from "./returnVmTable";
-import PropTypes from "prop-types";
-import { copyInfo } from "../../utilities/copyInfo";
-import DeleteModal from "../../general/deleteModal";
-import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 
 const ApiButton = React.lazy(() => import("container/ApiButton"));
 
@@ -47,7 +47,7 @@ const NetworkDetailsContent = ({
       <Grid.Row className="items-center">
         <Grid.Column className="inline-cell-wrapper">
           <div className="name-with-image-wrapper">
-            <img src={Network} />
+            <img src={Network} alt="Network" />
             <div>{network.name}</div>
           </div>
         </Grid.Column>

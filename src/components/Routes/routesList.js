@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { Table } from "semantic-ui-react";
-import { copyInfo } from "../../utilities/copyInfo";
-import TableHeader from "../../general/tableHeader";
-import OptionsMenu from "../../general/optionsMenu";
-import Route from "../../static/route.svg";
-import { useSelector } from "react-redux";
-import { onSearch } from "../../utilities/search";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { Table } from "semantic-ui-react";
+import OptionsMenu from "../../general/optionsMenu";
+import TableHeader from "../../general/tableHeader";
+import Route from "../../static/route.svg";
+import { copyInfo } from "../../utilities/copyInfo";
+import { onSearch } from "../../utilities/search";
 
 const RoutesList = ({ items, search }) => {
   const { t } = useTranslation();
@@ -23,7 +23,7 @@ const RoutesList = ({ items, search }) => {
     return (
       <Table.Row key={i}>
         <Table.Cell className="name-with-image-wrapper">
-          <img src={Route} />
+          <img src={Route} alt="Route" />
           <div>
             {route.destination} {copyInfo(route.destination)}
           </div>
@@ -32,7 +32,7 @@ const RoutesList = ({ items, search }) => {
           {route.nexthop} {copyInfo(route.nexthop)}
         </Table.Cell>
         <Table.Cell>{"IPv4"}</Table.Cell>
-        <Table.Cell textAlign="center"></Table.Cell>
+        <Table.Cell textAlign="center" />
         <Table.Cell collapsing textAlign="right">
           {user.role === "admin" && (
             <OptionsMenu type="routes" instance={route} options={["delete"]} />

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import NetworksList from "./networksList";
-import NetworkModal from "./networkModal";
-import { fetchNetworks, fetchVMs, fetchProvider } from "../../AppActions";
-import { Input, Loader } from "semantic-ui-react";
-import { networkValue } from "../../constants/common";
 import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { Input, Loader } from "semantic-ui-react";
+import { fetchNetworks, fetchProvider, fetchVMs } from "../../AppActions";
+import { networkValue } from "../../constants/common";
+import NetworkModal from "./networkModal";
+import NetworksList from "./networksList";
 
 // const ContentPage = React.lazy(() => import("container/ContentPage"));
 const ApiButton = React.lazy(() => import("container/ApiButton"));

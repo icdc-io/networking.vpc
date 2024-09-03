@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import RoutesList from "./routesList";
-import { fetchRoutes, fetchProvider } from "../../AppActions";
-import { Input, Loader } from "semantic-ui-react";
-import RouteModal from "./routeModal";
-import { routesValue } from "../../constants/common";
 import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { Input, Loader } from "semantic-ui-react";
+import { fetchProvider, fetchRoutes } from "../../AppActions";
+import { routesValue } from "../../constants/common";
+import RouteModal from "./routeModal";
+import RoutesList from "./routesList";
 
 const ApiButton = React.lazy(() => import("container/ApiButton"));
 

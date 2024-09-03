@@ -1,9 +1,9 @@
 import React from "react";
-import { Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
-import { Loader, Segment } from "semantic-ui-react";
-import TabsLayout from "../general/tabsLayout";
-import { networksPath, networkPath, routesPath } from "../constants/routes";
 import { useTranslation } from "react-i18next";
+import { Navigate, Outlet, Route, Routes, useLocation } from "react-router-dom";
+import { Loader, Segment } from "semantic-ui-react";
+import { networkPath, networksPath, routesPath } from "../constants/routes";
+import TabsLayout from "../general/tabsLayout";
 
 const NetworkDetails = React.lazy(() => import("./Details/networkDetails"));
 const Networks = React.lazy(() => import("./Networks/networks"));

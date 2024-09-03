@@ -1,15 +1,15 @@
-import React, { useState, useCallback } from "react";
-import { Modal, Header, Button, Dropdown } from "semantic-ui-react";
 import PropTypes from "prop-types";
-import NetworkForm from "./networkForm";
+import React, { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { Button, Dropdown, Header, Modal } from "semantic-ui-react";
 import {
+  addTemporaryNetwork,
   createNetworkActionAndFetch,
   editNetworkActionAndFetch,
   infoNotification,
-  addTemporaryNetwork,
 } from "../../AppActions";
-import { useSelector, useDispatch } from "react-redux";
-import { useTranslation } from "react-i18next";
+import NetworkForm from "./networkForm";
 
 const NetworkModal = ({ network, edit, details }) => {
   const { t } = useTranslation();

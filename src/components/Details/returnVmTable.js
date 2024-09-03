@@ -1,23 +1,23 @@
+import PropTypes from "prop-types";
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import {
-  Table,
-  Icon,
   Checkbox,
   Grid,
+  GridColumn,
   Header,
+  Icon,
   Input,
   Pagination,
   // Loader,
   Popup,
-  GridColumn,
+  Table,
 } from "semantic-ui-react";
-import PropTypes from "prop-types";
 import TableHeader from "../../general/tableHeader";
-import AssignVmModal from "./assignVmModal";
-import { onSearch } from "../../utilities/search";
-import { useSelector } from "react-redux";
 import { copyInfo } from "../../utilities/copyInfo";
-import { useTranslation } from "react-i18next";
+import { onSearch } from "../../utilities/search";
+import AssignVmModal from "./assignVmModal";
 
 const ApiButton = React.lazy(() => import("container/ApiButton"));
 
@@ -207,20 +207,15 @@ const ReturnVmTable = ({
     return vmInterfacesCell;
   };
 
-  const vmInterfacesRow =
-    paginationMass &&
-    paginationMass.map((vmInterface, index) => (
-      // eslint-disable-next-line max-len
-      <Table.Row
-        className={
-          (disabledList && disabledList[vmInterface.uuid] && "disabled-nic") ||
-          ""
-        }
-        key={index}
-      >
-        {vmInterfacesCell(vmInterface)}
-      </Table.Row>
-    ));
+  const vmInterfacesRow = paginationMass?.map((vmInterface, index) => (
+    // eslint-disable-next-line max-len
+    <Table.Row
+      className={(disabledList?.[vmInterface.uuid] && "disabled-nic") || ""}
+      key={index}
+    >
+      {vmInterfacesCell(vmInterface)}
+    </Table.Row>
+  ));
 
   return (
     <>

@@ -1,7 +1,7 @@
-import React from "react";
-import CodeSnippetOption from "./CodeSnippetOption";
 import PropTypes from "prop-types";
+import React from "react";
 import { Header } from "semantic-ui-react";
+import CodeSnippetOption from "./CodeSnippetOption";
 
 const CodeSnippetOptions = ({ tabs, navTitle, activeItem, setActiveItem }) => {
   const handleClick = (event) => {

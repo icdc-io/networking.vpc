@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Table } from "semantic-ui-react";
-import { Link } from "react-router-dom";
-import Network from "../../static/svgNetwork.svg";
-import Loading from "../../static/spinner.gif";
-import { copyInfo } from "../../utilities/copyInfo";
-import OptionsMenu from "../../general/optionsMenu";
-import { useSelector } from "react-redux";
-import { onSearch } from "../../utilities/search";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { Table } from "semantic-ui-react";
+import OptionsMenu from "../../general/optionsMenu";
+import Loading from "../../static/spinner.gif";
+import Network from "../../static/svgNetwork.svg";
+import { copyInfo } from "../../utilities/copyInfo";
+import { onSearch } from "../../utilities/search";
 
 const NetworksList = ({ items, search }) => {
   const { t } = useTranslation();
@@ -21,7 +21,7 @@ const NetworksList = ({ items, search }) => {
 
   const emptyValue = String.fromCharCode(8212);
   const returnAsignedVM = (item) => {
-    let vm = items[0].find((vm) => vm && item && vm.netId === item.netId);
+    const vm = items[0].find((vm) => vm && item && vm.netId === item.netId);
     return vm ? vm.vmsCount : 0;
   };
 
@@ -41,7 +41,7 @@ const NetworksList = ({ items, search }) => {
         <Table.Row key={index}>
           <Table.Cell>
             <div className="name-with-image-wrapper">
-              <img src={network.isLoading ? Loading : Network} />
+              <img src={network.isLoading ? Loading : Network} alt="Network" />
               <div>
                 {network.id ? (
                   <Link to={`${network.id}`}>{network.fullName}</Link>

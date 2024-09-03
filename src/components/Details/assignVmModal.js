@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Modal, Header, Button, Input } from "semantic-ui-react";
 import PropTypes from "prop-types";
-import ReturnVmTable from "./returnVmTable";
-import { onSearch } from "../../utilities/search";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchAllVMs } from "../../AppActions";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { Button, Header, Input, Modal } from "semantic-ui-react";
+import { fetchAllVMs } from "../../AppActions";
+import { onSearch } from "../../utilities/search";
+import ReturnVmTable from "./returnVmTable";
 
 const AssignVmModal = ({ submitAction, vmAssignedData = [] }) => {
   const { t } = useTranslation();
@@ -35,9 +35,9 @@ const AssignVmModal = ({ submitAction, vmAssignedData = [] }) => {
 
   useEffect(() => {
     const nics = [];
-    for (let serv of allServices) {
-      for (let network of serv.networks) {
-        for (let nic of network.allocations) {
+    for (const serv of allServices) {
+      for (const network of serv.networks) {
+        for (const nic of network.allocations) {
           if (nic?.type === "nic" && nic.nic_id) {
             const existingNic = nics.find((x) => x.vmId === nic?.vm_id);
             if (existingNic && nic.ip) {
@@ -65,7 +65,7 @@ const AssignVmModal = ({ submitAction, vmAssignedData = [] }) => {
       nics.filter(
         (x) =>
           !vmAssignedData.some((y) => {
-            return y.mac == x.mac;
+            return y.mac === x.mac;
           }),
       ),
     );

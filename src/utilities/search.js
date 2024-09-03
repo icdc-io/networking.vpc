@@ -3,10 +3,10 @@ const setExceptions = (key) => {
 };
 
 export const onSearch = (array, searchString) => {
-  let temp = [];
+  const temp = [];
   if (searchString !== "") {
     array.map((item) => {
-      for (let key in item) {
+      for (const key in item) {
         if (
           item[key] &&
           typeof item[key] !== "boolean" &&
@@ -23,7 +23,6 @@ export const onSearch = (array, searchString) => {
       }
     });
     return temp;
-  } else {
-    return array;
   }
+  return array;
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { Popup, Icon } from "semantic-ui-react";
+import { Icon, Popup } from "semantic-ui-react";
 
 export const copyInfo = (value) => {
   return value ? (
@@ -9,6 +9,7 @@ export const copyInfo = (value) => {
       pinned
       trigger={
         <button
+          type="button"
           id="gateway"
           className="reset-button"
           onClick={() => navigator.clipboard.writeText(value)}

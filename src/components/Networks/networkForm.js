@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import { Form, Field } from "react-final-form";
-import { Modal, Button } from "semantic-ui-react";
+import composeValidators from "container/composeValidators";
 import PropTypes from "prop-types";
+import React, { useState } from "react";
+import { Field, Form } from "react-final-form";
+import { useTranslation } from "react-i18next";
+import { Button, Modal } from "semantic-ui-react";
+import CustomCheckbox from "../../general/customCheckbox";
 import {
-  required,
-  name,
   ip,
   ipWithSubnetPrefix,
+  name,
+  required,
 } from "../../utilities/Validations";
-import CustomCheckbox from "../../general/customCheckbox";
-import { useTranslation } from "react-i18next";
-import composeValidators from "container/composeValidators";
 
 const GeneralInput = React.lazy(
   () => import("container/networking/GeneralInput"),

@@ -1,10 +1,10 @@
-import React, { useState, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Modal, Header, Button, Dropdown } from "semantic-ui-react";
 import PropTypes from "prop-types";
-import RouteForm from "./routeForm";
-import { createRouteActionAndFetch } from "../../AppActions";
+import React, { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { Button, Dropdown, Header, Modal } from "semantic-ui-react";
+import { createRouteActionAndFetch } from "../../AppActions";
+import RouteForm from "./routeForm";
 
 const RouteModal = ({ edit, route }) => {
   const { t } = useTranslation();
@@ -44,7 +44,7 @@ const RouteModal = ({ edit, route }) => {
   const onSubmit = useCallback(
     (values) => {
       handleClose();
-      let payload = mapPropsToApi(values);
+      const payload = mapPropsToApi(values);
       dispatch(createRouteActionAndFetch(payload, routerId));
     },
     [handleClose, dispatch, routerId],

@@ -1,16 +1,16 @@
 import React, { useEffect } from "react";
-import { Grid, Loader } from "semantic-ui-react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { Grid, Loader } from "semantic-ui-react";
 import {
   fetchNetwork,
-  fetchSecurityGroups,
-  fetchSecurityGroup,
   fetchProvider,
+  fetchSecurityGroup,
+  fetchSecurityGroups,
 } from "../../AppActions";
-import NetworkDetailsContent from "./networkDetailsContent";
 import ButtonBack from "../../general/buttonBack";
-import { useTranslation } from "react-i18next";
+import NetworkDetailsContent from "./networkDetailsContent";
 
 const NetworkDetails = () => {
   const { t } = useTranslation();

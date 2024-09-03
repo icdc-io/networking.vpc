@@ -113,9 +113,9 @@ export const dns = (value) => {
   if (
     value.match(/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{1,2}$/)
   ) {
-    let dnsParts = value.split(/\.|\//);
+    const dnsParts = value.split(/\.|\//);
     dnsParts.forEach((num, index) => {
-      let condition = (min, max) => num >= min && num <= max;
+      const condition = (min, max) => num >= min && num <= max;
       if (
         (index < 4 && condition(0, 255)) ||
         (index === 4 && condition(0, 32))
@@ -134,9 +134,9 @@ export const ip = (value) => {
     typeof value === "string" &&
     value.match(/^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$/)
   ) {
-    let dnsParts = value.split(/\./);
+    const dnsParts = value.split(/\./);
     dnsParts.forEach((num) => {
-      let condition = (min, max) => num >= min && num <= max;
+      const condition = (min, max) => num >= min && num <= max;
       if (condition(0, 255)) {
         flag++;
       }
@@ -148,11 +148,9 @@ export const ip = (value) => {
 
 export const ipWithSubnetPrefix = (value) => {
   let flag = 0;
-  const regexResult =
-    value &&
-    value.match(
-      /^([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3})\/([0-9]{1,2})$/,
-    );
+  const regexResult = value?.match(
+    /^([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3}).([0-9]{1,3})\/([0-9]{1,2})$/,
+  );
   if (regexResult) {
     const ipValues = regexResult.slice(1, 5);
     const subnet = regexResult.slice(-1)[0];
@@ -231,13 +229,14 @@ export const ports = (value) => {
   const numbersOnly =
     number(leftValue) === undefined && number(rightValue) === undefined;
   const leftLessThanRight =
-    splitedValue.length > 1 && parseInt(leftValue) <= parseInt(rightValue);
+    splitedValue.length > 1 &&
+    Number.parseInt(leftValue) <= Number.parseInt(rightValue);
   const inRangeLeftValue =
-    parseInt(leftValue) >= 0 && parseInt(leftValue) <= 65535;
+    Number.parseInt(leftValue) >= 0 && Number.parseInt(leftValue) <= 65535;
   const inRangeBothValues =
     inRangeLeftValue &&
-    parseInt(rightValue) >= 0 &&
-    parseInt(rightValue) <= 65535;
+    Number.parseInt(rightValue) >= 0 &&
+    Number.parseInt(rightValue) <= 65535;
 
   if (value !== "" && value !== null) {
     if (containsDash && rightValue === "") {
@@ -248,11 +247,10 @@ export const ports = (value) => {
       return numbersOnly && leftLessThanRight && inRangeBothValues
         ? undefined
         : validateTranslations[getLang()].number;
-    } else {
-      return number(leftValue) === undefined && inRangeLeftValue
-        ? undefined
-        : validateTranslations[getLang()].number;
     }
+    return number(leftValue) === undefined && inRangeLeftValue
+      ? undefined
+      : validateTranslations[getLang()].number;
   }
 };
 
@@ -300,11 +298,9 @@ export const peerEndpoint = (value) => {
 };
 
 export const publicKey = (value) => {
-  const validatePublicKey = value.match(
+  const validatePublicKey = !!value.match(
     /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/,
-  )
-    ? true
-    : false;
+  );
 
   return validatePublicKey
     ? undefined

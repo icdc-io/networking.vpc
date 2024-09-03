@@ -1,15 +1,15 @@
-import React, { useState, useCallback } from "react";
-import { Modal, Button, Header, Dropdown, Icon } from "semantic-ui-react";
 import PropTypes from "prop-types";
-import {
-  deleteRouteActionAndFetch,
-  deleteNetworkActionAndFetch,
-} from "../AppActions";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { networksPath } from "../constants/routes";
+import React, { useState, useCallback } from "react";
 import DangerousHTML from "react-dangerous-html";
 import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { Button, Dropdown, Header, Icon, Modal } from "semantic-ui-react";
+import {
+  deleteNetworkActionAndFetch,
+  deleteRouteActionAndFetch,
+} from "../AppActions";
+import { networksPath } from "../constants/routes";
 
 const DeleteModal = ({ type, instance, icon, button }) => {
   const { t } = useTranslation();
@@ -32,7 +32,7 @@ const DeleteModal = ({ type, instance, icon, button }) => {
       content: ["deleteRouteMessage"],
       deleteAction: useCallback(
         (route) => {
-          let payload = mapPropsToApi(route);
+          const payload = mapPropsToApi(route);
           dispatch(deleteRouteActionAndFetch(payload, routerId));
         },
         [dispatch, routerId],

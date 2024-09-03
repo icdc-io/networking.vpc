@@ -1,6 +1,6 @@
+import Immutable from "seamless-immutable";
 /* eslint camelcase: 0 */
 import * as ActionTypes from "./AppConstants";
-import Immutable from "seamless-immutable";
 
 // eslint-disable-next-line new-cap
 const initialState = Immutable({
@@ -103,11 +103,10 @@ export const VpcStore = (state = initialState, action) => {
 
     case ActionTypes.NETWORK_TEMP_ADD:
       return state.set("networks", [action.payload, ...state.networks]);
-    case ActionTypes.NETWORK_TEMP_REMOVE:
-      // eslint-disable-next-line
+    case ActionTypes.NETWORK_TEMP_REMOVE: {
       const index = state.networks
         .filter((network) => network.isLoading)
-        .findIndex((network) => network.name.endsWith("_" + action.payload));
+        .findIndex((network) => network.name.endsWith(`_${action.payload}`));
       if (index > -1) {
         return state.set("networks", [
           ...state.networks.slice(0, index),
@@ -116,6 +115,7 @@ export const VpcStore = (state = initialState, action) => {
       }
 
       return state;
+    }
 
     case `${ActionTypes.VPC_SECURITY_GROUP_FETCH}_PENDING`:
       return state.set("groupFetchStatus", "pending");
