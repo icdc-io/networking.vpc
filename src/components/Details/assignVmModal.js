@@ -95,7 +95,7 @@ const AssignVmModal = ({ submitAction, vmAssignedData = [] }) => {
         {t("createNic")}
       </Button>
 
-      <Modal open={open} size="fullscreen">
+      <Modal open={open} size="fullscreen" className="networking_vpc_modal">
         <Header content={t("connectAssignetVMS")} />
 
         <Modal.Content>

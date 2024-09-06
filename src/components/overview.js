@@ -42,16 +42,18 @@ const RootComponent = () => {
 
 const NetworksOverview = () => {
   return (
-    <React.Suspense fallback={<Loader active inline="centered" />}>
-      <Routes>
-        <Route path="/" Component={RootComponent}>
-          <Route path={networksPath()} Component={Networks} />
-          <Route path={networkPath()} Component={NetworkDetails} />
-          <Route path={routesPath()} Component={RoutesPage} />
-        </Route>
-        <Route path="*" element={<Navigate to={networksPath()} replace />} />
-      </Routes>
-    </React.Suspense>
+    <div className="networking_vpc">
+      <React.Suspense fallback={<Loader active inline="centered" />}>
+        <Routes>
+          <Route path="/" Component={RootComponent}>
+            <Route path={networksPath()} Component={Networks} />
+            <Route path={networkPath()} Component={NetworkDetails} />
+            <Route path={routesPath()} Component={RoutesPage} />
+          </Route>
+          <Route path="*" element={<Navigate to={networksPath()} replace />} />
+        </Routes>
+      </React.Suspense>
+    </div>
   );
 };
 

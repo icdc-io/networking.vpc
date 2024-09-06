@@ -78,6 +78,7 @@ const RouteModal = ({ edit, route }) => {
           size={"tiny"}
           onSubmit={onSubmit}
           onClose={handleClose}
+          className="networking_vpc_modal"
           closeIcon
         >
           <Header content={headerContent} onClick={handleClose} />
