@@ -3,7 +3,7 @@ const { dependencies } = require("./package.json");
 const isEnvProduction = process.env.NODE_ENV === "production";
 
 module.exports = {
-  name: "vpc",
+  name: "networking_vpc",
   filename: "remoteEntry.js",
   exposes: {
     "./vpc": "./src/vpc.jsx",
