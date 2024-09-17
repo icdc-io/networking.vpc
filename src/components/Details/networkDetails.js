@@ -47,7 +47,7 @@ const NetworkDetails = () => {
   return (
     <>
       <Grid.Row className="content-page__header">
-        <ButtonBack back={t("back")} style={{ marginLeft: 15 }} path={".."} />
+        <ButtonBack back={t("back")} path={".."} />
       </Grid.Row>
       {isError ? (
         "Error"

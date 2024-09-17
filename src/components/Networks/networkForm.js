@@ -16,78 +16,65 @@ const GeneralInput = React.lazy(
   () => import("container/networking/GeneralInput"),
 );
 
-const NetworkForm = ({
-  handleClose,
-  onSubmit,
-  create,
-  initialValues,
-  invalid,
-  pristine,
-}) => {
+const NetworkForm = ({ handleClose, onSubmit, create, initialValues }) => {
   const { t } = useTranslation();
-  const [addSubnet, setAddSubnet] = useState(
-    create ? true : initialValues.addSubnet,
-  );
-
-  const onAddSubnet = () => setAddSubnet(!addSubnet);
 
   const buttonContent = create ? t("create") : t("editNetwork");
 
   return (
-    <Form onSubmit={onSubmit}>
-      {({ handleSubmit }) => (
-        <form onSubmit={handleSubmit} className="ui form">
-          <Field
-            name="name"
-            label={t("name")}
-            component={GeneralInput}
-            type="text"
-            validate={composeValidators(required, name)}
-          />
-          <Field
-            name="addSubnet"
-            label={t("addSubnet")}
-            component={CustomCheckbox}
-            props={{ value: addSubnet, onClick: onAddSubnet }}
-            type="checkbox"
-          />
-          <Field
-            name="type"
-            label={t("type")}
-            component={GeneralInput}
-            type="text"
-            validate={required}
-            readOnly={true}
-          />
-          <Field
-            name="subnet"
-            label={t("subnet")}
-            component={GeneralInput}
-            type="text"
-            validate={
-              addSubnet ? composeValidators(required, ipWithSubnetPrefix) : []
-            }
-            readOnly={!addSubnet}
-          />
-          <Field
-            name="dns"
-            label={t("dnsIp")}
-            component={GeneralInput}
-            type="text"
-            validate={addSubnet ? composeValidators(required, ip) : []}
-            readOnly={!addSubnet}
-          />
-          <Modal.Actions align={"right"} style={{ marginTop: "20px" }}>
-            <Button onClick={handleClose}>{t("cancel")}</Button>
-            <Button
-              primary
-              type="submit"
-              disabled={pristine || invalid}
-              content={buttonContent}
+    <Form onSubmit={onSubmit} initialValues={initialValues}>
+      {({ handleSubmit, pristine, invalid, values }) => {
+        return (
+          <form onSubmit={handleSubmit} className="ui form">
+            <Field
+              name="name"
+              label={t("name")}
+              component={GeneralInput}
+              type="text"
+              validate={composeValidators(required, name)}
             />
-          </Modal.Actions>
-        </form>
-      )}
+            <Field
+              name="addSubnet"
+              label={t("addSubnet")}
+              component={CustomCheckbox}
+              type="checkbox"
+            />
+            <Field
+              name="type"
+              label={t("type")}
+              component={GeneralInput}
+              type="text"
+              validate={required}
+              readOnly={true}
+            />
+            <Field
+              name="subnet"
+              label={t("subnet")}
+              component={GeneralInput}
+              type="text"
+              validate={composeValidators(required, ipWithSubnetPrefix)}
+              readOnly={!values.addSubnet}
+            />
+            <Field
+              name="dns"
+              label={t("dnsIp")}
+              component={GeneralInput}
+              type="text"
+              validate={composeValidators(required, ip)}
+              readOnly={!values.addSubnet}
+            />
+            <Modal.Actions align={"right"} style={{ marginTop: "20px" }}>
+              <Button onClick={handleClose}>{t("cancel")}</Button>
+              <Button
+                primary
+                type="submit"
+                disabled={pristine || invalid}
+                content={buttonContent}
+              />
+            </Modal.Actions>
+          </form>
+        );
+      }}
     </Form>
   );
 };

@@ -10,14 +10,14 @@ const GeneralInput = React.lazy(
   () => import("container/networking/GeneralInput"),
 );
 
-const RouteForm = ({ handleClose, onSubmit, edit, invalid, pristine }) => {
+const RouteForm = ({ handleClose, onSubmit, edit }) => {
   const { t } = useTranslation();
   const buttonContent = edit ? t("editRoute") : t("createRoute");
 
   return (
     <>
       <Form onSubmit={onSubmit}>
-        {({ handleSubmit }) => (
+        {({ handleSubmit, invalid, pristine }) => (
           <form onSubmit={handleSubmit} className="ui form">
             <div className="field">
               <label>{t("type")}</label>
@@ -59,8 +59,6 @@ RouteForm.propTypes = {
   onSubmit: PropTypes.func,
   edit: PropTypes.bool,
   route: PropTypes.any,
-  invalid: PropTypes.any,
-  pristine: PropTypes.any,
 };
 
 export default RouteForm;

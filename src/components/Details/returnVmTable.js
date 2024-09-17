@@ -10,8 +10,6 @@ import {
   Icon,
   Input,
   Pagination,
-  // Loader,
-  Popup,
   Table,
 } from "semantic-ui-react";
 import TableHeader from "../../general/tableHeader";
@@ -20,6 +18,7 @@ import { onSearch } from "../../utilities/search";
 import AssignVmModal from "./assignVmModal";
 
 const ApiButton = React.lazy(() => import("container/ApiButton"));
+const Popup = React.lazy(() => import("container/Popup"));
 
 const ReturnVmTable = ({
   modal,
@@ -123,24 +122,23 @@ const ReturnVmTable = ({
               )}
               {currentVmInterface.length > 1 && (
                 <Popup
-                  position="bottom left"
-                  trigger={
+                  content={
+                    <GridColumn>
+                      {currentVmInterface.slice(1).map((element, index) => (
+                        <p key={index}>
+                          {element} {copyInfo(element)}
+                        </p>
+                      ))}
+                    </GridColumn>
+                  }
+                >
+                  <button type="button">
                     <Icon
                       size="large"
                       name="triangle down"
                       style={{ cursor: "pointer" }}
                     />
-                  }
-                  flowing
-                  hoverable
-                >
-                  <GridColumn>
-                    {currentVmInterface.slice(1).map((element, index) => (
-                      <p key={index}>
-                        {element} {copyInfo(element)}
-                      </p>
-                    ))}
-                  </GridColumn>
+                  </button>
                 </Popup>
               )}
             </Table.Cell>
