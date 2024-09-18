@@ -7,7 +7,7 @@ import { networkValue } from "../../constants/common";
 import NetworkModal from "./networkModal";
 import NetworksList from "./networksList";
 
-// const ContentPage = React.lazy(() => import("container/ContentPage"));
+const ErrorScreen = React.lazy(() => import("container/ErrorScreen"));
 const ApiButton = React.lazy(() => import("container/ApiButton"));
 
 const Networks = () => {
@@ -75,7 +75,7 @@ const Networks = () => {
           </div>
         </div>
         {isError ? (
-          "Error"
+          <ErrorScreen />
         ) : isLoading ? (
           <Loader active inline="centered" />
         ) : isNoData ? (

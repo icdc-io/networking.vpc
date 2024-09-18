@@ -11,6 +11,7 @@ import {
 } from "../../AppActions";
 import ButtonBack from "../../general/buttonBack";
 import NetworkDetailsContent from "./networkDetailsContent";
+const ErrorScreen = React.lazy(() => import("container/ErrorScreen"));
 
 const NetworkDetails = () => {
   const { t } = useTranslation();
@@ -50,7 +51,7 @@ const NetworkDetails = () => {
         <ButtonBack back={t("back")} path={".."} />
       </Grid.Row>
       {isError ? (
-        "Error"
+        <ErrorScreen />
       ) : isLoading ? (
         <Loader active inline="centered" />
       ) : (

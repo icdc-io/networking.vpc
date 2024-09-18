@@ -42,6 +42,10 @@ const NetworkDetailsContent = ({
     dispatch(unassignNicsFromNetworkAndFetch(payload, group.id));
   };
 
+  console.log("network");
+  console.log(network);
+  console.log("network");
+
   return (
     <Grid>
       <Grid.Row className="items-center">
