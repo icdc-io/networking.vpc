@@ -5,6 +5,8 @@ import * as ActionTypes from "./AppConstants";
 const notificationOptions = { position: "top-right", hideAfter: 7 };
 
 const errorHandler = (error) => {
+  if (!error) return "";
+
   if (error.includes("Could not find security_group with such id")) {
     return ActionTypes.notificationMessages[
       localStorage.getItem("icdc-lang") || "en"
