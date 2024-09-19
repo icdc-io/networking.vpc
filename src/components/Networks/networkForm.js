@@ -24,6 +24,8 @@ const NetworkForm = ({ handleClose, onSubmit, create, initialValues }) => {
   return (
     <Form onSubmit={onSubmit} initialValues={initialValues}>
       {({ handleSubmit, pristine, invalid, values }) => {
+        const isSubmitDisabled = pristine || invalid;
+
         return (
           <form onSubmit={handleSubmit} className="ui form">
             <Field
@@ -52,7 +54,11 @@ const NetworkForm = ({ handleClose, onSubmit, create, initialValues }) => {
               label={t("subnet")}
               component={GeneralInput}
               type="text"
-              validate={composeValidators(required, ipWithSubnetPrefix)}
+              validate={(value, values) => {
+                if (!values.addSubnet) return;
+
+                return required(value) || ipWithSubnetPrefix(value);
+              }}
               readOnly={!values.addSubnet}
             />
             <Field
@@ -60,7 +66,11 @@ const NetworkForm = ({ handleClose, onSubmit, create, initialValues }) => {
               label={t("dnsIp")}
               component={GeneralInput}
               type="text"
-              validate={composeValidators(required, ip)}
+              validate={(value, values) => {
+                if (!values.addSubnet) return;
+
+                return required(value) || ip(value);
+              }}
               readOnly={!values.addSubnet}
             />
             <Modal.Actions align={"right"} style={{ marginTop: "20px" }}>
@@ -68,7 +78,7 @@ const NetworkForm = ({ handleClose, onSubmit, create, initialValues }) => {
               <Button
                 primary
                 type="submit"
-                disabled={pristine || invalid}
+                disabled={isSubmitDisabled}
                 content={buttonContent}
               />
             </Modal.Actions>

@@ -47,6 +47,7 @@ const Networks = () => {
   return (
     <>
       <>
+        <h4 className="ui header">{t("vpcNetworks")}</h4>
         <div style={{ maxWidth: "600px" }}>
           <p className="color--grey">{t("vpcDescription")}</p>
         </div>
