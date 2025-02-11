@@ -1,60 +1,84 @@
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "container/Tabs";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Navigate, Outlet, Route, Routes, useLocation } from "react-router-dom";
-import { Loader, Segment } from "semantic-ui-react";
+import {
+	Navigate,
+	Outlet,
+	Route,
+	Routes,
+	useLocation,
+	useNavigate,
+} from "react-router-dom";
+import { Segment } from "semantic-ui-react";
 import { networkPath, networksPath, routesPath } from "../constants/routes";
-import TabsLayout from "../general/tabsLayout";
-
-const NetworkDetails = React.lazy(() => import("./Details/networkDetails"));
-const Networks = React.lazy(() => import("./Networks/networks"));
-const RoutesPage = React.lazy(() => import("./Routes/routes"));
+import NetworkDetails from "./Details/networkDetails";
+import Networks from "./Networks/networks";
+import RoutesPage from "./Routes/routes";
 
 const RootComponent = () => {
-  const { t } = useTranslation();
-  const location = useLocation();
-  const isRootBalancerPath =
-    location.pathname.split("/").filter((route) => route).length < 3;
+	const { t } = useTranslation();
+	const location = useLocation();
+	const networksRoute = networksPath();
+	const routesRoute = routesPath();
+	const currentRouteParts = location.pathname.split("/");
+	const isRootBalancerPath =
+		currentRouteParts.filter((route) => route).length < 3;
+	const defaultRoute = currentRouteParts[3];
+	const navigate = useNavigate();
 
-  if (isRootBalancerPath) return <Navigate to={networksPath()} replace />;
+	if (isRootBalancerPath) return <Navigate to={networksRoute} replace />;
 
-  const menuItems = [
-    {
-      name: t("networks"),
-      path: networksPath(),
-      component: Networks,
-    },
-    {
-      name: t("routes"),
-      path: routesPath(),
-      component: RoutesPage,
-    },
-  ];
+	const menuItems = [
+		{
+			name: t("networks"),
+			path: networksRoute,
+			component: Networks,
+		},
+		{
+			name: t("routes"),
+			path: routesRoute,
+			component: RoutesPage,
+		},
+	];
 
-  return (
-    <>
-      <TabsLayout menuItems={menuItems} />
-      <Segment attached="bottom">
-        <Outlet />
-      </Segment>
-    </>
-  );
+	return (
+		<Tabs
+			defaultValue={defaultRoute}
+			onValueChange={(value) => navigate(value)}
+		>
+			<TabsList>
+				{menuItems.map((item) => (
+					<TabsTrigger key={item.path} value={item.path}>
+						{item.name}
+					</TabsTrigger>
+				))}
+			</TabsList>
+			{menuItems.map((item) => (
+				<TabsContent key={item.path} value={item.path}>
+					<Segment attached="bottom">
+						<Outlet />
+					</Segment>
+				</TabsContent>
+			))}
+		</Tabs>
+	);
 };
 
 const NetworksOverview = () => {
-  return (
-    <div className="networking_vpc">
-      <React.Suspense fallback={<Loader active inline="centered" />}>
-        <Routes>
-          <Route path="/" Component={RootComponent}>
-            <Route path={networksPath()} Component={Networks} />
-            <Route path={networkPath()} Component={NetworkDetails} />
-            <Route path={routesPath()} Component={RoutesPage} />
-          </Route>
-          <Route path="*" element={<Navigate to={networksPath()} replace />} />
-        </Routes>
-      </React.Suspense>
-    </div>
-  );
+	return (
+		<div className="networking_vpc">
+			<React.Suspense fallback={null}>
+				<Routes>
+					<Route path="/" Component={RootComponent}>
+						<Route path={networksPath()} Component={Networks} />
+						<Route path={networkPath()} Component={NetworkDetails} />
+						<Route path={routesPath()} Component={RoutesPage} />
+					</Route>
+					<Route path="*" element={<Navigate to={networksPath()} replace />} />
+				</Routes>
+			</React.Suspense>
+		</div>
+	);
 };
 
 export default NetworksOverview;

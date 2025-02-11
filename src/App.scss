@@ -1,19 +1,28 @@
 .networking_vpc {
+  .network_details_content {
+    flex-flow: wrap;
+    align-items: stretch;
+    margin: -1rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+  }
+
   .ui.header.network-details {
     margin-bottom: 40px;
   }
-  
-  .ui.grid>.row.network-table {
-    margin-bottom: 16px;
-    margin-top: -2.5%;
-  
-    .network-table-title {
-      width: 90px !important;
-    }
-  
-    .network-table-content {
-      width: 180px !important;
-    }
+
+  .network-table {
+    display: flex;
+  }
+
+  .network-table-title {
+    width: 90px;
+  }
+
+  .network-table-content {
+    width: 180px;
   }
   
   .empty-table {
@@ -81,7 +90,7 @@
     width: auto;
   }
   
-  .items-center {
+  .detail-items-center {
     align-items: center;
     margin-top: 2rem;
   }
@@ -104,4 +113,17 @@
   .custom_checkbox {
     margin-bottom: 12px;
   }
+}
+
+.pagination__vm-modal {
+  margin-bottom: 20px;
+  margin-left: 20px;
+  bottom: 0;
+  position: absolute;
+}
+
+.novm-text {
+  color: gray;
+  font-weight: 600;
+  text-align: center;
 }
