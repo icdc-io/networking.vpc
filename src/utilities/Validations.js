@@ -90,6 +90,8 @@ export const maxLength250 = maxLength(250);
 
 export const maxLength256 = maxLength(256);
 
+export const namePattern = /^[a-zA-Z0-9_.-]*$/;
+
 export const name = (value) =>
 	value && !value.match(/^[a-zA-Z0-9_.-]*$/)
 		? validateTranslations[getLang()].name
@@ -135,6 +137,7 @@ export const ip = (value) => {
 		value.match(/^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$/)
 	) {
 		const dnsParts = value.split(/\./);
+		// biome-ignore lint/complexity/noForEach: <explanation>
 		dnsParts.forEach((num) => {
 			const condition = (min, max) => num >= min && num <= max;
 			if (condition(0, 255)) {
@@ -154,6 +157,7 @@ export const ipWithSubnetPrefix = (value) => {
 	if (regexResult) {
 		const ipValues = regexResult.slice(1, 5);
 		const subnet = regexResult.slice(-1)[0];
+		// biome-ignore lint/complexity/noForEach: <explanation>
 		ipValues.forEach((value) => value >= 0 && value <= 255 && flag++);
 		subnet >= 0 && subnet <= 32 && flag++;
 	}

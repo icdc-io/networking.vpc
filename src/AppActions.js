@@ -13,34 +13,46 @@ const errorNotification = (error) => {
 
 export const getFullPath = (url) => `/api/compute/v1${url}`;
 
-export const fetchNetworks = (options) => ({
+export const fetchNetworks = () => ({
 	type: ActionTypes.NETWORKS_FETCH,
-	payload: fetchData(getFullPath(ActionTypes.NETWORKS_FETCH_URL), options),
+	payload: fetchData(getFullPath(ActionTypes.NETWORKS_FETCH_URL), {
+		"X-Miq-Group": "%ACCOUNT.%ROLE",
+	}),
 });
 
-export const fetchVMs = (options) => ({
+export const fetchVMs = () => ({
 	type: ActionTypes.ASSIGNED_VMS_FETCH,
-	payload: fetchData(getFullPath(ActionTypes.ASSIGNED_VMS), options),
+	payload: fetchData(getFullPath(ActionTypes.ASSIGNED_VMS), {
+		"X-Miq-Group": "%ACCOUNT.%ROLE",
+	}),
 });
 
 export const fetchAllVMs = () => ({
 	type: ActionTypes.VPC_ALL_VMS_FETCH,
-	payload: fetchData(getFullPath(ActionTypes.ALL_VMS_URL)),
+	payload: fetchData(getFullPath(ActionTypes.ALL_VMS_URL), {
+		"X-Miq-Group": "%ACCOUNT.%ROLE",
+	}),
 });
 
 export const fetchNetwork = (id) => ({
 	type: ActionTypes.NETWORK_FETCH,
-	payload: fetchData(getFullPath(ActionTypes.currentNetwork(id))),
+	payload: fetchData(getFullPath(ActionTypes.currentNetwork(id)), {
+		"X-Miq-Group": "%ACCOUNT.%ROLE",
+	}),
 });
 
 export const fetchProvider = () => ({
 	type: ActionTypes.VPC_PROVIDER_ID_FETCH,
-	payload: fetchData(getFullPath(ActionTypes.PROVIDER_ID_URL)),
+	payload: fetchData(getFullPath(ActionTypes.PROVIDER_ID_URL), {
+		"X-Miq-Group": "%ACCOUNT.%ROLE",
+	}),
 });
 
 export const createNetwork = (payload, id) => ({
 	type: ActionTypes.NETWORK_CREATE,
-	payload: createData(getFullPath(ActionTypes.networksUrl(id)), payload),
+	payload: createData(getFullPath(ActionTypes.networksUrl(id)), payload, {
+		"X-Miq-Group": "%ACCOUNT.%ROLE",
+	}),
 });
 
 const addNetwork = (payload) => ({
@@ -81,7 +93,13 @@ export const createNetworkActionAndFetch = (payload, id) => {
 
 export const editNetwork = (payload, providerId) => ({
 	type: ActionTypes.NETWORK_EDIT,
-	payload: createData(getFullPath(ActionTypes.networkUrl(providerId)), payload),
+	payload: createData(
+		getFullPath(ActionTypes.networkUrl(providerId)),
+		payload,
+		{
+			"X-Miq-Group": "%ACCOUNT.%ROLE",
+		},
+	),
 });
 
 export const editNetworkActionAndFetch = (payload, providerId) => {
@@ -100,7 +118,13 @@ export const editNetworkActionAndFetch = (payload, providerId) => {
 
 export const deleteNetwork = (payload, providerId) => ({
 	type: ActionTypes.NETWORK_DELETE,
-	payload: createData(getFullPath(ActionTypes.networkUrl(providerId)), payload),
+	payload: createData(
+		getFullPath(ActionTypes.networkUrl(providerId)),
+		payload,
+		{
+			"X-Miq-Group": "%ACCOUNT.%ROLE",
+		},
+	),
 });
 
 export const deleteNetworkActionAndFetch = (payload, providerId) => {
@@ -119,12 +143,16 @@ export const deleteNetworkActionAndFetch = (payload, providerId) => {
 
 export const fetchSecurityGroups = () => ({
 	type: ActionTypes.VPC_SECURITY_GROUPS_FETCH,
-	payload: fetchData(getFullPath(ActionTypes.SECURITY_GROUPS_FETCH_URL)),
+	payload: fetchData(getFullPath(ActionTypes.SECURITY_GROUPS_FETCH_URL), {
+		"X-Miq-Group": "%ACCOUNT.%ROLE",
+	}),
 });
 
 export const fetchSecurityGroup = (id) => ({
 	type: ActionTypes.VPC_SECURITY_GROUP_FETCH,
-	payload: fetchData(getFullPath(ActionTypes.currentNetwork(id))),
+	payload: fetchData(getFullPath(ActionTypes.currentNetwork(id)), {
+		"X-Miq-Group": "%ACCOUNT.%ROLE",
+	}),
 });
 
 export const deleteSecurityGroup = () => ({
@@ -134,12 +162,16 @@ export const deleteSecurityGroup = () => ({
 
 export const fetchRoutes = () => ({
 	type: ActionTypes.VPC_ROUTES_FETCH,
-	payload: fetchData(getFullPath(ActionTypes.ROUTES_FETCH_URL)),
+	payload: fetchData(getFullPath(ActionTypes.ROUTES_FETCH_URL), {
+		"X-Miq-Group": "%ACCOUNT.%ROLE",
+	}),
 });
 
 export const createRoute = (payload, routerId) => ({
 	type: ActionTypes.VPC_ROUTE_CREATE,
-	payload: createData(getFullPath(ActionTypes.routerUrl(routerId)), payload),
+	payload: createData(getFullPath(ActionTypes.routerUrl(routerId)), payload, {
+		"X-Miq-Group": "%ACCOUNT.%ROLE",
+	}),
 });
 
 export const createRouteActionAndFetch = (payload, routerId) => {
@@ -158,7 +190,9 @@ export const createRouteActionAndFetch = (payload, routerId) => {
 
 export const deleteRoute = (payload, routerId) => ({
 	type: ActionTypes.VPC_ROUTE_DELETE,
-	payload: createData(getFullPath(ActionTypes.routerUrl(routerId)), payload),
+	payload: createData(getFullPath(ActionTypes.routerUrl(routerId)), payload, {
+		"X-Miq-Group": "%ACCOUNT.%ROLE",
+	}),
 });
 
 export const deleteRouteActionAndFetch = (payload, routerId) => {
@@ -177,7 +211,9 @@ export const deleteRouteActionAndFetch = (payload, routerId) => {
 
 export const unassignNicsToSecurityGroup = (payload, id) => ({
 	type: ActionTypes.VPC_UNASSIGN_NICS_FROM_SECURITY_GROUP,
-	payload: createData(getFullPath(ActionTypes.cloudSubnetsUrl(id)), payload),
+	payload: createData(getFullPath(ActionTypes.cloudSubnetsUrl(id)), payload, {
+		"X-Miq-Group": "%ACCOUNT.%ROLE",
+	}),
 });
 
 export const unassignNicsFromSecurityGroupAndFetch = (payload, id) => {
@@ -217,7 +253,9 @@ export const unassignNicsFromNetworkAndFetch = (payload, id) => {
 export const assignNicsToSecurityGroup = (payload, id) => {
 	return {
 		type: ActionTypes.VPC_ASSIGN_NICS_TO_SECURITY_GROUP,
-		payload: createData(getFullPath(ActionTypes.cloudSubnetsUrl(id)), payload),
+		payload: createData(getFullPath(ActionTypes.cloudSubnetsUrl(id)), payload, {
+			"X-Miq-Group": "%ACCOUNT.%ROLE",
+		}),
 	};
 };
 

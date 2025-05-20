@@ -1,17 +1,29 @@
+import { Button } from "container/Button";
+import ErrorScreen from "container/ErrorScreen";
+import { Input } from "container/Input";
 import Loader from "container/Loader";
-import React, { useEffect, useState } from "react";
+import { OPERATOR, isAdminRights } from "container/roleUtils";
+import { Meh } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { Input } from "semantic-ui-react";
-import { fetchNetworks, fetchProvider, fetchVMs } from "../../AppActions";
-import { networksUrl } from "../../AppConstants";
+import {
+	fetchNetworks,
+	fetchProvider,
+	fetchVMs,
+	getFullPath,
+} from "../../AppActions";
+import {
+	ASSIGNED_VMS,
+	NETWORKS_FETCH_URL,
+	PROVIDER_ID_URL,
+	networksUrl,
+} from "../../AppConstants";
 import { apiButtonInfo } from "../../constants/apiButtonInfo";
 import { networkValue } from "../../constants/common";
 import VpcApiButton from "../VpcApiButton";
 import NetworkModal from "./networkModal";
 import NetworksList from "./networksList";
-
-import ErrorScreen from "container/ErrorScreen";
 
 const Networks = () => {
 	const { t } = useTranslation();
@@ -29,22 +41,43 @@ const Networks = () => {
 	const [search, setSearch] = useState("");
 	const user = useSelector((state) => state.host.user);
 	const providerId = useSelector((state) => state.VpcStore.providerId);
+	const createModalRef = useRef();
 
 	const dispatch = useDispatch();
 
+	const onCreateModal = () => {
+		if (createModalRef.current) {
+			createModalRef.current.handleClick();
+		}
+	};
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		dispatch(fetchNetworks());
 		dispatch(fetchVMs());
 		providerIdFetchStatus !== "fulfilled" && dispatch(fetchProvider());
 	}, [dispatch, user]);
 
-	const isNoData = networks.length < 1;
+	const isNoData = networks.length === 0;
 
 	const statuses = [vmsFetchStatus, networksFetchStatus, providerIdFetchStatus];
 
 	const isError = statuses.includes("rejected");
 
 	const isLoading = statuses.includes("pending");
+
+	const getContent = () => {
+		if (isError) return <ErrorScreen />;
+		if (isLoading) return <Loader />;
+		if (isNoData)
+			return (
+				<div className="noContent">
+					<Meh className="m-auto" size={54} />
+					<h3>{t("noNetworks")}</h3>
+				</div>
+			);
+		return <NetworksList items={[vms, networks]} search={search} />;
+	};
 
 	return (
 		<>
@@ -56,35 +89,27 @@ const Networks = () => {
 				<div className="vpcDescription">
 					<div>
 						<p style={{ fontWeight: "700" }}>{t("search")}</p>
-						{!isError && !isLoading && (
-							<Input
-								icon="search"
-								iconPosition="left"
-								placeholder={t("searchField")}
-								value={search}
-								onChange={(e) => setSearch(e.currentTarget.value)}
-							/>
-						)}
+						<Input
+							placeholder={t("searchField")}
+							value={search}
+							onChange={(e) => setSearch(e.target.value)}
+							disabled={isError || isLoading}
+						/>
 					</div>
 					<div className="buttons-vpc">
 						<VpcApiButton
 							info={apiButtonInfo.network(networkValue)}
 							url={networksUrl(providerId)}
 						/>
-						<NetworkModal />
+						{isAdminRights(user.role) && (
+							<Button onClick={onCreateModal} disabled={user.role === OPERATOR}>
+								{t("createVps")}
+							</Button>
+						)}
 					</div>
 				</div>
-				{isError ? (
-					<ErrorScreen />
-				) : isLoading ? (
-					<Loader />
-				) : isNoData ? (
-					<div style={{ maxWidth: "600px" }}>
-						<p className="color--grey">{t("vpcDescription")}</p>
-					</div>
-				) : (
-					<NetworksList items={[vms, networks]} search={search} />
-				)}
+				{getContent()}
+				<NetworkModal ref={createModalRef} />
 			</>
 		</>
 	);

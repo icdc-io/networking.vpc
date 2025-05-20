@@ -1,8 +1,10 @@
+import { Button } from "container/Button";
+import { Input } from "container/Input";
 import Loader from "container/Loader";
-import React, { useEffect, useState } from "react";
+import { OPERATOR, isAdminRights } from "container/roleUtils";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { Input } from "semantic-ui-react";
 import { fetchProvider, fetchRoutes } from "../../AppActions";
 import { routerUrl } from "../../AppConstants";
 import { apiButtonInfo } from "../../constants/apiButtonInfo";
@@ -23,9 +25,17 @@ const Routes = () => {
 	const user = useSelector((state) => state.host.user);
 	const routerId = useSelector((state) => state.VpcStore.routerId);
 	const [search, setSearch] = useState("");
+	const modalRef = useRef();
 
 	const dispatch = useDispatch();
 
+	const onCreate = () => {
+		if (modalRef.current) {
+			modalRef.current.handleClick();
+		}
+	};
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		dispatch(fetchRoutes());
 		providerIdFetchStatus !== "fulfilled" && dispatch(fetchProvider());
@@ -50,8 +60,8 @@ const Routes = () => {
 						<div>
 							<p style={{ fontWeight: "700" }}>{t("search")}</p>
 							<Input
-								icon="search"
-								iconPosition="left"
+								// icon="search"
+								// iconPosition="left"
 								placeholder={t("searchField")}
 								value={search}
 								onChange={(e) => setSearch(e.currentTarget.value)}
@@ -62,12 +72,17 @@ const Routes = () => {
 								info={apiButtonInfo.route(routesValue)}
 								url={routerUrl(routerId)}
 							/>
-							<RouteModal />
+							{isAdminRights(user.role) && (
+								<Button onClick={onCreate} disabled={user.role === OPERATOR}>
+									{t("createRoute")}
+								</Button>
+							)}
 						</div>
 					</div>
 					<RoutesList items={routes} search={search} />
 				</>
 			)}
+			<RouteModal ref={modalRef} />
 		</>
 	);
 };

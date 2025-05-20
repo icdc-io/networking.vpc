@@ -26,6 +26,7 @@ const initialState = Immutable({
 
 const mapNetworksData = (payload) => {
 	const result = [];
+	// biome-ignore lint/complexity/noForEach: <explanation>
 	payload.resources.forEach((item) => {
 		const networkData = {
 			name: item.name,
@@ -34,6 +35,7 @@ const mapNetworksData = (payload) => {
 			fullName: item.name.split("_").slice(2).join("_"),
 		};
 		if (item.cloud_subnets.length) {
+			// biome-ignore lint/complexity/noForEach: <explanation>
 			item.cloud_subnets.forEach((subnet) =>
 				result.push({
 					id: subnet.id,
@@ -51,6 +53,7 @@ const mapNetworksData = (payload) => {
 	return result;
 };
 
+// biome-ignore lint/style/useDefaultParameterLast: <explanation>
 export const VpcStore = (state = initialState, action) => {
 	switch (action.type) {
 		case `${ActionTypes.ASSIGNED_VMS_FETCH}_PENDING`:

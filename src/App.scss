@@ -1,4 +1,11 @@
 .networking_vpc {
+	.noContent {
+		margin: 5rem auto;
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
   .network_details_content {
     flex-flow: wrap;
     align-items: stretch;
@@ -9,7 +16,7 @@
     padding: 1em;
   }
 
-  .ui.header.network-details {
+  .header.network-details {
     margin-bottom: 40px;
   }
 
@@ -57,27 +64,24 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-end;
-    margin-top: 20px;
+    margin: 1.5rem 0 2rem;
+		flex-wrap: wrap;
+		gap: 1rem;
   
-    .ui.input {
+    .input {
       margin: 10px 20px 20px 0;
     }
   
     .buttons-vpc {
       display: flex;
       flex-direction: row;
-      margin-bottom: 13px;
-  
-      button {
-        margin: 0.5rem 0;
-      }
     }
   
     p {
       margin: 0;
     }
   
-    .ui.primary.button {
+  .primary.button {
       height: 38px;
       white-space: nowrap;
       padding: 0 19px;
@@ -85,7 +89,7 @@
   }
   
   
-  .ui.grid > .row > .column.inline-cell-wrapper {
+  .column.inline-cell-wrapper {
     display: inline-block;
     width: auto;
   }
@@ -126,4 +130,8 @@
   color: gray;
   font-weight: 600;
   text-align: center;
+}
+
+.assign_vm_modal {
+	max-width: 90vw;
 }

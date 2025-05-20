@@ -1,8 +1,16 @@
-import PropTypes from "prop-types";
+import { Button } from "container/Button";
+import { Input } from "container/Input";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "container/Modal";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Header, Input, Modal } from "semantic-ui-react";
 import { fetchAllVMs } from "../../AppActions";
 import { onSearch } from "../../utilities/search";
 import ReturnVmTable from "./returnVmTable";
@@ -13,8 +21,6 @@ const AssignVmModal = ({ submitAction, vmAssignedData = [] }) => {
 	const [search, setSearch] = useState("");
 	const [result, setResult] = useState([]);
 	const [checked, setChecked] = useState({});
-	//   const [disabledList, setDisabledList] = useState({});
-	const [checkedCount, setCheckedCount] = useState(0);
 	const allServices = useSelector((state) => state.VpcStore.allVms);
 	const [nicsBasedVmList, setNicsBasedVmList] = useState([]);
 	const disabledList = {};
@@ -25,7 +31,7 @@ const AssignVmModal = ({ submitAction, vmAssignedData = [] }) => {
 	}, [dispatch]);
 
 	const onChange = (e) => {
-		setSearch(e.currentTarget.value);
+		setSearch(e.target.value);
 	};
 
 	const handleClose = () => {
@@ -33,6 +39,7 @@ const AssignVmModal = ({ submitAction, vmAssignedData = [] }) => {
 		setOpen(false);
 	};
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		const vms = [];
 		const allVms = allServices.flatMap((item) =>
@@ -65,8 +72,8 @@ const AssignVmModal = ({ submitAction, vmAssignedData = [] }) => {
 
 	const handleSubmit = () => {
 		const nicIds = Object.entries(checked)
-			.filter((nic) => nic[1].isChecked)
-			.map((nic) => nic[0].nicId);
+			.filter((nic) => nic[1])
+			.map((nic) => nic[0]);
 		submitAction(nicIds);
 		handleClose();
 	};
@@ -77,24 +84,30 @@ const AssignVmModal = ({ submitAction, vmAssignedData = [] }) => {
 
 	const toggle = (id) => () => setChecked({ ...checked, [id]: !checked[id] });
 
-	useEffect(() => {
-		setCheckedCount(Object.values(checked).filter((value) => value).length);
-	}, [checked]);
+	// useEffect(() => {
+	// 	setCheckedCount(Object.values(checked).filter((value) => value).length);
+	// }, [checked]);
+
+	const checkedCount = Object.values(checked).filter((value) => value).length;
 
 	return (
 		<React.Fragment>
-			<Button onClick={() => setOpen(true)} primary>
-				{t("createNic")}
-			</Button>
-
-			<Modal open={open} size="fullscreen" className="networking_vpc_modal">
-				<Header content={t("connectAssignetVMS")} />
-
-				<Modal.Content>
+			<Button onClick={() => setOpen(true)}>{t("createNic")}</Button>
+			<Dialog
+				open={open}
+				onOpenChange={(isOpen) => {
+					setOpen(isOpen);
+				}}
+			>
+				<DialogContent aria-describedby={undefined} className="assign_vm_modal">
+					<DialogHeader>
+						<DialogTitle>{t("connectAssignetVMS")}</DialogTitle>
+					</DialogHeader>
+					{/* <p>{getDescription()}</p> */}
 					<Input
 						value={search}
 						onChange={onChange}
-						icon="search"
+						// icon="search"
 						placeholder="Search..."
 					/>
 
@@ -107,27 +120,53 @@ const AssignVmModal = ({ submitAction, vmAssignedData = [] }) => {
 							disabledList={disabledList}
 						/>
 					</div>
-					<Modal.Actions align={"right"}>
-						{t("selected", { count: checkedCount })}
-						<Button onClick={handleClose}>{t("cancel")}</Button>
+					<DialogFooter>
+						<span className="flex items-center">
+							{t("selected", { count: checkedCount })}
+						</span>
+						<DialogClose asChild>
+							<Button
+								variant="ghost"
+								size="lg"
+								type="button"
+								// className={styles.cancel}
+							>
+								{t("cancel")}
+							</Button>
+						</DialogClose>
 						<Button
 							onClick={handleSubmit}
-							primary
-							type="submit"
+							size="lg"
+							type="button"
 							disabled={!checkedCount}
 						>
 							{t("save")}
 						</Button>
+
+						{/* <Button
+							type="button"
+							size="lg"
+							className={"confirm-delete-dns"}
+							onClick={onSubmitHandler}
+						>
+							{t("confirm")}
+						</Button> */}
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+
+			{/* <Modal open={open} size="fullscreen" className="networking_vpc_modal">
+				<Header content={t("connectAssignetVMS")} />
+
+				<Modal.Content>
+
+					<Modal.Actions align={"right"}>
+
 					</Modal.Actions>
 				</Modal.Content>
-			</Modal>
+			</Modal> */}
 		</React.Fragment>
 	);
-};
-
-AssignVmModal.propTypes = {
-	vmAssignedData: PropTypes.array,
-	submitAction: PropTypes.func,
 };
 
 export default AssignVmModal;

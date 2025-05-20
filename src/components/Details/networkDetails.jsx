@@ -1,17 +1,16 @@
+import { Button } from "container/Button";
 import ErrorScreen from "container/ErrorScreen";
 import Loader from "container/Loader";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { Grid } from "semantic-ui-react";
+import { Link, useParams } from "react-router-dom";
 import {
 	fetchNetwork,
 	fetchProvider,
 	fetchSecurityGroup,
 	fetchSecurityGroups,
 } from "../../AppActions";
-import ButtonBack from "../../general/buttonBack";
 import NetworkDetailsContent from "./networkDetailsContent";
 
 const NetworkDetails = () => {
@@ -33,6 +32,7 @@ const NetworkDetails = () => {
 
 	const dispatch = useDispatch();
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		dispatch(fetchNetwork(id));
 		dispatch(fetchSecurityGroups());
@@ -48,9 +48,13 @@ const NetworkDetails = () => {
 
 	return (
 		<>
-			<Grid.Row className="content-page__header">
-				<ButtonBack back={t("back")} path={".."} />
-			</Grid.Row>
+			<div className="row content-page__header">
+				<Link to={".."} relative="path" replace>
+					<Button variant="back" size="lg">
+						{t("back")}
+					</Button>
+				</Link>
+			</div>
 			{isError ? (
 				<ErrorScreen />
 			) : isLoading ? (

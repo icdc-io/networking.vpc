@@ -1,21 +1,22 @@
+import { Checkbox } from "container/Checkbox";
+import CopyButton from "container/CopyButton";
+import { Input } from "container/Input";
+import Paginator from "container/Paginator";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "container/Table";
 import { isAdminRights } from "container/roleUtils";
-import PropTypes from "prop-types";
-import React, { useState, useEffect } from "react";
+import { Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import {
-	Checkbox,
-	Grid,
-	Header,
-	Icon,
-	Input,
-	Pagination,
-	Table,
-} from "semantic-ui-react";
 import { cloudSubnetsUrl } from "../../AppConstants";
 import { apiButtonInfo } from "../../constants/apiButtonInfo";
-import TableHeader from "../../general/tableHeader";
-import { copyInfo } from "../../utilities/copyInfo";
 import { onSearch } from "../../utilities/search";
 import VpcApiButton from "../VpcApiButton";
 import AssignVmModal from "./assignVmModal";
@@ -61,11 +62,12 @@ const ReturnVmTable = ({
 		setSearch(e.currentTarget.value);
 	};
 
-	const pageChange = (_e, { activePage }) => {
+	const pageChange = (activePage) => {
 		setActivePage(activePage);
 		setoldActivePage(activePage);
 	};
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (vmInterfaces) {
 			setResult(vmInterfaces);
@@ -78,10 +80,12 @@ const ReturnVmTable = ({
 		paginationMass.length < 1 && setActivePage(1);
 	}, [paginationMass]);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		setResult(onSearch(vmInterfaces, search));
 	}, [search, activePage, totalPages]);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (activePage !== oldActivePage && search === "") {
 			setActivePage(oldActivePage);
@@ -90,6 +94,7 @@ const ReturnVmTable = ({
 		}
 	}, [search]);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (result) {
 			setTotalPages(Math.ceil(result.length / 10));
@@ -112,55 +117,61 @@ const ReturnVmTable = ({
 				case "mac":
 				case "ip":
 					return (
-						<Table.Cell key={index} style={{ textAlign: "left" }}>
-							{currentVmInterface || String.fromCharCode(8212)}
-							{copyInfo(currentVmInterface)}
-						</Table.Cell>
+						// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+						<TableCell key={index} style={{ textAlign: "left" }}>
+							<div className="flex gap-2 items-center">
+								{currentVmInterface || String.fromCharCode(8212)}
+								<CopyButton content={currentVmInterface} />
+							</div>
+						</TableCell>
 					);
 				default:
 					return (
-						<Table.Cell key={index} style={{ textAlign: "left" }}>
+						// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+						<TableCell key={index} style={{ textAlign: "left" }}>
 							{currentVmInterface || String.fromCharCode(8212)}
-						</Table.Cell>
+						</TableCell>
 					);
 			}
 		});
 
-		vmInterfacesCell.push(<Table.Cell />);
+		vmInterfacesCell.push(<TableCell />);
 
 		modal
 			? vmInterfacesCell.unshift(
-					<Table.Cell key={vmInterface.vmId}>
+					<TableCell key={vmInterface.vmId}>
 						<Checkbox
-							onChange={toggle(vmInterface.vmId)}
 							checked={checked[vmInterface.vmId]}
+							onCheckedChange={toggle(vmInterface.vmId)}
 							disabled={disabledList[vmInterface.vmId]}
 						/>
-					</Table.Cell>,
+					</TableCell>,
 				)
 			: vmInterfacesCell.push(
-					<Table.Cell key={vmInterfacesCell.length + 1}>
+					<TableCell key={vmInterfacesCell.length + 1}>
 						<VpcApiButton
 							filterActions={["TOKEN", "CREATE", "DELETE"]}
 							info={apiButtonInfo.vmNetworkTable(vmInterface)}
 							url={cloudSubnetsUrl(group?.id)}
 						/>
-					</Table.Cell>,
+					</TableCell>,
 					isAdminRights(user.role) && (
-						<Table.Cell
+						<TableCell
 							key={vmInterfacesCell.length + 2}
 							style={{ textAlign: "center" }}
 						>
 							{onDelete && (
-								<Icon
+								<button
+									type="button"
 									onClick={() => {
 										onDelete(vmInterface.nicId, vmInterface.vmId);
 									}}
-									name="trash alternate"
 									disabled={unassignedVmsFetchStatus === "pending"}
-								/>
+								>
+									<Trash2 size={16} />
+								</button>
 							)}
-						</Table.Cell>
+						</TableCell>
 					),
 				);
 
@@ -169,84 +180,82 @@ const ReturnVmTable = ({
 
 	const vmInterfacesRow = paginationMass?.map((vmInterface, index) => (
 		// eslint-disable-next-line max-len
-		<Table.Row
+		<TableRow
 			className={(disabledList?.[vmInterface.uuid] && "disabled-nic") || ""}
+			// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 			key={index}
 		>
 			{vmInterfacesCell(vmInterface)}
-		</Table.Row>
+		</TableRow>
 	));
 
 	return (
 		<>
 			{modal ? (
-				<Header as="h4">
+				<h4>
 					[{vmInterfaces.length}] {t("availableVMs")}
-				</Header>
+				</h4>
 			) : (
-				<Header as="h4">
-					{t("assignedVm")} ({vmInterfaces.length})
-				</Header>
+				<>
+					<h4>
+						{t("assignedVm")} ({vmInterfaces.length})
+					</h4>
+					<br />
+				</>
 			)}
 			{!modal && (
-				<Grid.Row>
-					<Grid.Column verticalAlign="middle" width={8}>
-						<Input
-							value={search}
-							onChange={onChange}
-							icon="search"
-							placeholder={t("search")}
-							disabled={vmInterfaces.length === 0}
-						/>
-					</Grid.Column>
-					{showModalButton && (
-						<Grid.Column textAlign="right" width={8}>
-							<AssignVmModal
-								submitAction={onModalSubmit}
-								vmAssignedData={paginationMass}
+				<>
+					<div className="flex gap-2 items-center justify-between w-full">
+						<div>
+							<Input
+								value={search}
+								onChange={onChange}
+								// icon="search"
+								placeholder={t("search")}
+								disabled={vmInterfaces.length === 0}
 							/>
-						</Grid.Column>
-					)}
-				</Grid.Row>
+						</div>
+						{showModalButton && (
+							<div>
+								<AssignVmModal
+									submitAction={onModalSubmit}
+									vmAssignedData={paginationMass}
+								/>
+							</div>
+						)}
+					</div>
+					<br />
+				</>
 			)}
 			<div className="table-container">
-				<Table unstackable className="item-list">
-					<TableHeader headers={headers} />
-					<Table.Body>{vmInterfacesRow}</Table.Body>
+				<Table className="item-list">
+					<TableHeader>
+						<TableRow>
+							{headers.map((header) => (
+								<TableHead key={header}>{t(header)}</TableHead>
+							))}
+						</TableRow>
+					</TableHeader>
+					<TableBody>{vmInterfacesRow}</TableBody>
 				</Table>
 			</div>
+			<br />
 			{vmInterfaces.length > 9 && (
-				<Grid.Row className={modal && "pagination__vm-modal"}>
-					<Pagination
-						pointing
-						secondary
-						lastItem={null}
-						firstItem={null}
-						activePage={activePage}
+				<div className={modal && "row pagination__vm-modal"}>
+					<Paginator
+						currentPage={activePage}
 						totalPages={totalPages}
 						onPageChange={pageChange}
 					/>
-				</Grid.Row>
+				</div>
 			)}
 			{vmInterfaces.length === 0 && (
-				<Grid.Row className="pagination__novm">
-					<Grid.Column className="novm-text">{t("noAssignedVM")}</Grid.Column>
-				</Grid.Row>
+				<div className="row pagination__novm">
+					<div className="novm-text">{t("noAssignedVM")}</div>
+				</div>
 			)}
 		</>
 	);
-};
-
-ReturnVmTable.propTypes = {
-	vmInterfaces: PropTypes.array,
-	modal: PropTypes.bool,
-	checked: PropTypes.any,
-	toggle: PropTypes.func,
-	showModalButton: PropTypes.bool,
-	onModalSubmit: PropTypes.func,
-	onDelete: PropTypes.func,
-	disabledList: PropTypes.any,
-	group: PropTypes.object,
 };
 
 export default ReturnVmTable;

@@ -25,19 +25,20 @@
 		"@rsbuild/plugin-sass": "^1.0.1-rc.2",
 		"dotenv-webpack": "^8.1.0",
 		"lefthook": "^1.7.15",
+		"openapi-typescript": "^7.4.1",
 		"redux-logger": "^3.0.6"
 	},
 	"dependencies": {
+		"@tanstack/react-query": "^5.66.9",
 		"ip-regex": "^5.0.0",
+		"lucide-react": "^0.447.0",
 		"react": "^18.2.0",
 		"react-dangerous-html": "^1.0.0",
-		"react-i18next": "^14.1.2",
 		"react-escape-outside": "^0.1.2",
-		"react-final-form": "^6.5.9",
+		"react-i18next": "^14.1.2",
 		"react-redux": "^9.1.0",
 		"react-router-dom": "^6.22.1",
 		"react-syntax-highlighter": "^15.4.5",
-		"seamless-immutable": "^7.1.4",
-		"semantic-ui-react": "^2.1.5"
+		"seamless-immutable": "^7.1.4"
 	}
 }
