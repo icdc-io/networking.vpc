@@ -74,7 +74,7 @@ const Routes = () => {
 							/>
 							{isAdminRights(user.role) && (
 								<Button onClick={onCreate} disabled={user.role === OPERATOR}>
-									{t("createRoute")}
+									{t("createWebRoute")}
 								</Button>
 							)}
 						</div>
