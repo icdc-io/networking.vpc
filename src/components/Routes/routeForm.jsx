@@ -36,7 +36,7 @@ const RouteForm = ({ handleClose, onSubmit, edit }) => {
 			return acc;
 		}, {}),
 	});
-	const buttonContent = edit ? t("editRoute") : t("createRoute");
+	const buttonContent = edit ? t("editWebRoute") : t("createWebRoute");
 
 	return (
 		<Form {...form}>
