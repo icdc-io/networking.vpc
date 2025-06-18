@@ -73,7 +73,7 @@ const NetworkDetailsContent = ({
 				</div> */}
 			</div>
 			<br />
-			<h4>{t("netDetails")}</h4>
+			<h3>{t("netDetails")}</h3>
 			<br />
 			<div className="network-table">
 				<span className="network-table-title">{t("subnet")}</span>

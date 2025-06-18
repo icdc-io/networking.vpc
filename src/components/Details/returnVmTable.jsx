@@ -192,12 +192,12 @@ const ReturnVmTable = ({
 	return (
 		<>
 			{modal ? (
-				<h4>
+				<h4 className="assign-vms-title">
 					[{vmInterfaces.length}] {t("availableVMs")}
 				</h4>
 			) : (
 				<>
-					<h4>
+					<h4 className="assign-vms-title">
 						{t("assignedVm")} ({vmInterfaces.length})
 					</h4>
 					<br />
@@ -210,7 +210,7 @@ const ReturnVmTable = ({
 							<Input
 								value={search}
 								onChange={onChange}
-								// icon="search"
+								variant="search"
 								placeholder={t("search")}
 								disabled={vmInterfaces.length === 0}
 							/>

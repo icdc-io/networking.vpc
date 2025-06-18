@@ -104,12 +104,14 @@ const AssignVmModal = ({ submitAction, vmAssignedData = [] }) => {
 						<DialogTitle>{t("connectAssignetVMS")}</DialogTitle>
 					</DialogHeader>
 					{/* <p>{getDescription()}</p> */}
-					<Input
-						value={search}
-						onChange={onChange}
-						// icon="search"
-						placeholder="Search..."
-					/>
+					<div className="input-container">
+						<Input
+							value={search}
+							onChange={onChange}
+							variant="search"
+							placeholder={t("search")}
+						/>
+					</div>
 
 					<div className="vm-block">
 						<ReturnVmTable

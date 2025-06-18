@@ -126,7 +126,10 @@ const NetworkForm = ({ handleClose, onSubmit, initialValues }) => {
 						</Button>
 					</DialogClose>
 
-					<Button type="submit" disabled={!form.formState.isDirty}>
+					<Button
+						type="submit"
+						// disabled={!form.formState.isDirty}
+					>
 						{buttonContent}
 					</Button>
 				</DialogFooter>

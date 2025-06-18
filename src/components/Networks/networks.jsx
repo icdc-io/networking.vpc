@@ -2,6 +2,14 @@ import { Button } from "container/Button";
 import ErrorScreen from "container/ErrorScreen";
 import { Input } from "container/Input";
 import Loader from "container/Loader";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "container/Table";
 import { OPERATOR, isAdminRights } from "container/roleUtils";
 import { Meh } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
@@ -21,9 +29,12 @@ import {
 } from "../../AppConstants";
 import { apiButtonInfo } from "../../constants/apiButtonInfo";
 import { networkValue } from "../../constants/common";
+import { onSearch } from "../../utilities/search";
 import VpcApiButton from "../VpcApiButton";
 import NetworkModal from "./networkModal";
 import NetworksList from "./networksList";
+
+const tableHeader = ["name", "subnet", "type", "dns", "assignedVmNics", ""];
 
 const Networks = () => {
 	const { t } = useTranslation();
@@ -31,7 +42,6 @@ const Networks = () => {
 	const networksFetchStatus = useSelector(
 		(state) => state.VpcStore.networksFetchStatus,
 	);
-	const vms = useSelector((state) => state.VpcStore.assignedVms);
 	const vmsFetchStatus = useSelector(
 		(state) => state.VpcStore.assignedVmsFetchStatus,
 	);
@@ -58,8 +68,6 @@ const Networks = () => {
 		providerIdFetchStatus !== "fulfilled" && dispatch(fetchProvider());
 	}, [dispatch, user]);
 
-	const isNoData = networks.length === 0;
-
 	const statuses = [vmsFetchStatus, networksFetchStatus, providerIdFetchStatus];
 
 	const isError = statuses.includes("rejected");
@@ -67,31 +75,48 @@ const Networks = () => {
 	const isLoading = statuses.includes("pending");
 
 	const getContent = () => {
-		if (isError) return <ErrorScreen />;
-		if (isLoading) return <Loader />;
-		if (isNoData)
-			return (
+		const items = onSearch(networks, search);
+
+		if (!isError && !isLoading && items.length > 0)
+			return <NetworksList items={items} />;
+
+		return (
+			<TableCell colSpan={100}>
 				<div className="noContent">
-					<Meh className="m-auto" size={54} />
-					<h3>{t("noNetworks")}</h3>
+					{isError ? (
+						<ErrorScreen />
+					) : isLoading ? (
+						<div className="m-auto">
+							<Loader />
+						</div>
+					) : (
+						<div className="m-auto">
+							<Meh className="m-auto" size={54} />
+							<h3>{t("noNetworks")}</h3>
+						</div>
+					)}
 				</div>
-			);
-		return <NetworksList items={[vms, networks]} search={search} />;
+			</TableCell>
+		);
 	};
+
+	const tableHeaderCells = tableHeader.map((header) => (
+		<TableHead key={header}>{t(header)}</TableHead>
+	));
 
 	return (
 		<>
 			<>
-				<h4 className="ui header">{t("vpcNetworks")}</h4>
+				<h2 className="page-title">{t("vpcNetworks")}</h2>
 				<div style={{ maxWidth: "600px" }}>
 					<p className="color--grey">{t("vpcDescription")}</p>
 				</div>
 				<div className="vpcDescription">
 					<div>
-						<p style={{ fontWeight: "700" }}>{t("search")}</p>
 						<Input
-							placeholder={t("searchField")}
+							placeholder={t("search")}
 							value={search}
+							variant="search"
 							onChange={(e) => setSearch(e.target.value)}
 							disabled={isError || isLoading}
 						/>
@@ -108,7 +133,15 @@ const Networks = () => {
 						)}
 					</div>
 				</div>
-				{getContent()}
+
+				<div className="table-container">
+					<Table>
+						<TableHeader>
+							<TableRow>{tableHeaderCells}</TableRow>
+						</TableHeader>
+						<TableBody>{getContent()}</TableBody>
+					</Table>
+				</div>
 				<NetworkModal ref={createModalRef} />
 			</>
 		</>

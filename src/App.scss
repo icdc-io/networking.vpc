@@ -1,10 +1,12 @@
 .networking_vpc {
+	.page-title {
+		margin-bottom: 1rem;
+	}
 	.noContent {
-		margin: 5rem auto;
-		text-align: center;
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
+		min-height: 30rem;
 	}
   .network_details_content {
     flex-flow: wrap;
@@ -14,6 +16,11 @@
     display: flex;
     flex-direction: column;
     padding: 1em;
+
+		h3 {
+			font-size: 20px;
+			font-weight: 600;
+		}
   }
 
   .header.network-details {
@@ -134,4 +141,14 @@
 
 .assign_vm_modal {
 	max-width: 90vw;
+
+	.input-container {
+		max-width: 20rem;
+		width: 100%;
+	}
+}
+
+.assign-vms-title {
+	font-size: 18px;
+	font-weight: 600;
 }

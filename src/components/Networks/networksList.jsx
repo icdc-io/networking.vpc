@@ -17,18 +17,13 @@ import { Link, useNavigate } from "react-router-dom";
 import DeleteModal from "../../general/deleteModal";
 import Loading from "../../static/spinner.gif";
 import Network from "../../static/svgNetwork.svg";
-import { onSearch } from "../../utilities/search";
 
-const NetworksList = ({ items, search }) => {
+const NetworksList = ({ items }) => {
 	const { t } = useTranslation();
-	const [filteredData, setFilteredData] = useState([]);
 	const user = useSelector((state) => state.host.user);
 	const deleteModalRef = useRef();
 	const navigate = useNavigate();
-
-	useEffect(() => {
-		setFilteredData(onSearch(items[1], search));
-	}, [search, items]);
+	const vms = useSelector((state) => state.VpcStore.assignedVms);
 
 	const onDelete = (instance) => () => {
 		if (deleteModalRef.current) {
@@ -40,19 +35,11 @@ const NetworksList = ({ items, search }) => {
 
 	const emptyValue = String.fromCharCode(8212);
 	const returnAsignedVM = (item) => {
-		const vm = items[0].find((vm) => vm && item && vm.netId === item.netId);
+		const vm = vms.find((vm) => vm && item && vm.netId === item.netId);
 		return vm ? vm.vmsCount : 0;
 	};
 
-	const tableHeader = ["name", "subnet", "type", "dns", "assignedVmNics", ""];
-
-	const tableHeaderCells = tableHeader.map((header) => (
-		<TableCell key={header} style={{ borderBottom: "1px solid #D1D1D1" }}>
-			<b>{t(header)}</b>
-		</TableCell>
-	));
-
-	const networkList = filteredData.map((network, index) => {
+	const networkList = items.map((network, index) => {
 		// const options = !returnAsignedVM(network) ? ['edit', 'delete'] : ['edit', 'view'];
 		if (network) {
 			const options = !returnAsignedVM(network)
@@ -117,17 +104,7 @@ const NetworksList = ({ items, search }) => {
 
 	return (
 		<>
-			<div className="table-container">
-				<Table>
-					<TableHeader>
-						<TableRow>{tableHeaderCells}</TableRow>
-					</TableHeader>
-					<TableBody>{networkList}</TableBody>
-				</Table>
-			</div>
-			{search && filteredData.length === 0 && (
-				<div className="empty-table">{t("noSearchResults")}</div>
-			)}
+			{networkList}
 			<DeleteModal ref={deleteModalRef} type={"networks"} />
 		</>
 	);
