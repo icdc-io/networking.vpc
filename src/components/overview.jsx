@@ -24,11 +24,13 @@ const menuItems = [
 const RootComponent = ({ children }) => {
 	const { t } = useTranslation();
 	const currentRouteParts = window.location.pathname.split("/");
-	const defaultRoute =
-		menuItems.find((item) => item.path === currentRouteParts[3])?.path ||
-		menuItems[0].path;
+	const isRootVpcPath = currentRouteParts.filter((route) => route).length < 3;
+	const defaultRoute = currentRouteParts[3];
 
 	const navigate = useNavigate();
+
+	if (isRootVpcPath || !menuItems.find((item) => item.path === defaultRoute))
+		return <Navigate to={networksPath()} replace />;
 
 	const onChange = (value) => {
 		navigate(value, {
@@ -45,11 +47,13 @@ const RootComponent = ({ children }) => {
 					</TabsTrigger>
 				))}
 			</TabsList>
-			{menuItems.map((item) => (
-				<TabsContent key={item.path} value={item.path}>
-					<Segment>{children}</Segment>
-				</TabsContent>
-			))}
+			{menuItems
+				.filter((item) => item.path === defaultRoute)
+				.map((item) => (
+					<TabsContent key={item.path} value={item.path}>
+						<Segment>{children}</Segment>
+					</TabsContent>
+				))}
 		</Tabs>
 	);
 };
@@ -60,7 +64,7 @@ const NetworksOverview = () => {
 			<React.Suspense fallback={null}>
 				<RootComponent>
 					<Routes>
-						<Route index element={<Navigate to={networksPath()} replace />} />
+						{/* <Route index element={<Navigate to={networksPath()} replace />} /> */}
 						<Route path={networksPath()} Component={Networks} />
 						<Route path={networkPath()} Component={NetworkDetails} />
 						<Route path={routesPath()} Component={RoutesPage} />
