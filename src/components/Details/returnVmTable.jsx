@@ -192,20 +192,19 @@ const ReturnVmTable = ({
 	return (
 		<>
 			{modal ? (
-				<h4 className="assign-vms-title">
+				<h4 className="assign-vms-title w-full mx-4">
 					[{vmInterfaces.length}] {t("availableVMs")}
 				</h4>
 			) : (
 				<>
-					<h4 className="assign-vms-title">
+					<h4 className="assign-vms-title mt-8 w-full">
 						{t("assignedVm")} ({vmInterfaces.length})
 					</h4>
-					<br />
 				</>
 			)}
 			{!modal && (
 				<>
-					<div className="flex gap-2 items-center justify-between w-full">
+					<div className="flex gap-2 items-center justify-between w-full mx-4">
 						<div>
 							<Input
 								value={search}
@@ -224,7 +223,6 @@ const ReturnVmTable = ({
 							</div>
 						)}
 					</div>
-					<br />
 				</>
 			)}
 			<div className="table-container">
@@ -236,22 +234,28 @@ const ReturnVmTable = ({
 							))}
 						</TableRow>
 					</TableHeader>
-					<TableBody>{vmInterfacesRow}</TableBody>
+					<TableBody>
+						{vmInterfaces.length === 0 ? (
+							<TableRow>
+								<TableCell colSpan={100}>
+									<div className="row pagination__novm">
+										<div className="novm-text">{t("noAssignedVM")}</div>
+									</div>
+								</TableCell>
+							</TableRow>
+						) : (
+							vmInterfacesRow
+						)}
+					</TableBody>
 				</Table>
 			</div>
-			<br />
 			{vmInterfaces.length > 9 && (
-				<div className={modal && "row pagination__vm-modal"}>
+				<div className={"mx-4 w-full"}>
 					<Paginator
 						currentPage={activePage}
 						totalPages={totalPages}
 						onPageChange={pageChange}
 					/>
-				</div>
-			)}
-			{vmInterfaces.length === 0 && (
-				<div className="row pagination__novm">
-					<div className="novm-text">{t("noAssignedVM")}</div>
 				</div>
 			)}
 		</>

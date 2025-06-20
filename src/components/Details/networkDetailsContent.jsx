@@ -72,9 +72,7 @@ const NetworkDetailsContent = ({
 					<NetworkModal edit details network={network} />
 				</div> */}
 			</div>
-			<br />
-			<h3>{t("netDetails")}</h3>
-			<br />
+			<h3 className="mx-4">{t("netDetails")}</h3>
 			<div className="network-table">
 				<span className="network-table-title">{t("subnet")}</span>
 				<span className="network-table-content flex items-center">
@@ -97,7 +95,6 @@ const NetworkDetailsContent = ({
 					<CopyButton content={network.dns} />
 				</span>
 			</div>
-			<br />
 			<ReturnVmTable
 				showModalButton
 				onModalSubmit={assignNicsAndFetch}

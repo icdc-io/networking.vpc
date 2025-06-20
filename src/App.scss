@@ -2,145 +2,138 @@
 	.page-title {
 		margin-bottom: 1rem;
 	}
+	.mt-8 {
+		margin-top: 2rem;
+	}
 	.noContent {
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
 		min-height: 30rem;
 	}
-  .network_details_content {
-    flex-flow: wrap;
-    align-items: stretch;
-    margin: -1rem;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    padding: 1em;
+	.network_details_content {
+		flex-flow: wrap;
+		align-items: stretch;
+		margin: -1rem;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		padding: 1em;
 
 		h3 {
 			font-size: 20px;
 			font-weight: 600;
 		}
-  }
+	}
 
-  .header.network-details {
-    margin-bottom: 40px;
-  }
+	.header.network-details {
+		margin-bottom: 40px;
+	}
 
-  .network-table {
-    display: flex;
-  }
+	.network-table {
+		display: flex;
+	}
 
-  .network-table-title {
-    width: 90px;
-  }
+	.network-table-title {
+		width: 90px;
+	}
 
-  .network-table-content {
-    width: 180px;
-  }
-  
-  .empty-table {
-    text-align: center;
-    color: grey;
-    font-weight: 600;
-    margin-top: 46px;
-    margin-bottom: 46px;
-  }
-  
-  .buttons-vpc {
-    display: flex;
-  }
-  
-  .grid.no-vpc-networks-header,
-  .grid.no-vpc-routes-header {
-    padding: 16px;
-  
-    .row {
-      padding: 0;
-  
-      &:first-child {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-    }
-  }
-  
-  .vpcDescription {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin: 1.5rem 0 2rem;
+	.network-table-content {
+		width: 180px;
+	}
+
+	.empty-table {
+		text-align: center;
+		color: grey;
+		font-weight: 600;
+		margin-top: 46px;
+		margin-bottom: 46px;
+	}
+
+	.buttons-vpc {
+		display: flex;
+	}
+
+	.grid.no-vpc-networks-header,
+	.grid.no-vpc-routes-header {
+		padding: 16px;
+
+		.row {
+			padding: 0;
+
+			&:first-child {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+		}
+	}
+
+	.vpcDescription {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: flex-end;
+		margin: 1.5rem 0 2rem;
 		flex-wrap: wrap;
 		gap: 1rem;
-  
-    .input {
-      margin: 10px 20px 20px 0;
-    }
-  
-    .buttons-vpc {
-      display: flex;
-      flex-direction: row;
-    }
-  
-    p {
-      margin: 0;
-    }
-  
-  .primary.button {
-      height: 38px;
-      white-space: nowrap;
-      padding: 0 19px;
-    }
-  }
-  
-  
-  .column.inline-cell-wrapper {
-    display: inline-block;
-    width: auto;
-  }
-  
-  .detail-items-center {
-    align-items: center;
-    margin-top: 2rem;
-  }
+
+		.input {
+			margin: 10px 20px 20px 0;
+		}
+
+		.buttons-vpc {
+			display: flex;
+			flex-direction: row;
+		}
+
+		p {
+			margin: 0;
+		}
+
+		.primary.button {
+			height: 38px;
+			white-space: nowrap;
+			padding: 0 19px;
+		}
+	}
+
+	.column.inline-cell-wrapper {
+		display: inline-block;
+		width: auto;
+	}
+
+	.detail-items-center {
+		align-items: center;
+		margin-top: 2rem;
+	}
 }
 
 .networking_vpc_modal {
-  .ipv4 {
-    font-size: 1rem;
-    padding: 1rem;
-    color: #515151;
-  }
-  
-  .vm-block {
-    margin: 2rem 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    height: 368px;
-  }
+	.ipv4 {
+		font-size: 1rem;
+		padding: 1rem;
+		color: #515151;
+	}
 
-  .custom_checkbox {
-    margin-bottom: 12px;
-  }
-}
-
-.pagination__vm-modal {
-  margin-bottom: 20px;
-  margin-left: 20px;
-  bottom: 0;
-  position: absolute;
+	.custom_checkbox {
+		margin-bottom: 12px;
+	}
 }
 
 .novm-text {
-  color: gray;
-  font-weight: 600;
-  text-align: center;
+	color: gray;
+	font-weight: 600;
+	text-align: center;
 }
 
 .assign_vm_modal {
 	max-width: 90vw;
+
+	.vm-block {
+		min-height: 160px;
+		margin-bottom: 2rem;
+	}
 
 	.input-container {
 		max-width: 20rem;
@@ -151,4 +144,16 @@
 .assign-vms-title {
 	font-size: 18px;
 	font-weight: 600;
+}
+
+.mx-4 {
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+}
+.pagination__novm {
+	min-height: 120px;
+	display: flex;
+	align-content: center;
+	justify-content: center;
+	flex-direction: column;
 }
