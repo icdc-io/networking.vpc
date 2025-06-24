@@ -1,4 +1,5 @@
 import CopyButton from "container/CopyButton";
+import Loader from "container/Loader";
 import OptionsMenu from "container/OptionsMenu";
 import {
 	Table,
@@ -49,8 +50,14 @@ const NetworksList = ({ items }) => {
 				// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 				<TableRow key={index}>
 					<TableCell>
-						<div className="name-with-image-wrapper">
-							<img src={network.isLoading ? Loading : Network} alt="Network" />
+						<div className="name-with-image-wrapper gap-2">
+							{network.isLoading ? (
+								<div className="loader-container">
+									<Loader variant="fixed" />
+								</div>
+							) : (
+								<img src={Network} height={45} width={45} alt="Network" />
+							)}
 							<div>
 								{network.id ? (
 									<Link to={`${network.id}`}>{network.fullName}</Link>
