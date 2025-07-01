@@ -32,7 +32,7 @@ const RoutesList = ({ items }) => {
 		return (
 			// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 			<TableRow key={i}>
-				<TableCell className="name-with-image-wrapper">
+				<TableCell className="name-with-image-wrapper gap-2">
 					<img src={Route} alt="Route" />
 					<div className="flex items-center gap-2">
 						{route.destination}

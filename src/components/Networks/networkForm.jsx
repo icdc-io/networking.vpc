@@ -1,7 +1,8 @@
 import { Button } from "container/Button";
 import { Form, useForm } from "container/Form";
+import Loader from "container/Loader";
 import { DialogClose, DialogFooter } from "container/Modal";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CheckboxFormField } from "../../general/CheckboxFormField";
 import { InputFormField } from "../../general/InputFormField";
@@ -71,6 +72,8 @@ const fieldsInfo = (values = {}) => [
 
 const NetworkForm = ({ handleClose, onSubmit, initialValues }) => {
 	const { t } = useTranslation();
+	const [isCreating, setIsCreating] = useState(false);
+
 	const form = useForm({
 		defaultValues: fieldsInfo().reduce(
 			(acc, curr) => {
@@ -103,10 +106,17 @@ const NetworkForm = ({ handleClose, onSubmit, initialValues }) => {
 		}
 	}, [values.addSubnet]);
 
+	const handleSubmit = (values) => {
+		setIsCreating(true);
+		onSubmit(values).finally(() => {
+			setIsCreating(false);
+		});
+	};
+
 	return (
 		<Form {...form}>
 			<form
-				onSubmit={form.handleSubmit(onSubmit)}
+				onSubmit={form.handleSubmit(handleSubmit)}
 				className={"flex flex-col gap-4"}
 			>
 				{fieldsInfo(values).map((fieldInfo) => {
@@ -126,10 +136,12 @@ const NetworkForm = ({ handleClose, onSubmit, initialValues }) => {
 						</Button>
 					</DialogClose>
 
-					<Button
-						type="submit"
-						// disabled={!form.formState.isDirty}
-					>
+					<Button type="submit" disabled={isCreating}>
+						{isCreating && (
+							<span className="button-loader-container">
+								<Loader variant="fixed" />
+							</span>
+						)}
 						{buttonContent}
 					</Button>
 				</DialogFooter>

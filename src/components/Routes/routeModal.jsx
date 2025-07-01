@@ -4,7 +4,6 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "container/Modal";
-import PropTypes from "prop-types";
 import React, {
 	useState,
 	useCallback,
@@ -69,11 +68,6 @@ const RouteModal = (_props, ref) => {
 			</DialogContent>
 		</Dialog>
 	);
-};
-
-RouteModal.propTypes = {
-	edit: PropTypes.bool,
-	route: PropTypes.any,
 };
 
 export default forwardRef(RouteModal);

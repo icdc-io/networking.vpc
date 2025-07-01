@@ -13,12 +13,15 @@ const errorNotification = (error) => {
 
 export const getFullPath = (url) => `/api/compute/v1${url}`;
 
-export const fetchNetworks = () => ({
-	type: ActionTypes.NETWORKS_FETCH,
-	payload: fetchData(getFullPath(ActionTypes.NETWORKS_FETCH_URL), {
-		"X-Miq-Group": "%ACCOUNT.%ROLE",
-	}),
-});
+export const fetchNetworks = (withoutLoader) => (dispatch) =>
+	dispatch({
+		type: ActionTypes[
+			withoutLoader ? "NETWORKS_FETCH_NO_PENDING" : "NETWORKS_FETCH"
+		],
+		payload: fetchData(getFullPath(ActionTypes.NETWORKS_FETCH_URL), {
+			"X-Miq-Group": "%ACCOUNT.%ROLE",
+		}),
+	});
 
 export const fetchVMs = () => ({
 	type: ActionTypes.ASSIGNED_VMS_FETCH,
@@ -77,15 +80,16 @@ export const createNetworkActionAndFetch = (payload, id) => {
 	return (dispatch) => {
 		const response = dispatch(createNetwork(payload, id));
 
-		response.then(
+		return response.then(
 			() => {
 				dispatch(fetchNetworks());
 				dispatch(fetchVMs());
 				showSuccessNotification("");
 			},
 			(error) => {
-				dispatch(removeNetwork(payload.name));
+				// dispatch(removeNetwork(payload.name));
 				errorNotification(error);
+				throw new Error(error);
 			},
 		);
 	};
@@ -106,12 +110,15 @@ export const editNetworkActionAndFetch = (payload, providerId) => {
 	return (dispatch) => {
 		const response = dispatch(editNetwork(payload, providerId));
 
-		response.then(
+		return response.then(
 			() => {
 				dispatch(fetchNetworks());
 				showSuccessNotification("");
 			},
-			(error) => errorNotification(error),
+			(error) => {
+				errorNotification(error);
+				throw new Error(error);
+			},
 		);
 	};
 };
@@ -131,12 +138,15 @@ export const deleteNetworkActionAndFetch = (payload, providerId) => {
 	return (dispatch) => {
 		const response = dispatch(deleteNetwork(payload, providerId));
 
-		response.then(
+		return response.then(
 			() => {
 				dispatch(fetchNetworks());
 				showSuccessNotification("");
 			},
-			(error) => errorNotification(error),
+			(error) => {
+				errorNotification(error);
+				throw new Error(error);
+			},
 		);
 	};
 };
@@ -199,12 +209,15 @@ export const deleteRouteActionAndFetch = (payload, routerId) => {
 	return (dispatch) => {
 		const response = dispatch(deleteRoute(payload, routerId));
 
-		response.then(
+		return response.then(
 			() => {
 				dispatch(fetchRoutes());
 				showSuccessNotification("");
 			},
-			(error) => errorNotification(error),
+			(error) => {
+				errorNotification(error);
+				throw new Error(error);
+			},
 		);
 	};
 };
@@ -282,9 +295,11 @@ export const assignNicsToNetworkAndFetch = (payload, id) => {
 		const response = dispatch(assignNicsToSecurityGroup(payload, id));
 
 		response.then(
-			() => {
+			(data) => {
 				dispatch(fetchNetwork(id));
-				showSuccessNotification("");
+				data.value.success
+					? showSuccessNotification("")
+					: errorNotification(data.value.message);
 			},
 			(error) => {
 				errorNotification(error);

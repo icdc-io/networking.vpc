@@ -55,7 +55,7 @@ const NetworkDetailsContent = ({
 		<div className="network_details_content">
 			<div className="row detail-items-center flex items-center gap-2">
 				<div className="inline-cell-wrapper">
-					<div className="name-with-image-wrapper">
+					<div className="name-with-image-wrapper gap-2">
 						<img src={Network} alt="Network" />
 						<div>{network.name}</div>
 					</div>
@@ -107,6 +107,7 @@ const NetworkDetailsContent = ({
 				}))}
 				group={group}
 				onDelete={deleteNicAndFetch}
+				isActive={network.status === "active"}
 			/>
 			<div className="network-delete">
 				<div className="network-delete_desc">
@@ -116,7 +117,7 @@ const NetworkDetailsContent = ({
 					<div>{t("deleteVpsDetailsDesc")}</div>
 				</div>
 				<div>
-					{isAdminRights(user.role) && (
+					{isAdminRights(user.role) && network.status === "active" && (
 						<Button
 							onClick={onDeleteModalOpen}
 							variant="outline"
