@@ -15,7 +15,7 @@ import { fetchAllVMs } from "../../AppActions";
 import { onSearch } from "../../utilities/search";
 import ReturnVmTable from "./returnVmTable";
 
-const AssignVmModal = ({ submitAction, vmAssignedData = [] }) => {
+const AssignVmModal = ({ submitAction, vmAssignedData = [], isActive }) => {
 	const { t } = useTranslation();
 	const [open, setOpen] = useState(false);
 	const [search, setSearch] = useState("");
@@ -92,7 +92,9 @@ const AssignVmModal = ({ submitAction, vmAssignedData = [] }) => {
 
 	return (
 		<React.Fragment>
-			<Button onClick={() => setOpen(true)}>{t("createNic")}</Button>
+			{isActive && (
+				<Button onClick={() => setOpen(true)}>{t("createNic")}</Button>
+			)}
 			<Dialog
 				open={open}
 				onOpenChange={(isOpen) => {

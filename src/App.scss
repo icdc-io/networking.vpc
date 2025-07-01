@@ -3,8 +3,9 @@
 		margin-bottom: 1rem;
 	}
 	.loader-container {
-		height: 45px;
-		width: 45px;
+    width: 35px;
+    height: 35px;
+    margin: 5px;
 	}
 	.name-with-image-wrapper img {
 		padding: 0;
@@ -125,6 +126,16 @@
 
 	.custom_checkbox {
 		margin-bottom: 12px;
+	}
+	.button-loader-container {
+		width: 16;
+		height: 16;
+		margin-right: 0.5rem;
+
+		.icdc-loader {
+			border-width: 2px;
+			border-top-color: transparent;
+		}
 	}
 }
 

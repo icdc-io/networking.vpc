@@ -25,7 +25,6 @@ const NetworksList = ({ items }) => {
 	const deleteModalRef = useRef();
 	const navigate = useNavigate();
 	const vms = useSelector((state) => state.VpcStore.assignedVms);
-
 	const onDelete = (instance) => () => {
 		if (deleteModalRef.current) {
 			deleteModalRef.current.handleClick(instance);
@@ -42,71 +41,83 @@ const NetworksList = ({ items }) => {
 
 	const networkList = items.map((network, index) => {
 		// const options = !returnAsignedVM(network) ? ['edit', 'delete'] : ['edit', 'view'];
-		if (network) {
-			const options = !returnAsignedVM(network)
-				? [{ text: "delete", action: onDelete, color: "red" }]
-				: [{ text: "viewVmNics", action: toToDetails }];
-			return (
-				// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-				<TableRow key={index}>
-					<TableCell>
-						<div className="name-with-image-wrapper gap-2">
-							{network.isLoading ? (
-								<div className="loader-container">
-									<Loader variant="fixed" />
-								</div>
-							) : (
-								<img src={Network} height={45} width={45} alt="Network" />
-							)}
-							<div>
-								{network.id ? (
+		if (!network) return null;
+		const vmsCount = returnAsignedVM(network);
+
+		const options = network.status
+			? [
+					!vmsCount &&
+						isAdminRights(user.role) && {
+							text: "delete",
+							action: onDelete,
+							color: "red",
+						},
+					vmsCount && {
+						text: "viewVmNics",
+						action: toToDetails,
+					},
+				].filter(Boolean)
+			: [];
+
+		return (
+			// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+			<TableRow key={index}>
+				<TableCell>
+					<div className="name-with-image-wrapper gap-2">
+						{!network.status ? (
+							<div className="loader-container">
+								<Loader variant="fixed" />
+							</div>
+						) : (
+							<img src={Network} height={45} width={45} alt="Network" />
+						)}
+						<div>
+							{network.id ? (
+								network.status ? (
 									<Link to={`${network.id}`}>{network.fullName}</Link>
 								) : (
-									network.name
-								)}
-								<p>{network.name}</p>
-							</div>
+									network.fullName
+								)
+							) : (
+								network.name
+							)}
+							<p>{network.name}</p>
 						</div>
-					</TableCell>
-					<TableCell>
-						{network.subnet ? (
-							<div className="flex items-center">
-								<span>{network.subnet}</span>
-								&nbsp; &nbsp;
-								<CopyButton content={network.subnet} />
-							</div>
-						) : (
-							emptyValue
-						)}
-					</TableCell>
-					<TableCell>{network.type || emptyValue}</TableCell>
-					<TableCell>
-						{network.dns ? (
-							<div className="flex items-center">
-								<span>{network.dns}</span>
-								&nbsp; &nbsp;
-								<CopyButton content={network.dns} />
-							</div>
-						) : (
-							emptyValue
-						)}
-					</TableCell>
-					<TableCell>
-						{!returnAsignedVM(network) ? (
-							returnAsignedVM(network)
-						) : (
-							<Link to={`${network.id}`}>{returnAsignedVM(network)}</Link>
-						)}
-					</TableCell>
-					<TableCell align="right">
-						{((isAdminRights(user.role) || returnAsignedVM(network)) && (
-							<OptionsMenu instance={network} options={options} />
-						)) ||
-							""}
-					</TableCell>
-				</TableRow>
-			);
-		}
+					</div>
+				</TableCell>
+				<TableCell>
+					{network.subnet ? (
+						<div className="flex items-center">
+							<span>{network.subnet}</span>
+							&nbsp; &nbsp;
+							<CopyButton content={network.subnet} />
+						</div>
+					) : (
+						emptyValue
+					)}
+				</TableCell>
+				<TableCell>{network.type || emptyValue}</TableCell>
+				<TableCell>
+					{network.dns ? (
+						<div className="flex items-center">
+							<span>{network.dns}</span>
+							&nbsp; &nbsp;
+							<CopyButton content={network.dns} />
+						</div>
+					) : (
+						emptyValue
+					)}
+				</TableCell>
+				<TableCell>
+					{!vmsCount ? vmsCount : <Link to={`${network.id}`}>{vmsCount}</Link>}
+				</TableCell>
+				<TableCell align="right">
+					{options.length > 0 && (
+						<OptionsMenu instance={network} options={options} />
+					)}
+				</TableCell>
+			</TableRow>
+		);
 	});
 
 	return (

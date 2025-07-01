@@ -1,4 +1,6 @@
 export const NETWORKS_FETCH = "NETWORKS_FETCH";
+export const ASSIGNED_VMS_FETCH_NO_PENDING = "ASSIGNED_VMS_FETCH_NO_PENDING";
+export const NETWORKS_FETCH_NO_PENDING = "NETWORKS_FETCH_NO_PENDING";
 export const NETWORKS_FETCH_URL =
 	"/cloud_networks?expand=resources&attributes=cloud_subnets,custom_attributes";
 export const NETWORK_FETCH = "NETWORK_FETCH";
