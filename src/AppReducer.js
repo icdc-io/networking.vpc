@@ -22,6 +22,7 @@ const initialState = Immutable({
 	providerIdFetchStatus: "",
 	allVms: [],
 	allVmsFetchStatus: "",
+	inactiveNetworks: [],
 });
 
 const mapNetworksData = (payload) => {
@@ -32,17 +33,19 @@ const mapNetworksData = (payload) => {
 			name: item.name,
 			netId: item.id,
 			emsRef: item.ems_ref,
+			status: item.status,
 			fullName: item.name.split("_").slice(2).join("_"),
 		};
 		if (item.cloud_subnets.length) {
 			// biome-ignore lint/complexity/noForEach: <explanation>
 			item.cloud_subnets.forEach((subnet) =>
 				result.push({
+					...networkData,
 					id: subnet.id,
 					subnet: subnet.cidr,
 					type: subnet.network_protocol,
 					dns: subnet.dns_nameservers[0],
-					...networkData,
+					emsRef: subnet.ems_ref,
 				}),
 			);
 		} else {
@@ -81,11 +84,45 @@ export const VpcStore = (state = initialState, action) => {
 			return state.set("networksFetchStatus", "pending");
 		case `${ActionTypes.NETWORKS_FETCH}_REJECTED`:
 			return state.set("networksFetchStatus", "rejected");
-		case `${ActionTypes.NETWORKS_FETCH}_FULFILLED`:
+		case `${ActionTypes.NETWORKS_FETCH}_FULFILLED`: {
+			const updatedNetworks = mapNetworksData(action.payload);
+			const oldInactiveNetworks = state.inactiveNetworks.filter(
+				(network) =>
+					!updatedNetworks.find((net) => net.emsRef === network.emsRef)?.status,
+			);
 			return Immutable.merge(state, {
-				networks: mapNetworksData(action.payload),
+				networks: updatedNetworks.sort((a, b) => b.id - a.id),
+				inactiveNetworks: [
+					...updatedNetworks.filter(
+						(network) =>
+							!network.status &&
+							!oldInactiveNetworks.find((net) => net.emsRef === network.emsRef),
+					),
+					...oldInactiveNetworks,
+				],
 				networksFetchStatus: "fulfilled",
 			});
+		}
+
+		case `${ActionTypes.NETWORKS_FETCH_NO_PENDING}_FULFILLED`: {
+			const updatedNetworks = mapNetworksData(action.payload);
+			const oldInactiveNetworks = state.inactiveNetworks.filter(
+				(network) =>
+					!updatedNetworks.find((net) => net.emsRef === network.emsRef)?.status,
+			);
+			return Immutable.merge(state, {
+				networks: updatedNetworks.sort((a, b) => b.id - a.id),
+				inactiveNetworks: [
+					...updatedNetworks.filter(
+						(network) =>
+							!network.status &&
+							!oldInactiveNetworks.find((net) => net.emsRef === network.emsRef),
+					),
+					...oldInactiveNetworks,
+				],
+				networksFetchStatus: "fulfilled",
+			});
+		}
 
 		case `${ActionTypes.NETWORK_FETCH}_PENDING`:
 			return state.set("networkFetchStatus", "pending");
@@ -100,25 +137,26 @@ export const VpcStore = (state = initialState, action) => {
 					dns: action.payload.dns_nameservers[0],
 					assignedVms: action.payload.assigned_vms,
 					netId: action.payload.cloud_network_id,
+					status: action.payload.status,
 				},
 				networkFetchStatus: "fulfilled",
 			});
 
 		case ActionTypes.NETWORK_TEMP_ADD:
 			return state.set("networks", [action.payload, ...state.networks]);
-		case ActionTypes.NETWORK_TEMP_REMOVE: {
-			const index = state.networks
-				.filter((network) => network.isLoading)
-				.findIndex((network) => network.name.endsWith(`_${action.payload}`));
-			if (index > -1) {
-				return state.set("networks", [
-					...state.networks.slice(0, index),
-					...state.networks.slice(index + 1),
-				]);
-			}
+		// case ActionTypes.NETWORK_TEMP_REMOVE: {
+		// 	const index = state.networks
+		// 		.filter((network) => network.isLoading)
+		// 		.findIndex((network) => network.name.endsWith(`_${action.payload}`));
+		// 	if (index > -1) {
+		// 		return state.set("networks", [
+		// 			...state.networks.slice(0, index),
+		// 			...state.networks.slice(index + 1),
+		// 		]);
+		// 	}
 
-			return state;
-		}
+		// 	return state;
+		// }
 
 		case `${ActionTypes.VPC_SECURITY_GROUP_FETCH}_PENDING`:
 			return state.set("groupFetchStatus", "pending");

@@ -1,11 +1,7 @@
 import { showInfoNotification } from "container/Api";
-import { Button } from "container/Button";
-import { Input } from "container/Input";
 import {
 	Dialog,
-	DialogClose,
 	DialogContent,
-	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 } from "container/Modal";
@@ -27,16 +23,6 @@ const NetworkModal = ({ edit, details }, ref) => {
 	const providerId = useSelector((state) => state.VpcStore.providerId);
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.host.user);
-
-	// const mapApiToProps = (item) => ({
-	// 	name: item.name,
-	// 	type: "ipv4",
-	// 	subnet: item.subnet,
-	// 	dns: item.dns,
-	// 	netId: item.netId,
-	// 	emsRef: item.emsRef,
-	// 	addSubnet: !!item.subnet,
-	// });
 
 	useImperativeHandle(ref, () => ({
 		handleClick: (instance) => {
@@ -69,7 +55,6 @@ const NetworkModal = ({ edit, details }, ref) => {
 
 	const mapPropsToNetworkObj = (values) => {
 		return {
-			isLoading: true,
 			name: `${user.location}_${user.account}_${values.name}`,
 			subnet: values.subnet,
 			type: values.type,
@@ -82,16 +67,21 @@ const NetworkModal = ({ edit, details }, ref) => {
 	};
 
 	const createNetwork = (values, providerId) => {
-		dispatch(createNetworkActionAndFetch(mapPropsToApi(values), providerId));
-		dispatch(addTemporaryNetwork(mapPropsToNetworkObj(values)));
+		return dispatch(
+			createNetworkActionAndFetch(mapPropsToApi(values), providerId),
+		).then(() => {
+			dispatch(addTemporaryNetwork(mapPropsToNetworkObj(values)));
+		});
 	};
 
 	const onSubmit = (values) => {
 		showInfoNotification("creatingNetwork");
-		edit
-			? dispatch(editNetworkActionAndFetch(mapPropsToApi(values), providerId))
-			: createNetwork(values, providerId);
-		handleClose();
+
+		return (
+			edit
+				? dispatch(editNetworkActionAndFetch(mapPropsToApi(values), providerId))
+				: createNetwork(values, providerId)
+		).then(handleClose);
 	};
 
 	const headerContent = edit ? t("editVps") : t("createVps");
@@ -106,7 +96,10 @@ const NetworkModal = ({ edit, details }, ref) => {
 				}}
 				on
 			>
-				<DialogContent aria-describedby={undefined} className="">
+				<DialogContent
+					aria-describedby={undefined}
+					className="networking_vpc_modal"
+				>
 					<DialogHeader>
 						<DialogTitle>{headerContent}</DialogTitle>
 					</DialogHeader>
@@ -116,12 +109,6 @@ const NetworkModal = ({ edit, details }, ref) => {
 			</Dialog>
 		</>
 	);
-};
-
-NetworkModal.propTypes = {
-	network: PropTypes.object,
-	edit: PropTypes.bool,
-	details: PropTypes.bool,
 };
 
 export default forwardRef(NetworkModal);

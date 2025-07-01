@@ -31,6 +31,7 @@ const ReturnVmTable = ({
 	onDelete,
 	disabledList,
 	group,
+	isActive,
 }) => {
 	const { t } = useTranslation();
 	const [search, setSearch] = useState("");
@@ -219,6 +220,7 @@ const ReturnVmTable = ({
 								<AssignVmModal
 									submitAction={onModalSubmit}
 									vmAssignedData={paginationMass}
+									isActive={isActive}
 								/>
 							</div>
 						)}
@@ -229,8 +231,8 @@ const ReturnVmTable = ({
 				<Table className="item-list">
 					<TableHeader>
 						<TableRow>
-							{headers.map((header) => (
-								<TableHead key={header}>{t(header)}</TableHead>
+							{headers.map((header, index) => (
+								<TableHead key={index}>{t(header)}</TableHead>
 							))}
 						</TableRow>
 					</TableHeader>

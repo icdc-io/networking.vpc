@@ -1,4 +1,5 @@
 import { Button } from "container/Button";
+import Loader from "container/Loader";
 import {
 	Dialog,
 	DialogClose,
@@ -7,7 +8,6 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "container/Modal";
-import PropTypes from "prop-types";
 import React, {
 	useState,
 	useCallback,
@@ -29,6 +29,7 @@ const DeleteModal = ({ type, button }, ref) => {
 	const providerId = useSelector((state) => state.VpcStore.providerId);
 	const [isVisible, setIsVisible] = useState(false);
 	const [instance, setInstance] = useState(false);
+	const [isDeleting, setIsDeleting] = useState(false);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -52,7 +53,7 @@ const DeleteModal = ({ type, button }, ref) => {
 			deleteAction: useCallback(
 				(route) => {
 					const payload = mapPropsToApi(route);
-					dispatch(deleteRouteActionAndFetch(payload, routerId));
+					return dispatch(deleteRouteActionAndFetch(payload, routerId));
 				},
 				[dispatch, routerId],
 			),
@@ -69,13 +70,12 @@ const DeleteModal = ({ type, button }, ref) => {
 			deleteAction: useCallback(
 				(network) => {
 					const netId = network.netId;
-					dispatch(
+					return dispatch(
 						deleteNetworkActionAndFetch(
 							{ action: "delete", id: netId },
 							providerId,
 						),
-					);
-					button && navigate(-1);
+					).then(() => button && navigate(".."));
 				},
 				[dispatch, providerId, navigate, button],
 			),
@@ -87,8 +87,11 @@ const DeleteModal = ({ type, button }, ref) => {
 	};
 
 	const onConfirm = () => {
-		closeModal();
-		types[type].deleteAction(instance);
+		setIsDeleting(true);
+		types[type]
+			.deleteAction(instance)
+			.then(closeModal)
+			.finally(() => setIsDeleting(false));
 	};
 
 	const modalText = (modalContent, textOptions) =>
@@ -102,7 +105,7 @@ const DeleteModal = ({ type, button }, ref) => {
 
 	return (
 		<Dialog open={isVisible} onOpenChange={closeModal}>
-			<DialogContent>
+			<DialogContent className="networking_vpc_modal">
 				<DialogHeader>
 					<DialogTitle>{t(types[type].header)}</DialogTitle>
 				</DialogHeader>
@@ -117,20 +120,23 @@ const DeleteModal = ({ type, button }, ref) => {
 						</Button>
 					</DialogClose>
 
-					<Button type="button" onClick={onConfirm} variant="warning">
+					<Button
+						type="button"
+						onClick={onConfirm}
+						variant="warning"
+						disabled={isDeleting}
+					>
+						{isDeleting && (
+							<span className="button-loader-container">
+								<Loader variant="fixed" />
+							</span>
+						)}
 						{t(type === "networks" ? "delete" : "confirm")}
 					</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
 	);
-};
-
-DeleteModal.propTypes = {
-	type: PropTypes.string,
-	instance: PropTypes.object,
-	button: PropTypes.bool,
-	icon: PropTypes.bool,
 };
 
 export default forwardRef(DeleteModal);

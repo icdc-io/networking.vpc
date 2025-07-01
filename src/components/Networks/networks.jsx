@@ -1,3 +1,4 @@
+import { fetchData } from "container/Api";
 import { Button } from "container/Button";
 import ErrorScreen from "container/ErrorScreen";
 import { Input } from "container/Input";
@@ -15,18 +16,8 @@ import { Meh } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import {
-	fetchNetworks,
-	fetchProvider,
-	fetchVMs,
-	getFullPath,
-} from "../../AppActions";
-import {
-	ASSIGNED_VMS,
-	NETWORKS_FETCH_URL,
-	PROVIDER_ID_URL,
-	networksUrl,
-} from "../../AppConstants";
+import { fetchNetworks, fetchProvider, fetchVMs } from "../../AppActions";
+import { networksUrl } from "../../AppConstants";
 import { apiButtonInfo } from "../../constants/apiButtonInfo";
 import { networkValue } from "../../constants/common";
 import { onSearch } from "../../utilities/search";
@@ -35,6 +26,7 @@ import NetworkModal from "./networkModal";
 import NetworksList from "./networksList";
 
 const tableHeader = ["name", "subnet", "type", "dns", "assignedVmNics", ""];
+const ONE_MINUTE = 1000 * 60;
 
 const Networks = () => {
 	const { t } = useTranslation();
@@ -48,10 +40,14 @@ const Networks = () => {
 	const providerIdFetchStatus = useSelector(
 		(state) => state.VpcStore.providerIdFetchStatus,
 	);
+
 	const [search, setSearch] = useState("");
 	const user = useSelector((state) => state.host.user);
 	const providerId = useSelector((state) => state.VpcStore.providerId);
 	const createModalRef = useRef();
+	const inactiveNetworks = useSelector(
+		(state) => state.VpcStore.inactiveNetworks,
+	);
 
 	const dispatch = useDispatch();
 
@@ -60,6 +56,19 @@ const Networks = () => {
 			createModalRef.current.handleClick();
 		}
 	};
+
+	useEffect(() => {
+		let interval;
+		if (!inactiveNetworks.length) return clearInterval(interval);
+
+		interval = setInterval(() => {
+			dispatch(fetchNetworks(true));
+		}, ONE_MINUTE);
+
+		return () => {
+			clearInterval(interval);
+		};
+	}, [inactiveNetworks.length]);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
@@ -75,7 +84,8 @@ const Networks = () => {
 	const isLoading = statuses.includes("pending");
 
 	const getContent = () => {
-		const items = onSearch(networks, search);
+		const activeNetworks = networks.filter((net) => net.status);
+		const items = onSearch([...inactiveNetworks, ...activeNetworks], search);
 
 		if (!isError && !isLoading && items.length > 0)
 			return <NetworksList items={items} />;
@@ -100,8 +110,8 @@ const Networks = () => {
 		);
 	};
 
-	const tableHeaderCells = tableHeader.map((header) => (
-		<TableHead key={header}>{t(header)}</TableHead>
+	const tableHeaderCells = tableHeader.map((header, index) => (
+		<TableHead key={index}>{t(header)}</TableHead>
 	));
 
 	return (
