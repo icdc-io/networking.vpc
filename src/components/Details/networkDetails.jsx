@@ -1,7 +1,7 @@
 import { Button } from "container/Button";
 import ErrorScreen from "container/ErrorScreen";
 import Loader from "container/Loader";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
@@ -32,7 +32,6 @@ const NetworkDetails = () => {
 
 	const dispatch = useDispatch();
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		dispatch(fetchNetwork(id));
 		dispatch(fetchSecurityGroups());

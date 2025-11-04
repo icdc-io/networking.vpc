@@ -5,7 +5,6 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "container/Modal";
-import PropTypes from "prop-types";
 import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,7 +16,7 @@ import {
 // import ReturnVmTable from "../Details/returnVmTable";
 import NetworkForm from "./networkForm";
 
-const NetworkModal = ({ edit, details }, ref) => {
+const NetworkModal = ({ edit }, ref) => {
 	const { t } = useTranslation();
 	const [open, setOpen] = useState(false);
 	const providerId = useSelector((state) => state.VpcStore.providerId);
@@ -25,7 +24,7 @@ const NetworkModal = ({ edit, details }, ref) => {
 	const user = useSelector((state) => state.host.user);
 
 	useImperativeHandle(ref, () => ({
-		handleClick: (instance) => {
+		handleClick: (_instance) => {
 			// setInstance(instance);
 			setOpen(true);
 		},

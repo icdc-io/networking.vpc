@@ -1,26 +1,16 @@
 import CopyButton from "container/CopyButton";
 import Loader from "container/Loader";
 import OptionsMenu from "container/OptionsMenu";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "container/Table";
 import { isAdminRights } from "container/roleUtils";
+import { TableCell, TableRow } from "container/Table";
 import PropTypes from "prop-types";
-import React, { useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useRef } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import DeleteModal from "../../general/deleteModal";
-import Loading from "../../static/spinner.gif";
 import Network from "../../static/svgNetwork.svg";
 
 const NetworksList = ({ items }) => {
-	const { t } = useTranslation();
 	const user = useSelector((state) => state.host.user);
 	const deleteModalRef = useRef();
 	const navigate = useNavigate();
@@ -60,7 +50,6 @@ const NetworksList = ({ items }) => {
 			: [];
 
 		return (
-			// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 			<TableRow key={index}>
 				<TableCell>
 					<div className="name-with-image-wrapper gap-2">

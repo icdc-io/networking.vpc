@@ -137,7 +137,6 @@ export const ip = (value) => {
 		value.match(/^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$/)
 	) {
 		const dnsParts = value.split(/\./);
-		// biome-ignore lint/complexity/noForEach: <explanation>
 		dnsParts.forEach((num) => {
 			const condition = (min, max) => num >= min && num <= max;
 			if (condition(0, 255)) {
@@ -157,7 +156,7 @@ export const ipWithSubnetPrefix = (value) => {
 	if (regexResult) {
 		const ipValues = regexResult.slice(1, 5);
 		const subnet = regexResult.slice(-1)[0];
-		// biome-ignore lint/complexity/noForEach: <explanation>
+		// biome-ignore lint/suspicious/useIterableCallbackReturn: no return value
 		ipValues.forEach((value) => value >= 0 && value <= 255 && flag++);
 		subnet >= 0 && subnet <= 32 && flag++;
 	}
@@ -234,12 +233,16 @@ export const ports = (value) => {
 		number(leftValue) === undefined && number(rightValue) === undefined;
 	const leftLessThanRight =
 		splitedValue.length > 1 &&
+		// biome-ignore lint/correctness/useParseIntRadix: parseInt with radix 10
 		Number.parseInt(leftValue) <= Number.parseInt(rightValue);
 	const inRangeLeftValue =
+		// biome-ignore lint/correctness/useParseIntRadix: parseInt with radix 10
 		Number.parseInt(leftValue) >= 0 && Number.parseInt(leftValue) <= 65535;
 	const inRangeBothValues =
 		inRangeLeftValue &&
+		// biome-ignore lint/correctness/useParseIntRadix: parseInt with radix 10
 		Number.parseInt(rightValue) >= 0 &&
+		// biome-ignore lint/correctness/useParseIntRadix: parseInt with radix 10
 		Number.parseInt(rightValue) <= 65535;
 
 	if (value !== "" && value !== null) {

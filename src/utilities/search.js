@@ -5,6 +5,7 @@ const setExceptions = (key) => {
 export const onSearch = (array, searchString) => {
 	const temp = [];
 	if (searchString !== "") {
+		// biome-ignore lint/suspicious/useIterableCallbackReturn: use foreach instead of map
 		array.map((item) => {
 			for (const key in item) {
 				if (

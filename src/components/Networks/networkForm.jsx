@@ -9,9 +9,7 @@ import { InputFormField } from "../../general/InputFormField";
 import {
 	ip,
 	ipWithSubnetPrefix,
-	name,
 	namePattern,
-	required,
 } from "../../utilities/Validations";
 
 const fieldTypes = {

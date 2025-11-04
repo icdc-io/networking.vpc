@@ -7,7 +7,6 @@ import "./App.scss";
 const Vpc = ({ store }) => {
 	const [isLoaded, setIsLoaded] = useState(false);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		store.injectReducer("VpcStore", VpcStore);
 		setIsLoaded(true);

@@ -1,16 +1,14 @@
 import CopyButton from "container/CopyButton";
 import OptionsMenu from "container/OptionsMenu";
-import { TableCell, TableRow } from "container/Table";
 import { isAdminRights } from "container/roleUtils";
+import { TableCell, TableRow } from "container/Table";
 import PropTypes from "prop-types";
 import { useRef } from "react";
-import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import DeleteModal from "../../general/deleteModal";
 import Route from "../../static/route.svg";
 
 const RoutesList = ({ items }) => {
-	const { t } = useTranslation();
 	const user = useSelector((state) => state.host.user);
 	const deleteModalRef = useRef();
 
@@ -30,7 +28,6 @@ const RoutesList = ({ items }) => {
 
 	const routeList = items.map((route, i) => {
 		return (
-			// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 			<TableRow key={i}>
 				<TableCell className="name-with-image-wrapper gap-2">
 					<img src={Route} alt="Route" />
