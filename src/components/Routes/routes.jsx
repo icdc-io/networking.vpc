@@ -1,6 +1,7 @@
 import { Button } from "container/Button";
 import { Input } from "container/Input";
 import Loader from "container/Loader";
+import { isAdminRights, OPERATOR } from "container/roleUtils";
 import {
 	Table,
 	TableBody,
@@ -9,9 +10,8 @@ import {
 	TableHeader,
 	TableRow,
 } from "container/Table";
-import { OPERATOR, isAdminRights } from "container/roleUtils";
 import { Meh } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProvider, fetchRoutes } from "../../AppActions";
@@ -47,7 +47,6 @@ const Routes = () => {
 		}
 	};
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		dispatch(fetchRoutes());
 		providerIdFetchStatus !== "fulfilled" && dispatch(fetchProvider());

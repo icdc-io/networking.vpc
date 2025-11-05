@@ -8,7 +8,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "container/Modal";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllVMs } from "../../AppActions";
@@ -39,7 +39,6 @@ const AssignVmModal = ({ submitAction, vmAssignedData = [], isActive }) => {
 		setOpen(false);
 	};
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		const vms = [];
 		const allVms = allServices.flatMap((item) =>

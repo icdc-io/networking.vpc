@@ -1,8 +1,8 @@
-import { fetchData } from "container/Api";
 import { Button } from "container/Button";
 import ErrorScreen from "container/ErrorScreen";
 import { Input } from "container/Input";
 import Loader from "container/Loader";
+import { isAdminRights, OPERATOR } from "container/roleUtils";
 import {
 	Table,
 	TableBody,
@@ -11,9 +11,8 @@ import {
 	TableHeader,
 	TableRow,
 } from "container/Table";
-import { OPERATOR, isAdminRights } from "container/roleUtils";
 import { Meh } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchNetworks, fetchProvider, fetchVMs } from "../../AppActions";
@@ -70,7 +69,6 @@ const Networks = () => {
 		};
 	}, [inactiveNetworks.length]);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		dispatch(fetchNetworks());
 		dispatch(fetchVMs());
@@ -116,44 +114,42 @@ const Networks = () => {
 
 	return (
 		<>
-			<>
-				<h2 className="page-title">{t("vpcNetworks")}</h2>
-				<div style={{ maxWidth: "600px" }}>
-					<p className="color--grey">{t("vpcDescription")}</p>
+			<h2 className="page-title">{t("vpcNetworks")}</h2>
+			<div style={{ maxWidth: "600px" }}>
+				<p className="color--grey">{t("vpcDescription")}</p>
+			</div>
+			<div className="vpcDescription">
+				<div>
+					<Input
+						placeholder={t("search")}
+						value={search}
+						variant="search"
+						onChange={(e) => setSearch(e.target.value)}
+						disabled={isError || isLoading}
+					/>
 				</div>
-				<div className="vpcDescription">
-					<div>
-						<Input
-							placeholder={t("search")}
-							value={search}
-							variant="search"
-							onChange={(e) => setSearch(e.target.value)}
-							disabled={isError || isLoading}
-						/>
-					</div>
-					<div className="buttons-vpc">
-						<VpcApiButton
-							info={apiButtonInfo.network(networkValue)}
-							url={networksUrl(providerId)}
-						/>
-						{isAdminRights(user.role) && (
-							<Button onClick={onCreateModal} disabled={user.role === OPERATOR}>
-								{t("createVps")}
-							</Button>
-						)}
-					</div>
+				<div className="buttons-vpc">
+					<VpcApiButton
+						info={apiButtonInfo.network(networkValue)}
+						url={networksUrl(providerId)}
+					/>
+					{isAdminRights(user.role) && (
+						<Button onClick={onCreateModal} disabled={user.role === OPERATOR}>
+							{t("createVps")}
+						</Button>
+					)}
 				</div>
+			</div>
 
-				<div className="table-container">
-					<Table>
-						<TableHeader>
-							<TableRow>{tableHeaderCells}</TableRow>
-						</TableHeader>
-						<TableBody>{getContent()}</TableBody>
-					</Table>
-				</div>
-				<NetworkModal ref={createModalRef} />
-			</>
+			<div className="table-container">
+				<Table>
+					<TableHeader>
+						<TableRow>{tableHeaderCells}</TableRow>
+					</TableHeader>
+					<TableBody>{getContent()}</TableBody>
+				</Table>
+			</div>
+			<NetworkModal ref={createModalRef} />
 		</>
 	);
 };
