@@ -80,7 +80,6 @@ const getMostUsedDns = (networks) => {
 			}, {}),
 		).reduce(
 			(acc, curr) => {
-				console.log(curr);
 				if (curr[1] > acc[1]) return curr;
 
 				return acc;
