@@ -7,7 +7,7 @@ import { DialogClose, DialogFooter } from "container/Modal";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ComboboxFormField } from "../../general/ComboboxFormField";
 import { InputFormField } from "../../general/InputFormField";
 import External from "../../static/external.svg";
