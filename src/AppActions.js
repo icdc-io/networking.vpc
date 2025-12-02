@@ -189,12 +189,15 @@ export const createRouteActionAndFetch = (payload, routerId) => {
 	return (dispatch) => {
 		const response = dispatch(createRoute(payload, routerId));
 
-		response.then(
+		return response.then(
 			() => {
 				dispatch(fetchRoutes());
 				showSuccessNotification("");
 			},
-			(error) => errorNotification(error),
+			(error) => {
+				errorNotification(error);
+				throw new Error(error);
+			},
 		);
 	};
 };

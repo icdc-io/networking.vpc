@@ -48,7 +48,8 @@
 			"vmName": "VM Name",
 			"vpcDescription": "All networks created with the selected subnet will be connected to one virtual router, so virtual machines from different networks will see each other.",
 			"vpcNetworks": "VPC Networks",
-			"creatingNetwork": "Creating the network..."
+			"creatingNetwork": "Creating the network...",
+			"addNewGateway": "Add new gateway"
 		}
 	},
 	"ru": {
@@ -100,7 +101,8 @@
 			"vmName": "Имя ВМ",
 			"vpcDescription": "Все сети, созданные с выбранной подсетью, будут подключены к одному виртуальному маршрутизатору, поэтому виртуальные машины из разных сетей будут видеть друг друга.",
 			"vpcNetworks": "VPC-сети",
-			"creatingNetwork": "Создание сети..."
+			"creatingNetwork": "Создание сети...",
+			"addNewGateway": "Добавить новый шлюз"
 		}
 	}
 }

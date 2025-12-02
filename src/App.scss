@@ -175,3 +175,30 @@
 	justify-content: center;
 	flex-direction: column;
 }
+
+.gateway-option {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+
+	h4 {
+		color: #000000;
+		font-weight: 400;
+		font-size: 14px;
+	}
+
+	p {
+		color: #838383;
+		font-weight: 400;
+		font-size: 14px;
+	}
+}
+
+.external-gateways {
+	font-size: 14px;
+	font-weight: 400;
+	color: #2185D0;
+	display: flex;
+	align-items: center;
+	margin-top: 4px;
+}
