@@ -41,13 +41,11 @@ const RouteForm = ({ handleClose, onSubmit, edit, initialValues }) => {
 	const { data: gateways = [] } = useFetchData({
 		endpoint: "/api/gateway/v1/ip/gateways",
 		select: (gateways) =>
-			gateways
-				.filter((gateway) => gateway.type === "custom")
-				.map((gateway) => ({
-					value: gateway.ip,
-					text: gateway.ip,
-					title: gateway.name,
-				})),
+			gateways.map((gateway) => ({
+				value: gateway.ip,
+				text: gateway.ip,
+				title: gateway.name,
+			})),
 		cacheTime: 0,
 		staleTime: 0,
 	});
