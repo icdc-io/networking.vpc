@@ -2,6 +2,7 @@ import { Checkbox } from "container/Checkbox";
 import CopyButton from "container/CopyButton";
 import { Input } from "container/Input";
 import Paginator from "container/Paginator";
+import { isAdminRights } from "container/roleUtils";
 import {
 	Table,
 	TableBody,
@@ -10,7 +11,6 @@ import {
 	TableHeader,
 	TableRow,
 } from "container/Table";
-import { isAdminRights } from "container/roleUtils";
 import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -68,7 +68,6 @@ const ReturnVmTable = ({
 		setoldActivePage(activePage);
 	};
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (vmInterfaces) {
 			setResult(vmInterfaces);
@@ -81,12 +80,10 @@ const ReturnVmTable = ({
 		paginationMass.length < 1 && setActivePage(1);
 	}, [paginationMass]);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		setResult(onSearch(vmInterfaces, search));
 	}, [search, activePage, totalPages]);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (activePage !== oldActivePage && search === "") {
 			setActivePage(oldActivePage);
@@ -95,7 +92,6 @@ const ReturnVmTable = ({
 		}
 	}, [search]);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (result) {
 			setTotalPages(Math.ceil(result.length / 10));
@@ -118,7 +114,6 @@ const ReturnVmTable = ({
 				case "mac":
 				case "ip":
 					return (
-						// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 						<TableCell key={index} style={{ textAlign: "left" }}>
 							<div className="flex gap-2 items-center">
 								{currentVmInterface || String.fromCharCode(8212)}
@@ -128,7 +123,6 @@ const ReturnVmTable = ({
 					);
 				default:
 					return (
-						// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 						<TableCell key={index} style={{ textAlign: "left" }}>
 							{currentVmInterface || String.fromCharCode(8212)}
 						</TableCell>
@@ -183,7 +177,6 @@ const ReturnVmTable = ({
 		// eslint-disable-next-line max-len
 		<TableRow
 			className={(disabledList?.[vmInterface.uuid] && "disabled-nic") || ""}
-			// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 			key={index}
 		>
 			{vmInterfacesCell(vmInterface)}
@@ -197,35 +190,31 @@ const ReturnVmTable = ({
 					[{vmInterfaces.length}] {t("availableVMs")}
 				</h4>
 			) : (
-				<>
-					<h4 className="assign-vms-title mt-8 w-full">
-						{t("assignedVm")} ({vmInterfaces.length})
-					</h4>
-				</>
+				<h4 className="assign-vms-title mt-8 w-full">
+					{t("assignedVm")} ({vmInterfaces.length})
+				</h4>
 			)}
 			{!modal && (
-				<>
-					<div className="flex gap-2 items-center justify-between w-full mx-4">
+				<div className="flex gap-2 items-center justify-between w-full mx-4">
+					<div>
+						<Input
+							value={search}
+							onChange={onChange}
+							variant="search"
+							placeholder={t("search")}
+							disabled={vmInterfaces.length === 0}
+						/>
+					</div>
+					{showModalButton && (
 						<div>
-							<Input
-								value={search}
-								onChange={onChange}
-								variant="search"
-								placeholder={t("search")}
-								disabled={vmInterfaces.length === 0}
+							<AssignVmModal
+								submitAction={onModalSubmit}
+								vmAssignedData={paginationMass}
+								isActive={isActive}
 							/>
 						</div>
-						{showModalButton && (
-							<div>
-								<AssignVmModal
-									submitAction={onModalSubmit}
-									vmAssignedData={paginationMass}
-									isActive={isActive}
-								/>
-							</div>
-						)}
-					</div>
-				</>
+					)}
+				</div>
 			)}
 			<div className="table-container">
 				<Table className="item-list">

@@ -4,14 +4,13 @@ import Loader from "container/Loader";
 import { DialogClose, DialogFooter } from "container/Modal";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import { CheckboxFormField } from "../../general/CheckboxFormField";
 import { InputFormField } from "../../general/InputFormField";
 import {
 	ip,
 	ipWithSubnetPrefix,
-	name,
 	namePattern,
-	required,
 } from "../../utilities/Validations";
 
 const fieldTypes = {
@@ -70,9 +69,30 @@ const fieldsInfo = (values = {}) => [
 	},
 ];
 
+const getMostUsedDns = (networks) => {
+	if (!networks?.length) return "";
+	return (
+		Object.entries(
+			networks.reduce((acc, curr) => {
+				if (!acc[curr.dns]) acc[curr.dns] = 0;
+				acc[curr.dns]++;
+				return acc;
+			}, {}),
+		).reduce(
+			(acc, curr) => {
+				if (curr[1] > acc[1]) return curr;
+
+				return acc;
+			},
+			["", 0],
+		)[0] || ""
+	);
+};
+
 const NetworkForm = ({ handleClose, onSubmit, initialValues }) => {
 	const { t } = useTranslation();
 	const [isCreating, setIsCreating] = useState(false);
+	const networks = useSelector((state) => state.VpcStore.networks);
 
 	const form = useForm({
 		defaultValues: fieldsInfo().reduce(
@@ -94,6 +114,11 @@ const NetworkForm = ({ handleClose, onSubmit, initialValues }) => {
 			form.reset(initialValues);
 		}
 	}, []);
+
+	useEffect(() => {
+		if (networks.length && !form.getValues("dns"))
+			form.setValue("dns", getMostUsedDns(networks));
+	}, [networks]);
 
 	const buttonContent = edit ? t("editNetwork") : t("create");
 

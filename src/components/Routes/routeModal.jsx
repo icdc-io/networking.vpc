@@ -4,20 +4,19 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "container/Modal";
-import React, {
-	useState,
-	useCallback,
-	useImperativeHandle,
-	forwardRef,
-} from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 import { createRouteActionAndFetch } from "../../AppActions";
 import RouteForm from "./routeForm";
 
 const RouteModal = (_props, ref) => {
 	const { t } = useTranslation();
-	const [open, setOpen] = useState(false);
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	const { modal_open, ...initialForm } = Object.fromEntries(searchParams);
+	const [open, setOpen] = useState(modal_open === "true");
 	const routerId = useSelector((state) => state.VpcStore.routerId);
 
 	const dispatch = useDispatch();
@@ -42,25 +41,27 @@ const RouteModal = (_props, ref) => {
 
 	const handleClose = () => {
 		setOpen(false);
+		setSearchParams({});
 	};
 
 	const onSubmit = (values) => {
-		handleClose();
 		const payload = mapPropsToApi(values);
-		dispatch(createRouteActionAndFetch(payload, routerId));
+		return dispatch(createRouteActionAndFetch(payload, routerId)).then(
+			handleClose,
+		);
 	};
 
 	const routeForm = (
 		<RouteForm
 			handleClose={handleClose}
 			onSubmit={onSubmit}
-			// initialValues={edit && mapRouteToProps(route)}
+			initialValues={initialForm}
 		/>
 	);
 
 	return (
 		<Dialog open={open} onOpenChange={handleClose}>
-			<DialogContent>
+			<DialogContent className="networking_vpc_modal">
 				<DialogHeader>
 					<DialogTitle>{t("createRoute")}</DialogTitle>
 				</DialogHeader>

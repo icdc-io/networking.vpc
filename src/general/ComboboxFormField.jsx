@@ -46,6 +46,7 @@ export const ComboboxFormField = ({ fieldInfo, form }) => {
 								placeholder={fieldInfo.placeholder}
 								formatOption={fieldInfo.formatOption}
 								className={fieldInfo.className}
+								emptyMessage={fieldInfo.emptyMessage}
 							/>
 						</FormControl>
 						{fieldInfo.description && (

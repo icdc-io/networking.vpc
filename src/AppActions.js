@@ -15,6 +15,7 @@ export const getFullPath = (url) => `/api/compute/v1${url}`;
 
 export const fetchNetworks = (withoutLoader) => (dispatch) =>
 	dispatch({
+		// biome-ignore lint/performance/noDynamicNamespaceImportAccess: temporary fix
 		type: ActionTypes[
 			withoutLoader ? "NETWORKS_FETCH_NO_PENDING" : "NETWORKS_FETCH"
 		],
@@ -188,12 +189,15 @@ export const createRouteActionAndFetch = (payload, routerId) => {
 	return (dispatch) => {
 		const response = dispatch(createRoute(payload, routerId));
 
-		response.then(
+		return response.then(
 			() => {
 				dispatch(fetchRoutes());
 				showSuccessNotification("");
 			},
-			(error) => errorNotification(error),
+			(error) => {
+				errorNotification(error);
+				throw new Error(error);
+			},
 		);
 	};
 };
